@@ -5,8 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import android.text.Layout
-import android.text.StaticLayout
 import android.text.TextPaint
 import com.mementolife.app.data.AppLocale
 import com.mementolife.app.data.DesignTokens
@@ -156,29 +154,43 @@ class WallpaperRenderer(
             color = inkColor
             alpha = (themedOpacity(efemeride.opacity, theme) * 255).roundToInt()
             textSize = efemeride.sizePx.toFloat()
+            textAlign = Paint.Align.CENTER
             typeface = this@WallpaperRenderer.typeface
         }
 
-        val maxWidth = (tokens.canvas.widthPx - 2 * efemeride.marginSidePx).toInt()
-        // El multiplicador CSS de line-height es relativo al tamaño de fuente, no al alto
-        // natural que reporta la tipografía (que en variables como Fraunces puede ser muy
-        // distinto). Se calcula el alto de línea objetivo en px y se compensa contra el
-        // alto natural del Paint para que el resultado no dependa de esa métrica.
-        val targetLineHeightPx = (efemeride.sizePx * efemeride.lineHeightMultiplier).toFloat()
-        val extraSpacing = targetLineHeightPx - paint.fontSpacing
-        val layout = StaticLayout.Builder
-            .obtain(text, 0, text.length, paint, maxWidth)
-            .setAlignment(Layout.Alignment.ALIGN_CENTER)
-            .setLineSpacing(extraSpacing, 1f)
-            .build()
+        val maxWidth = (tokens.canvas.widthPx - 2 * efemeride.marginSidePx).toFloat()
+        val lines = wrapText(text, paint, maxWidth)
 
-        canvas.save()
-        canvas.translate(
-            efemeride.marginSidePx.toFloat(),
-            (tokens.canvas.heightPx - efemeride.marginBottomPx).toFloat() - layout.height,
-        )
-        layout.draw(canvas)
-        canvas.restore()
+        // El multiplicador CSS de line-height es relativo al tamaño de fuente (no al alto
+        // natural que reporta la tipografía, que en variables como Fraunces puede ser muy
+        // distinto), así que se posiciona cada línea a mano en vez de delegarlo en
+        // StaticLayout: evita que un metric inusual de la fuente distorsione el bloque.
+        val lineHeight = (efemeride.sizePx * efemeride.lineHeightMultiplier).toFloat()
+        val blockBottom = (tokens.canvas.heightPx - efemeride.marginBottomPx).toFloat()
+        val blockTop = blockBottom - lines.size * lineHeight
+        val centerX = (tokens.canvas.widthPx / 2).toFloat()
+
+        for ((index, line) in lines.withIndex()) {
+            val lineTop = blockTop + index * lineHeight
+            canvas.drawText(line, centerX, lineTop - paint.ascent(), paint)
+        }
+    }
+
+    private fun wrapText(text: String, paint: Paint, maxWidth: Float): List<String> {
+        val words = text.split(" ")
+        val lines = mutableListOf<String>()
+        var current = StringBuilder()
+        for (word in words) {
+            val candidate = if (current.isEmpty()) word else "$current $word"
+            if (current.isEmpty() || paint.measureText(candidate) <= maxWidth) {
+                current = StringBuilder(candidate)
+            } else {
+                lines.add(current.toString())
+                current = StringBuilder(word)
+            }
+        }
+        if (current.isNotEmpty()) lines.add(current.toString())
+        return lines
     }
 
     private fun fillPaint(color: Int, opacity: Double) = Paint(Paint.ANTI_ALIAS_FLAG).apply {
