@@ -160,10 +160,16 @@ class WallpaperRenderer(
         }
 
         val maxWidth = (tokens.canvas.widthPx - 2 * efemeride.marginSidePx).toInt()
+        // El multiplicador CSS de line-height es relativo al tamaño de fuente, no al alto
+        // natural que reporta la tipografía (que en variables como Fraunces puede ser muy
+        // distinto). Se calcula el alto de línea objetivo en px y se compensa contra el
+        // alto natural del Paint para que el resultado no dependa de esa métrica.
+        val targetLineHeightPx = (efemeride.sizePx * efemeride.lineHeightMultiplier).toFloat()
+        val extraSpacing = targetLineHeightPx - paint.fontSpacing
         val layout = StaticLayout.Builder
             .obtain(text, 0, text.length, paint, maxWidth)
             .setAlignment(Layout.Alignment.ALIGN_CENTER)
-            .setLineSpacing(0f, efemeride.lineHeightMultiplier.toFloat())
+            .setLineSpacing(extraSpacing, 1f)
             .build()
 
         canvas.save()
