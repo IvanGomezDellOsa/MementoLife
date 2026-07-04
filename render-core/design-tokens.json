@@ -18,7 +18,8 @@
     "footer": {
       "sizePx": 10,
       "letterSpacingPx": 1.2,
-      "opacity": 0.55
+      "opacity": 0.55,
+      "baselineFromGridAreaBottomPx": 6
     },
     "efemeride": {
       "sizePx": 10.5,

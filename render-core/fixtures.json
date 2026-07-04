@@ -2,6 +2,7 @@
   "fixtures": [
     {
       "id": "base_weeks_dark_es",
+      "note": "Caso base del handoff: yearsLived ~33.5, equivalente al mock (33.6).",
       "view": "weeks",
       "theme": "dark",
       "locale": "es",
@@ -82,6 +83,7 @@
     },
     {
       "id": "edge_lifeYears_40",
+      "note": "Extremo inferior del rango (40) y ademas caso de clamping: por los dias bisiestos, yearsLived da 40.0008 (> lifeYears). El renderer debe clampear como reference.html (Math.min): grilla 100% pasada, sin anillo fuera de rango.",
       "view": "weeks",
       "theme": "dark",
       "locale": "es",
@@ -92,6 +94,7 @@
     },
     {
       "id": "edge_lifeYears_100",
+      "note": "Extremo superior del rango (100): 100 filas de semanas, el paso vertical mas comprimido permitido.",
       "view": "weeks",
       "theme": "dark",
       "locale": "es",
@@ -102,6 +105,7 @@
     },
     {
       "id": "edge_efemeride_off",
+      "note": "Con efemeride apagada el bloque no se dibuja y el resto del layout no se mueve.",
       "view": "weeks",
       "theme": "dark",
       "locale": "es",
@@ -112,6 +116,7 @@
     },
     {
       "id": "edge_feb29_leap_year",
+      "note": "29 de febrero en anio bisiesto: debe mostrarse la efemeride del 29/2.",
       "view": "months",
       "theme": "dark",
       "locale": "es",
