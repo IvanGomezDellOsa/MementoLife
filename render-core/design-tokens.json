@@ -22,8 +22,8 @@
       "baselineFromGridAreaBottomPx": 6
     },
     "efemeride": {
-      "sizePx": 10.5,
-      "lineHeightMultiplier": 1.55,
+      "sizePx": 9,
+      "lineHeightMultiplier": 1.35,
       "marginSidePx": 64,
       "marginBottomPx": 32,
       "opacity": {
