@@ -41,6 +41,12 @@ android {
             isMinifyEnabled = false
         }
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 kotlin {
@@ -54,6 +60,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.16.1")
 }
 
 // El diseño y el dataset viven en render-core/ y content/, fuera de android/,

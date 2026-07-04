@@ -22,3 +22,11 @@ jobs:
       - name: Build, lint y tests
         working-directory: android
         run: ./gradlew build
+
+      - name: Subir renders de los fixtures para revisión visual
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: golden-output
+          path: android/app/build/golden-output/*.png
+          if-no-files-found: warn
