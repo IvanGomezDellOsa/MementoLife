@@ -58,15 +58,23 @@ class EfemerideLengthDiagnosticTest {
             return lines
         }
 
-        val entries = Json { ignoreUnknownKeys = true }
-            .decodeFromString<List<EfemerideEntry>>(resource("es.json"))
-
-        val overflowing = entries.filter { wrap(it.textEs ?: "") > safeLines }
-        println("DIAG run 2 ${System.nanoTime()}")
+        println("DIAG run 3 ${System.nanoTime()}")
         println("DIAG espacio seguro: ${safeLines} lineas (${availableHeight}px util / ${lineHeight}px por linea)")
-        println("DIAG total entradas: ${entries.size}, exceden el espacio seguro: ${overflowing.size}")
-        overflowing.take(10).forEach {
-            println("DIAG desborda (${wrap(it.textEs ?: "")} lineas): ${it.month}/${it.day} -> ${it.textEs}")
+
+        val esEntries = Json { ignoreUnknownKeys = true }
+            .decodeFromString<List<EfemerideEntry>>(resource("es.json"))
+        val esOverflowing = esEntries.filter { wrap(it.textEs ?: "") > safeLines }
+        println("DIAG es: ${esEntries.size} entradas, exceden: ${esOverflowing.size}")
+        esOverflowing.take(10).forEach {
+            println("DIAG es desborda (${wrap(it.textEs ?: "")} lineas): ${it.month}/${it.day} -> ${it.textEs}")
+        }
+
+        val enEntries = Json { ignoreUnknownKeys = true }
+            .decodeFromString<List<EfemerideEntry>>(resource("en.json"))
+        val enOverflowing = enEntries.filter { wrap(it.textEn ?: "") > safeLines }
+        println("DIAG en: ${enEntries.size} entradas, exceden: ${enOverflowing.size}")
+        enOverflowing.take(10).forEach {
+            println("DIAG en desborda (${wrap(it.textEn ?: "")} lineas): ${it.month}/${it.day} -> ${it.textEn}")
         }
     }
 }
