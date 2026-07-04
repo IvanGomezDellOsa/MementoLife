@@ -26,6 +26,7 @@ fun BatteryHelpScreen(onBack: () -> Unit) {
     ) {
         Text(stringResource(R.string.battery_help_title))
         Text(stringResource(R.string.battery_help_body))
+        Text(stringResource(R.string.battery_help_low_usage))
         Button(onClick = { BatteryOptimizationHelper.openBatterySettings(context) }) {
             Text(stringResource(R.string.battery_help_open_settings_button))
         }

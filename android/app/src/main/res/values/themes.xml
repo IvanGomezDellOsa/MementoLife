@@ -1,0 +1,4 @@
+<resources>
+    <!-- AppCompatActivity exige un tema Theme.AppCompat; el look real lo pone Compose. -->
+    <style name="Theme.MementoLife" parent="Theme.AppCompat.DayNight.NoActionBar" />
+</resources>

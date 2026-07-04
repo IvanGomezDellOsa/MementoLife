@@ -37,6 +37,7 @@ import com.mementolife.app.ui.common.BirthDatePickerDialog
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -121,10 +122,14 @@ fun SettingsScreen(
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.settings_life_expectancy_label, preferences.lifeYears))
+            // Estado local durante el arrastre: recién al soltar se persiste y se
+            // re-renderiza el wallpaper (un render por gesto, no uno por pixel).
+            var sliderYears by remember(preferences.lifeYears) { mutableStateOf(preferences.lifeYears) }
+            Text(stringResource(R.string.settings_life_expectancy_label, sliderYears))
             Slider(
-                value = preferences.lifeYears.toFloat(),
-                onValueChange = { onLifeYearsChange(it.toInt()) },
+                value = sliderYears.toFloat(),
+                onValueChange = { sliderYears = it.roundToInt() },
+                onValueChangeFinished = { onLifeYearsChange(sliderYears) },
                 valueRange = MIN_LIFE_YEARS.toFloat()..MAX_LIFE_YEARS.toFloat(),
                 steps = MAX_LIFE_YEARS - MIN_LIFE_YEARS - 1,
             )

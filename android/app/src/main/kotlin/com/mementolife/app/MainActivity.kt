@@ -1,8 +1,8 @@
 package com.mementolife.app
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,10 +25,13 @@ import com.mementolife.app.ui.settings.SettingsScreen
 import com.mementolife.app.ui.theme.MementoLifeTheme
 import com.mementolife.app.work.WallpaperUpdateWorker
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 private enum class SubScreen { SETTINGS, BATTERY_HELP }
 
-class MainActivity : ComponentActivity() {
+// AppCompatActivity (no ComponentActivity): setApplicationLocales solo aplica el
+// idioma en API < 33 cuando la activity es AppCompat; en 33+ delega en el sistema.
+class MainActivity : AppCompatActivity() {
 
     private lateinit var preferencesRepository: UserPreferencesRepository
 
@@ -47,7 +50,9 @@ class MainActivity : ComponentActivity() {
                     when {
                         currentPrefs == null -> Unit
                         currentPrefs.birthDate == null -> OnboardingScreen(
-                            initialLocale = currentPrefs.locale,
+                            // Pre-seleccionado por el locale del dispositivo (plan §6.1), no
+                            // por el default de DataStore, que todavía no dice nada del usuario.
+                            initialLocale = deviceLocale(),
                             initialTheme = currentPrefs.theme,
                             initialView = currentPrefs.view,
                             onConfirm = { locale, birthDate, theme, view ->
@@ -56,9 +61,11 @@ class MainActivity : ComponentActivity() {
                                     preferencesRepository.setTheme(theme)
                                     preferencesRepository.setView(view)
                                     preferencesRepository.setBirthDate(birthDate)
-                                    applyLocale(locale)
                                     WallpaperUpdateWorker.schedulePeriodic(applicationContext)
                                     WallpaperUpdateWorker.requestImmediateUpdate(applicationContext)
+                                    // Último a propósito: puede recrear la activity y cancelar
+                                    // este scope; todo lo anterior ya tiene que estar encolado.
+                                    applyLocale(locale)
                                 }
                             },
                         )
@@ -70,8 +77,9 @@ class MainActivity : ComponentActivity() {
                             onLocaleChange = { locale ->
                                 scope.launch {
                                     preferencesRepository.setLocale(locale)
-                                    applyLocale(locale)
                                     WallpaperUpdateWorker.requestImmediateUpdate(applicationContext)
+                                    // Último: puede recrear la activity y cancelar este scope.
+                                    applyLocale(locale)
                                 }
                             },
                             onThemeChange = { theme ->
@@ -116,4 +124,7 @@ class MainActivity : ComponentActivity() {
         val tag = if (locale == AppLocale.ES) "es" else "en"
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
     }
+
+    private fun deviceLocale(): AppLocale =
+        if (Locale.getDefault().language == "es") AppLocale.ES else AppLocale.EN
 }
