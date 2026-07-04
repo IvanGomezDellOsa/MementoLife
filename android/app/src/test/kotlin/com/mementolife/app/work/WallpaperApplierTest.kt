@@ -7,18 +7,27 @@ import com.mementolife.app.data.UserPreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import java.io.File
 import java.time.LocalDate
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class WallpaperApplierTest {
+
+    @Before
+    fun clearPersistedPreferences() {
+        // El archivo de DataStore puede sobrevivir entre métodos de test en el mismo
+        // sandbox de Robolectric; sin esto, el estado de un test se filtra al siguiente.
+        File(RuntimeEnvironment.getApplication().filesDir, "datastore").deleteRecursively()
+    }
 
     private fun resource(name: String): String =
         checkNotNull(javaClass.classLoader.getResourceAsStream(name)) { "recurso no encontrado: $name" }
