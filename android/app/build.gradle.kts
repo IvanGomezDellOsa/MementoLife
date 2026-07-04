@@ -27,6 +27,12 @@ android {
         getByName("main") {
             kotlin.srcDirs("src/main/kotlin")
         }
+        getByName("test") {
+            kotlin.srcDirs("src/test/kotlin")
+            // Los unit tests leen el dataset y los tokens directo de la fuente
+            // de verdad (render-core/, content/efemerides/), sin copias.
+            resources.srcDirs("../render-core", "../content/efemerides")
+        }
     }
 
     buildTypes {
