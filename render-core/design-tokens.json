@@ -1,0 +1,68 @@
+{
+  "canvas": {
+    "widthPx": 360,
+    "heightPx": 780
+  },
+  "colors": {
+    "background": {
+      "dark": "#161310",
+      "light": "#f4f0e8"
+    },
+    "ink": {
+      "dark": "#eae3d4",
+      "light": "#2b2721"
+    }
+  },
+  "typography": {
+    "fontFamily": "Fraunces",
+    "footer": {
+      "sizePx": 10,
+      "letterSpacingPx": 1.2,
+      "opacity": 0.55
+    },
+    "efemeride": {
+      "sizePx": 10.5,
+      "lineHeightMultiplier": 1.55,
+      "marginSidePx": 64,
+      "marginBottomPx": 32,
+      "opacity": {
+        "dark": 0.48,
+        "light": 0.55
+      }
+    }
+  },
+  "grid": {
+    "areaTopPx": 206,
+    "areaWidthPx": 360,
+    "areaHeightPx": 494,
+    "footerReservedPx": 28,
+    "usefulWidthPx": 326,
+    "marginSidePx": 17,
+    "weeks": {
+      "columns": 52,
+      "dotRadiusPx": 1.9,
+      "bandEveryRows": 10,
+      "bandGapPx": 4,
+      "currentRingRadiusPx": 2.95,
+      "currentRingStrokePx": 1.1
+    },
+    "months": {
+      "columns": 24,
+      "dotRadiusPx": 3.2,
+      "bandEveryRows": 5,
+      "bandGapPx": 6,
+      "currentRingRadiusPx": 4.6,
+      "currentRingStrokePx": 1.2
+    },
+    "opacity": {
+      "past": {
+        "dark": 0.90,
+        "light": 0.82
+      },
+      "future": {
+        "dark": 0.14,
+        "light": 0.15
+      }
+    }
+  }
+}

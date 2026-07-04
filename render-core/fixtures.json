@@ -1,0 +1,124 @@
+{
+  "fixtures": [
+    {
+      "id": "base_weeks_dark_es",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "base_weeks_light_en",
+      "view": "weeks",
+      "theme": "light",
+      "locale": "en",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "base_weeks_dark_en",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "en",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "base_weeks_light_es",
+      "view": "weeks",
+      "theme": "light",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "base_months_dark_en",
+      "view": "months",
+      "theme": "dark",
+      "locale": "en",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "base_months_light_es",
+      "view": "months",
+      "theme": "light",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "base_months_dark_es",
+      "view": "months",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "base_months_light_en",
+      "view": "months",
+      "theme": "light",
+      "locale": "en",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "edge_lifeYears_40",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "2000-06-10",
+      "today": "2040-06-10",
+      "lifeYears": 40,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "edge_lifeYears_100",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "1965-11-20",
+      "today": "2023-07-02",
+      "lifeYears": 100,
+      "efemerideEnabled": true
+    },
+    {
+      "id": "edge_efemeride_off",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": false
+    },
+    {
+      "id": "edge_feb29_leap_year",
+      "view": "months",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "2020-02-29",
+      "today": "2024-02-29",
+      "lifeYears": 80,
+      "efemerideEnabled": true
+    }
+  ]
+}

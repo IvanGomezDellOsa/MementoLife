@@ -40,6 +40,9 @@ android/*.keystore
 android/*.jks
 android/key.properties
 
+# Copias generadas por la tarea Gradle de assets (fuente de verdad: render-core/ y content/)
+android/app/src/main/assets/
+
 # ========================
 # DOCUMENTACIÓN INTERNA (no publicada aún)
 # ========================
