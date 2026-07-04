@@ -1,6 +1,7 @@
 package com.mementolife.app
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -69,9 +70,11 @@ class MainActivity : AppCompatActivity() {
                                 }
                             },
                         )
-                        subScreen == SubScreen.BATTERY_HELP -> BatteryHelpScreen(
-                            onBack = { subScreen = SubScreen.SETTINGS },
-                        )
+                        subScreen == SubScreen.BATTERY_HELP -> {
+                            // El back del sistema vuelve a settings en vez de cerrar la app.
+                            BackHandler { subScreen = SubScreen.SETTINGS }
+                            BatteryHelpScreen(onBack = { subScreen = SubScreen.SETTINGS })
+                        }
                         else -> SettingsScreen(
                             preferences = currentPrefs,
                             onLocaleChange = { locale ->

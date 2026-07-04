@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.mementolife.app.data.AssetSources
 import com.mementolife.app.data.UserPreferencesRepository
+import kotlinx.coroutines.CancellationException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -33,8 +34,15 @@ class WallpaperUpdateWorker(
             val applier = WallpaperApplier(applicationContext, preferencesRepository, tokens, efemerideRepositories, typeface)
             applier.applyIfNeeded(force = inputData.getBoolean(KEY_FORCE, false))
             Result.success()
+        } catch (cancellation: CancellationException) {
+            // La cancelación del worker (p. ej. REPLACE de un update inmediato por
+            // otro) no es un error: debe propagarse, no convertirse en retry.
+            throw cancellation
         } catch (error: Exception) {
-            Result.retry()
+            // Reintentos acotados: ante un error persistente no tiene sentido
+            // insistir con backoff infinito — la próxima ventana del periódico
+            // de 6 h ya es la siguiente oportunidad natural.
+            if (runAttemptCount < MAX_RUN_ATTEMPTS - 1) Result.retry() else Result.failure()
         }
     }
 
@@ -42,6 +50,7 @@ class WallpaperUpdateWorker(
         private const val PERIODIC_WORK_NAME = "wallpaper_update_periodic"
         private const val IMMEDIATE_WORK_NAME = "wallpaper_update_immediate"
         private const val KEY_FORCE = "force"
+        private const val MAX_RUN_ATTEMPTS = 3
 
         fun schedulePeriodic(context: Context) {
             val request = PeriodicWorkRequestBuilder<WallpaperUpdateWorker>(6, TimeUnit.HOURS).build()

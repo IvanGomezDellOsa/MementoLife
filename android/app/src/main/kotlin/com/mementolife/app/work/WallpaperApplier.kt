@@ -52,7 +52,10 @@ class WallpaperApplier(
     private fun screenSizePx(): Pair<Int, Int> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val bounds = windowManager.currentWindowMetrics.bounds
+            // maximumWindowMetrics (no current): esto corre en background con el
+            // application context, sin ventana; para un wallpaper lo que importa
+            // es el display físico completo.
+            val bounds = windowManager.maximumWindowMetrics.bounds
             return bounds.width() to bounds.height()
         }
         val metrics = context.resources.displayMetrics
