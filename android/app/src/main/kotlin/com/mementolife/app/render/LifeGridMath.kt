@@ -50,7 +50,11 @@ object LifeGridMath {
     fun percentLived(yearsLived: Double, lifeYears: Int): Int =
         (yearsLived / lifeYears * 100).roundToInt().coerceIn(0, 100)
 
-    /** "% · semana X de Y" / "% · week X of Y" (ídem "mes"/"month"). Sin la palabra "vivido"/"lived". */
+    /**
+     * "{n} % · semana X de Y" / "{n} % · week X of Y" (ídem "mes"/"month").
+     * Con espacio antes del signo %, como en reference.html; sin "vivido"/"lived"
+     * (decisión del gate F0).
+     */
     fun footerText(view: GridView, locale: AppLocale, currentNumber: Int, total: Int, percent: Int): String {
         val unit = when (view to locale) {
             GridView.WEEKS to AppLocale.ES -> "semana"
@@ -60,8 +64,8 @@ object LifeGridMath {
             else -> error("combinación no soportada")
         }
         return when (locale) {
-            AppLocale.ES -> "$percent% · $unit $currentNumber de $total"
-            AppLocale.EN -> "$percent% · $unit $currentNumber of $total"
+            AppLocale.ES -> "$percent % · $unit $currentNumber de $total"
+            AppLocale.EN -> "$percent % · $unit $currentNumber of $total"
         }
     }
 }

@@ -84,6 +84,14 @@ class GoldenGenerationTest {
             FileOutputStream(File(outputDir, "${fixture.id}.png")).use { out ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             }
+
+            // Muestra a resolución nativa de dispositivo (plan §5) para verificar el escalado.
+            if (fixture.id == "base_weeks_dark_es") {
+                val hiRes = renderer.render(request, 1179, 2556)
+                FileOutputStream(File(outputDir, "${fixture.id}_1179x2556.png")).use { out ->
+                    hiRes.compress(Bitmap.CompressFormat.PNG, 100, out)
+                }
+            }
         }
     }
 }

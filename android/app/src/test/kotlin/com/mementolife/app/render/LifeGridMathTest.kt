@@ -76,11 +76,11 @@ class LifeGridMathTest {
     @Test
     fun `footerText en espanol para semanas y meses`() {
         assertEquals(
-            "42% · semana 1742 de 4160",
+            "42 % · semana 1742 de 4160",
             LifeGridMath.footerText(GridView.WEEKS, AppLocale.ES, 1742, 4160, 42),
         )
         assertEquals(
-            "42% · mes 402 de 960",
+            "42 % · mes 402 de 960",
             LifeGridMath.footerText(GridView.MONTHS, AppLocale.ES, 402, 960, 42),
         )
     }
@@ -88,11 +88,11 @@ class LifeGridMathTest {
     @Test
     fun `footerText en ingles para semanas y meses`() {
         assertEquals(
-            "42% · week 1742 of 4160",
+            "42 % · week 1742 of 4160",
             LifeGridMath.footerText(GridView.WEEKS, AppLocale.EN, 1742, 4160, 42),
         )
         assertEquals(
-            "42% · month 402 of 960",
+            "42 % · month 402 of 960",
             LifeGridMath.footerText(GridView.MONTHS, AppLocale.EN, 402, 960, 42),
         )
     }
