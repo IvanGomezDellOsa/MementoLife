@@ -63,13 +63,6 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.16.1")
 }
 
-// Temporal: ver salida del diagnóstico de EfemerideLengthDiagnosticTest en el log de CI.
-tasks.withType<Test> {
-    testLogging {
-        showStandardStreams = true
-    }
-}
-
 // El diseño y el dataset viven en render-core/ y content/, fuera de android/,
 // para que no exista una segunda copia de la verdad. Esta tarea los sincroniza
 // a assets/ en cada build; el contenido copiado no se versiona (ver .gitignore).
