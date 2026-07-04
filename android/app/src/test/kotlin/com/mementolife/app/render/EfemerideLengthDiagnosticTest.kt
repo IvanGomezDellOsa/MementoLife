@@ -62,7 +62,7 @@ class EfemerideLengthDiagnosticTest {
             .decodeFromString<List<EfemerideEntry>>(resource("es.json"))
 
         val overflowing = entries.filter { wrap(it.textEs ?: "") > safeLines }
-        println("DIAG run ${System.nanoTime()}")
+        println("DIAG run 2 ${System.nanoTime()}")
         println("DIAG espacio seguro: ${safeLines} lineas (${availableHeight}px util / ${lineHeight}px por linea)")
         println("DIAG total entradas: ${entries.size}, exceden el espacio seguro: ${overflowing.size}")
         overflowing.take(10).forEach {
