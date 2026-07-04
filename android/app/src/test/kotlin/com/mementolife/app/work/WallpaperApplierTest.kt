@@ -7,31 +7,28 @@ import com.mementolife.app.data.UserPreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import java.io.File
 import java.time.LocalDate
+import java.util.UUID
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34])
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class WallpaperApplierTest {
 
-    @Before
-    fun clearPersistedPreferences() {
-        // El archivo de DataStore puede sobrevivir entre métodos de test en el mismo
-        // sandbox de Robolectric; sin esto, el estado de un test se filtra al siguiente.
-        File(RuntimeEnvironment.getApplication().filesDir, "datastore").deleteRecursively()
-    }
-
     private fun resource(name: String): String =
         checkNotNull(javaClass.classLoader.getResourceAsStream(name)) { "recurso no encontrado: $name" }
             .bufferedReader().readText()
+
+    // Nombre de store único por test: UserPreferencesRepository ya no comparte
+    // una única instancia de DataStore por proceso (ver su comentario de clase).
+    private fun newPrefsRepository() =
+        UserPreferencesRepository(RuntimeEnvironment.getApplication(), storeName = "test_${UUID.randomUUID()}")
 
     private fun newApplier(prefsRepository: UserPreferencesRepository): WallpaperApplier {
         val tokens = DesignTokens.parse(resource("design-tokens.json"))
@@ -44,14 +41,14 @@ class WallpaperApplierTest {
 
     @Test
     fun `sin fecha de nacimiento no actualiza el estado`() = runBlocking {
-        val prefsRepository = UserPreferencesRepository(RuntimeEnvironment.getApplication())
+        val prefsRepository = newPrefsRepository()
         newApplier(prefsRepository).applyIfNeeded()
         assertEquals(null, prefsRepository.preferences.first().lastAppliedDate)
     }
 
     @Test
     fun `con fecha de nacimiento renderiza y guarda la fecha de hoy`() = runBlocking {
-        val prefsRepository = UserPreferencesRepository(RuntimeEnvironment.getApplication())
+        val prefsRepository = newPrefsRepository()
         prefsRepository.setBirthDate(LocalDate.of(1990, 1, 1))
 
         newApplier(prefsRepository).applyIfNeeded()
@@ -61,7 +58,7 @@ class WallpaperApplierTest {
 
     @Test
     fun `llamar dos veces el mismo dia no rompe la idempotencia`() = runBlocking {
-        val prefsRepository = UserPreferencesRepository(RuntimeEnvironment.getApplication())
+        val prefsRepository = newPrefsRepository()
         prefsRepository.setBirthDate(LocalDate.of(1990, 1, 1))
         val applier = newApplier(prefsRepository)
 
