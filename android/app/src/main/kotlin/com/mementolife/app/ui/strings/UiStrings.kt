@@ -10,7 +10,6 @@ import com.mementolife.app.data.AppLocale
  */
 data class UiStrings(
     val onboardingTitle: String,
-    val onboardingSubtitle: String,
     val birthDateLabel: String,
     val birthDatePlaceholder: String,
     val onboardingConfirm: String,
@@ -38,6 +37,7 @@ data class UiStrings(
     val applyButton: String,
     val applySuccess: String,
     val applyError: String,
+    val applyTimeout: String,
     val batteryHelpButton: String,
 
     val batteryHelpTitle: String,
@@ -58,7 +58,6 @@ data class UiStrings(
 
         private val ES = UiStrings(
             onboardingTitle = "MementoLife",
-            onboardingSubtitle = "Tu vida, semana a semana.",
             birthDateLabel = "Fecha de nacimiento",
             birthDatePlaceholder = "Elegir fecha",
             onboardingConfirm = "Empezar",
@@ -86,6 +85,7 @@ data class UiStrings(
             applyButton = "Aplicar fondo de bloqueo",
             applySuccess = "Fondo actualizado",
             applyError = "No se pudo aplicar. Probá la ayuda de batería.",
+            applyTimeout = "Está tardando más de lo normal (pasa en algunos celulares) — puede terminar de aplicarse solo en unos minutos.",
             batteryHelpButton = "¿No se actualiza?",
 
             batteryHelpTitle = "Mantené el fondo actualizado",
@@ -102,7 +102,6 @@ data class UiStrings(
 
         private val EN = UiStrings(
             onboardingTitle = "MementoLife",
-            onboardingSubtitle = "Your life, week by week.",
             birthDateLabel = "Date of birth",
             birthDatePlaceholder = "Pick a date",
             onboardingConfirm = "Start",
@@ -130,6 +129,7 @@ data class UiStrings(
             applyButton = "Apply lock screen",
             applySuccess = "Wallpaper updated",
             applyError = "Couldn't apply it. Try the battery help.",
+            applyTimeout = "Taking longer than usual (happens on some phones) — it may still finish applying on its own in a few minutes.",
             batteryHelpButton = "Not updating?",
 
             batteryHelpTitle = "Keep the wallpaper updating",

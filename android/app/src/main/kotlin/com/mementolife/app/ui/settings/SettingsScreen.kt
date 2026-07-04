@@ -49,6 +49,7 @@ import com.mementolife.app.render.GridView
 import com.mementolife.app.render.Theme
 import com.mementolife.app.ui.common.BirthDatePickerDialog
 import com.mementolife.app.ui.strings.UiStrings
+import com.mementolife.app.work.ApplyOutcome
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -68,11 +69,11 @@ fun SettingsScreen(
     onEfemerideEnabledChange: (Boolean) -> Unit,
     onOpenBatteryHelp: () -> Unit,
     onOpenPreview: () -> Unit,
-    onApplyNow: suspend () -> Boolean,
+    onApplyNow: suspend () -> ApplyOutcome,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     var applying by remember { mutableStateOf(false) }
-    var applyResult by remember { mutableStateOf<Boolean?>(null) }
+    var applyResult by remember { mutableStateOf<ApplyOutcome?>(null) }
     val scope = rememberCoroutineScope()
 
     Column(
@@ -185,12 +186,13 @@ fun SettingsScreen(
                 }
             }
         }
-        applyResult?.let { success ->
-            Text(
-                if (success) strings.applySuccess else strings.applyError,
-                color = if (success) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-            )
+        applyResult?.let { outcome ->
+            val (text, color) = when (outcome) {
+                ApplyOutcome.SUCCESS -> strings.applySuccess to MaterialTheme.colorScheme.primary
+                ApplyOutcome.FAILURE -> strings.applyError to MaterialTheme.colorScheme.error
+                ApplyOutcome.TIMEOUT -> strings.applyTimeout to MaterialTheme.colorScheme.onSurfaceVariant
+            }
+            Text(text, color = color, style = MaterialTheme.typography.bodySmall)
         }
 
         TextButton(onClick = onOpenBatteryHelp) {

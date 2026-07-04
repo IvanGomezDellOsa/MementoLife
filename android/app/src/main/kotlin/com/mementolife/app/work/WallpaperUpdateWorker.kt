@@ -14,7 +14,13 @@ import androidx.work.workDataOf
 import com.mementolife.app.data.UserPreferencesRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.TimeUnit
+
+/** Resultado del botón "aplicar ahora" — TIMEOUT no es lo mismo que FAILURE: el
+ * trabajo sigue encolado y puede terminar de aplicarse solo (pasó en un Xiaomi
+ * real: tardó pero terminó aplicando), simplemente tardó más de lo que esperamos. */
+enum class ApplyOutcome { SUCCESS, FAILURE, TIMEOUT }
 
 /**
  * Chequeo periódico cada 6 h (plan §6.2, decisión cerrada): el worker es casi
@@ -50,6 +56,7 @@ class WallpaperUpdateWorker(
         private const val IMMEDIATE_WORK_NAME = "wallpaper_update_immediate"
         private const val KEY_FORCE = "force"
         private const val MAX_RUN_ATTEMPTS = 3
+        private const val APPLY_TIMEOUT_MS = 30_000L
 
         fun schedulePeriodic(context: Context) {
             val request = PeriodicWorkRequestBuilder<WallpaperUpdateWorker>(6, TimeUnit.HOURS).build()
@@ -67,13 +74,23 @@ class WallpaperUpdateWorker(
          * Igual que [requestImmediateUpdate] pero espera el resultado — para el botón
          * "aplicar ahora" de settings, que necesita mostrarle al usuario si funcionó
          * o no (antes esto era una caja negra sin ninguna señal de fallo).
+         *
+         * Con timeout: algunos OEMs (Xiaomi/MIUI confirmado) demoran el arranque del
+         * proceso en segundo plano incluso con batería sin restricciones concedida —
+         * sin esto, el botón quedaba girando indefinidamente en vez de avisar algo.
          */
-        suspend fun applyNowAndAwaitResult(context: Context): Boolean {
+        suspend fun applyNowAndAwaitResult(context: Context): ApplyOutcome {
             val workManager = WorkManager.getInstance(context)
             val request = buildImmediateRequest(force = true)
             workManager.enqueueUniqueWork(IMMEDIATE_WORK_NAME, ExistingWorkPolicy.REPLACE, request)
-            val info = workManager.getWorkInfoByIdFlow(request.id).first { it != null && it.state.isFinished }
-            return info?.state == WorkInfo.State.SUCCEEDED
+            val info = withTimeoutOrNull(APPLY_TIMEOUT_MS) {
+                workManager.getWorkInfoByIdFlow(request.id).first { it != null && it.state.isFinished }
+            }
+            return when {
+                info == null -> ApplyOutcome.TIMEOUT
+                info.state == WorkInfo.State.SUCCEEDED -> ApplyOutcome.SUCCESS
+                else -> ApplyOutcome.FAILURE
+            }
         }
 
         private fun buildImmediateRequest(force: Boolean): OneTimeWorkRequest =

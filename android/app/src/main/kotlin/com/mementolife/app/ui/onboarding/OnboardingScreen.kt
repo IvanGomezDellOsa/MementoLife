@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mementolife.app.ui.common.BirthDatePickerDialog
 import com.mementolife.app.ui.strings.UiStrings
@@ -52,11 +51,6 @@ fun OnboardingScreen(strings: UiStrings, onConfirm: (birthDate: LocalDate) -> Un
                     strings.onboardingTitle,
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    strings.onboardingSubtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
                 )
                 OutlinedButton(onClick = { showDatePicker = true }, modifier = Modifier.fillMaxWidth()) {
                     val label = birthDate?.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
