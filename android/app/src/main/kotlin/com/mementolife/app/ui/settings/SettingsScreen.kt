@@ -2,13 +2,28 @@ package com.mementolife.app.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Timeline
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.Wallpaper
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -21,12 +36,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.mementolife.app.R
 import com.mementolife.app.data.AppLocale
 import com.mementolife.app.data.MAX_LIFE_YEARS
 import com.mementolife.app.data.MIN_LIFE_YEARS
@@ -34,98 +48,99 @@ import com.mementolife.app.data.UserPreferences
 import com.mementolife.app.render.GridView
 import com.mementolife.app.render.Theme
 import com.mementolife.app.ui.common.BirthDatePickerDialog
+import com.mementolife.app.ui.strings.UiStrings
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.util.Locale
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    strings: UiStrings,
     preferences: UserPreferences,
     onLocaleChange: (AppLocale) -> Unit,
     onThemeChange: (Theme) -> Unit,
     onViewChange: (GridView) -> Unit,
-    onBirthDateChange: (java.time.LocalDate) -> Unit,
+    onBirthDateChange: (LocalDate) -> Unit,
     onLifeYearsChange: (Int) -> Unit,
     onEfemerideEnabledChange: (Boolean) -> Unit,
     onOpenBatteryHelp: () -> Unit,
+    onOpenPreview: () -> Unit,
+    onApplyNow: suspend () -> Boolean,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
+    var applying by remember { mutableStateOf(false) }
+    var applyResult by remember { mutableStateOf<Boolean?>(null) }
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(stringResource(R.string.settings_title))
+        Text(strings.settingsTitle, style = MaterialTheme.typography.headlineSmall)
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.onboarding_language_label))
+        SettingCard(Icons.Filled.Language, strings.languageLabel, strings.languageCaption) {
             SingleChoiceSegmentedButtonRow {
                 SegmentedButton(
                     selected = preferences.locale == AppLocale.ES,
                     onClick = { onLocaleChange(AppLocale.ES) },
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-                ) { Text(stringResource(R.string.language_es)) }
+                ) { Text(strings.languageEs) }
                 SegmentedButton(
                     selected = preferences.locale == AppLocale.EN,
                     onClick = { onLocaleChange(AppLocale.EN) },
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-                ) { Text(stringResource(R.string.language_en)) }
+                ) { Text(strings.languageEn) }
             }
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.onboarding_birth_date_label))
-            OutlinedButton(onClick = { showDatePicker = true }) {
-                val label = preferences.birthDate?.format(
-                    DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                        .withLocale(Locale(preferences.locale.name.lowercase())),
-                ) ?: stringResource(R.string.onboarding_birth_date_button)
-                Text(label)
-            }
-        }
-
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.onboarding_theme_label))
+        SettingCard(Icons.Filled.DarkMode, strings.themeLabel, strings.themeCaption) {
             SingleChoiceSegmentedButtonRow {
                 SegmentedButton(
                     selected = preferences.theme == Theme.DARK,
                     onClick = { onThemeChange(Theme.DARK) },
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-                ) { Text(stringResource(R.string.theme_dark)) }
+                ) { Text(strings.themeDark) }
                 SegmentedButton(
                     selected = preferences.theme == Theme.LIGHT,
                     onClick = { onThemeChange(Theme.LIGHT) },
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-                ) { Text(stringResource(R.string.theme_light)) }
+                ) { Text(strings.themeLight) }
             }
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(R.string.onboarding_view_label))
+        SettingCard(Icons.Filled.GridView, strings.viewLabel, strings.viewCaption) {
             SingleChoiceSegmentedButtonRow {
                 SegmentedButton(
                     selected = preferences.view == GridView.WEEKS,
                     onClick = { onViewChange(GridView.WEEKS) },
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
-                ) { Text(stringResource(R.string.view_weeks)) }
+                ) { Text(strings.viewWeeks) }
                 SegmentedButton(
                     selected = preferences.view == GridView.MONTHS,
                     onClick = { onViewChange(GridView.MONTHS) },
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
-                ) { Text(stringResource(R.string.view_months)) }
+                ) { Text(strings.viewMonths) }
             }
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        SettingCard(Icons.Filled.Cake, strings.birthDateLabel, strings.birthDateSettingCaption) {
+            OutlinedButton(onClick = { showDatePicker = true }) {
+                val label = preferences.birthDate?.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                    ?: strings.birthDatePlaceholder
+                Text(label)
+            }
+        }
+
+        SettingCard(Icons.Filled.Timeline, strings.lifeExpectancyLabel(preferences.lifeYears), "") {
             // Estado local durante el arrastre: recién al soltar se persiste y se
             // re-renderiza el wallpaper (un render por gesto, no uno por pixel).
             var sliderYears by remember(preferences.lifeYears) { mutableStateOf(preferences.lifeYears) }
-            Text(stringResource(R.string.settings_life_expectancy_label, sliderYears))
             Slider(
                 value = sliderYears.toFloat(),
                 onValueChange = { sliderYears = it.roundToInt() },
@@ -135,28 +150,82 @@ fun SettingsScreen(
             )
         }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(stringResource(R.string.settings_efemeride_label))
-            Switch(checked = preferences.efemerideEnabled, onCheckedChange = onEfemerideEnabledChange)
+        SettingCard(Icons.Filled.Info, strings.efemerideLabel, strings.efemerideCaption) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Switch(checked = preferences.efemerideEnabled, onCheckedChange = onEfemerideEnabledChange)
+            }
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
+            OutlinedButton(onClick = onOpenPreview, modifier = Modifier.fillMaxWidth().weight(1f)) {
+                Icon(Icons.Filled.Visibility, contentDescription = null, modifier = Modifier.size(18.dp))
+                Text(" " + strings.previewButton)
+            }
+            Button(
+                onClick = {
+                    applying = true
+                    applyResult = null
+                    scope.launch {
+                        applyResult = onApplyNow()
+                        applying = false
+                    }
+                },
+                enabled = !applying,
+                modifier = Modifier.fillMaxWidth().weight(1f),
+            ) {
+                if (applying) {
+                    CircularProgressIndicator(modifier = Modifier.size(18.dp))
+                } else {
+                    Icon(Icons.Filled.Wallpaper, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Text(" " + strings.applyButton)
+                }
+            }
+        }
+        applyResult?.let { success ->
+            Text(
+                if (success) strings.applySuccess else strings.applyError,
+                color = if (success) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+            )
         }
 
         TextButton(onClick = onOpenBatteryHelp) {
-            Text(stringResource(R.string.settings_battery_help_button))
+            Text(strings.batteryHelpButton)
         }
     }
 
     if (showDatePicker) {
         BirthDatePickerDialog(
             initialDate = preferences.birthDate,
+            strings = strings,
             onDismiss = { showDatePicker = false },
             onConfirm = {
                 onBirthDateChange(it)
                 showDatePicker = false
             },
         )
+    }
+}
+
+@Composable
+private fun SettingCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    caption: String,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Icon(icon, contentDescription = null)
+                Column {
+                    Text(label, style = MaterialTheme.typography.titleMedium)
+                    if (caption.isNotEmpty()) {
+                        Text(caption, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+            content()
+        }
     }
 }

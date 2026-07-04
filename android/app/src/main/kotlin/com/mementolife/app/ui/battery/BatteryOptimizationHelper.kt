@@ -7,12 +7,12 @@ import android.net.Uri
 import android.provider.Settings
 
 /**
- * Deep-links a las pantallas de exención de batería / autoinicio (plan §10.1).
- * Los intents de autostart de OEM no son API pública: son best-effort y varían
- * por ROM/versión, por eso cada intento cae al siguiente si no resuelve.
- * Evita `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` a propósito: exige declarar un
- * permiso especial escrutado por la política de Play; el detalle de la app
- * (con su sección de batería) logra lo mismo sin ese costo.
+ * Deep-links a las pantallas de autoinicio / batería sin restricciones (plan §10.1).
+ * Son dos pantallas DISTINTAS en Xiaomi/MIUI (autoinicio vive en la app de
+ * seguridad; batería sin restricciones en los ajustes del sistema) — antes un
+ * solo botón decía "ajustes de batería" pero abría autoinicio, lo cual confundía.
+ * Los intents de autoinicio de OEM no son API pública: son best-effort y caen
+ * al siguiente si no resuelven.
  */
 object BatteryOptimizationHelper {
 
@@ -23,10 +23,19 @@ object BatteryOptimizationHelper {
         Intent().setClassName("com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity"),
     )
 
-    fun openBatterySettings(context: Context) {
+    fun openAutostartSettings(context: Context) {
         for (intent in oemAutostartIntents) {
             if (tryStart(context, intent)) return
         }
+        tryStart(context, appDetailsIntent(context))
+    }
+
+    /**
+     * Lista del sistema de optimización de batería por app (sin el permiso especial
+     * `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`, escrutado por la política de Play).
+     */
+    fun openUnrestrictedBatterySettings(context: Context) {
+        if (tryStart(context, Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATIONS_SETTINGS))) return
         tryStart(context, appDetailsIntent(context))
     }
 

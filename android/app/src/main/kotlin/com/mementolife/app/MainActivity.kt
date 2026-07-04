@@ -1,10 +1,9 @@
 package com.mementolife.app
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -16,29 +15,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.core.os.LocaleListCompat
 import com.mementolife.app.data.AppLocale
 import com.mementolife.app.data.UserPreferencesRepository
 import com.mementolife.app.render.Theme
 import com.mementolife.app.ui.battery.BatteryHelpScreen
 import com.mementolife.app.ui.onboarding.OnboardingScreen
+import com.mementolife.app.ui.preview.PreviewScreen
 import com.mementolife.app.ui.settings.SettingsScreen
+import com.mementolife.app.ui.strings.UiStrings
 import com.mementolife.app.ui.theme.MementoLifeTheme
+import com.mementolife.app.work.WallpaperApplier
 import com.mementolife.app.work.WallpaperUpdateWorker
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-private enum class SubScreen { SETTINGS, BATTERY_HELP }
+private enum class SubScreen { SETTINGS, BATTERY_HELP, PREVIEW }
 
-// AppCompatActivity (no ComponentActivity): setApplicationLocales solo aplica el
-// idioma en API < 33 cuando la activity es AppCompat; en 33+ delega en el sistema.
-class MainActivity : AppCompatActivity() {
+// El idioma de la UI vive en DataStore (prefs.locale) y se lee directo con
+// UiStrings.of(...) en cada composable: no hay AppCompatDelegate ni
+// Activity.recreate() de por medio (esa combinación crasheaba al cambiar de
+// idioma, reportado en Xiaomi Redmi Note 11), así que ComponentActivity alcanza.
+class MainActivity : ComponentActivity() {
 
     private lateinit var preferencesRepository: UserPreferencesRepository
+    private lateinit var wallpaperApplier: WallpaperApplier
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferencesRepository = UserPreferencesRepository(applicationContext)
+        wallpaperApplier = WallpaperApplier.create(applicationContext, preferencesRepository)
 
         setContent {
             val prefs by preferencesRepository.preferences.collectAsState(initial = null)
@@ -51,38 +56,42 @@ class MainActivity : AppCompatActivity() {
                     when {
                         currentPrefs == null -> Unit
                         currentPrefs.birthDate == null -> OnboardingScreen(
-                            // Pre-seleccionado por el locale del dispositivo (plan §6.1), no
-                            // por el default de DataStore, que todavía no dice nada del usuario.
-                            initialLocale = deviceLocale(),
-                            initialTheme = currentPrefs.theme,
-                            initialView = currentPrefs.view,
-                            onConfirm = { locale, birthDate, theme, view ->
+                            strings = UiStrings.of(deviceLocale()),
+                            onConfirm = { birthDate ->
                                 scope.launch {
-                                    preferencesRepository.setLocale(locale)
-                                    preferencesRepository.setTheme(theme)
-                                    preferencesRepository.setView(view)
+                                    // Idioma y tema se detectan del dispositivo (sin popup);
+                                    // vista queda en el default (semanas), editable en settings.
+                                    preferencesRepository.setLocale(deviceLocale())
+                                    preferencesRepository.setTheme(if (isSystemDark()) Theme.DARK else Theme.LIGHT)
                                     preferencesRepository.setBirthDate(birthDate)
                                     WallpaperUpdateWorker.schedulePeriodic(applicationContext)
                                     WallpaperUpdateWorker.requestImmediateUpdate(applicationContext)
-                                    // Último a propósito: puede recrear la activity y cancelar
-                                    // este scope; todo lo anterior ya tiene que estar encolado.
-                                    applyLocale(locale)
                                 }
                             },
                         )
                         subScreen == SubScreen.BATTERY_HELP -> {
                             // El back del sistema vuelve a settings en vez de cerrar la app.
                             BackHandler { subScreen = SubScreen.SETTINGS }
-                            BatteryHelpScreen(onBack = { subScreen = SubScreen.SETTINGS })
+                            BatteryHelpScreen(
+                                strings = UiStrings.of(currentPrefs.locale),
+                                onBack = { subScreen = SubScreen.SETTINGS },
+                            )
+                        }
+                        subScreen == SubScreen.PREVIEW -> {
+                            BackHandler { subScreen = SubScreen.SETTINGS }
+                            PreviewScreen(
+                                strings = UiStrings.of(currentPrefs.locale),
+                                renderPreview = { wallpaperApplier.renderPreview() },
+                                onBack = { subScreen = SubScreen.SETTINGS },
+                            )
                         }
                         else -> SettingsScreen(
+                            strings = UiStrings.of(currentPrefs.locale),
                             preferences = currentPrefs,
                             onLocaleChange = { locale ->
                                 scope.launch {
                                     preferencesRepository.setLocale(locale)
                                     WallpaperUpdateWorker.requestImmediateUpdate(applicationContext)
-                                    // Último: puede recrear la activity y cancelar este scope.
-                                    applyLocale(locale)
                                 }
                             },
                             onThemeChange = { theme ->
@@ -116,6 +125,8 @@ class MainActivity : AppCompatActivity() {
                                 }
                             },
                             onOpenBatteryHelp = { subScreen = SubScreen.BATTERY_HELP },
+                            onOpenPreview = { subScreen = SubScreen.PREVIEW },
+                            onApplyNow = { WallpaperUpdateWorker.applyNowAndAwaitResult(applicationContext) },
                         )
                     }
                 }
@@ -123,11 +134,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun applyLocale(locale: AppLocale) {
-        val tag = if (locale == AppLocale.ES) "es" else "en"
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
-    }
-
     private fun deviceLocale(): AppLocale =
         if (Locale.getDefault().language == "es") AppLocale.ES else AppLocale.EN
+
+    private fun isSystemDark(): Boolean =
+        (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
 }
