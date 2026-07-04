@@ -1,0 +1,55 @@
+# ========================
+# SISTEMA Y IDEs (Global)
+# ========================
+.DS_Store
+Thumbs.db
+.history
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+*.iml
+*.swp
+*.code-workspace
+
+# ========================
+# PYTHON
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# ========================
+# ANDROID / GRADLE (Kotlin nativo)
+# ========================
+android/.gradle/
+android/local.properties
+android/**/build/
+android/.idea/
+android/**/*.iml
+android/captures/
+android/.cxx/
+android/*.keystore
+android/*.jks
+android/key.properties
+
+# ========================
+# DOCUMENTACIÓN INTERNA (no publicada aún)
+# ========================
+README.md
+README.en.md
+docs/
+
+# ========================
+# HERRAMIENTAS / SESIONES TEMPORALES
+# ========================
+.claude/
+.cowork/
+*_probe.txt
