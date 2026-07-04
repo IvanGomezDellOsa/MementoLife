@@ -35,7 +35,7 @@ object BatteryOptimizationHelper {
      * `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`, escrutado por la política de Play).
      */
     fun openUnrestrictedBatterySettings(context: Context) {
-        if (tryStart(context, Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATIONS_SETTINGS))) return
+        if (tryStart(context, Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))) return
         tryStart(context, appDetailsIntent(context))
     }
 

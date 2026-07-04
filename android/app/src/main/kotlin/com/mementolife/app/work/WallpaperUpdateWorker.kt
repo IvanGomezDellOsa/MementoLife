@@ -72,8 +72,8 @@ class WallpaperUpdateWorker(
             val workManager = WorkManager.getInstance(context)
             val request = buildImmediateRequest(force = true)
             workManager.enqueueUniqueWork(IMMEDIATE_WORK_NAME, ExistingWorkPolicy.REPLACE, request)
-            val info = workManager.getWorkInfoByIdFlow(request.id).first { it.state.isFinished }
-            return info.state == WorkInfo.State.SUCCEEDED
+            val info = workManager.getWorkInfoByIdFlow(request.id).first { it != null && it.state.isFinished }
+            return info?.state == WorkInfo.State.SUCCEEDED
         }
 
         private fun buildImmediateRequest(force: Boolean): OneTimeWorkRequest =
