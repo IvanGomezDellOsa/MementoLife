@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">MementoLife</string>
+
+    <string name="language_en">English</string>
+    <string name="language_es">Spanish</string>
+
+    <string name="onboarding_title">MementoLife</string>
+    <string name="onboarding_subtitle">Your life, as a lock screen grid.</string>
+    <string name="onboarding_language_label">Language</string>
+    <string name="onboarding_birth_date_label">Date of birth</string>
+    <string name="onboarding_birth_date_button">Select date</string>
+    <string name="onboarding_theme_label">Theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="onboarding_view_label">View</string>
+    <string name="view_weeks">Weeks</string>
+    <string name="view_months">Months</string>
+    <string name="onboarding_confirm_button">Start</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_life_expectancy_label">Life expectancy: %1$d years</string>
+    <string name="settings_efemeride_label">Show daily fact</string>
+    <string name="settings_battery_help_button">Wallpaper not updating?</string>
+
+    <string name="battery_help_title">Keep the wallpaper updating</string>
+    <string name="battery_help_body">Some phone manufacturers (Xiaomi, Huawei, Samsung, and others) aggressively restrict background apps to save battery. If your lock screen stops updating, exclude MementoLife from battery optimization and allow it to auto-start.</string>
+    <string name="battery_help_open_settings_button">Open battery settings</string>
+    <string name="battery_help_back">Back</string>
+
+    <string name="date_picker_confirm">OK</string>
+    <string name="date_picker_cancel">Cancel</string>
 </resources>

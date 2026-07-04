@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">MementoLife</string>
+
+    <string name="language_en">Inglés</string>
+    <string name="language_es">Español</string>
+
+    <string name="onboarding_title">MementoLife</string>
+    <string name="onboarding_subtitle">Tu vida, como grilla en la pantalla de bloqueo.</string>
+    <string name="onboarding_language_label">Idioma</string>
+    <string name="onboarding_birth_date_label">Fecha de nacimiento</string>
+    <string name="onboarding_birth_date_button">Elegir fecha</string>
+    <string name="onboarding_theme_label">Tema</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="theme_light">Claro</string>
+    <string name="onboarding_view_label">Vista</string>
+    <string name="view_weeks">Semanas</string>
+    <string name="view_months">Meses</string>
+    <string name="onboarding_confirm_button">Empezar</string>
+
+    <string name="settings_title">Configuración</string>
+    <string name="settings_life_expectancy_label">Esperanza de vida: %1$d años</string>
+    <string name="settings_efemeride_label">Mostrar efeméride del día</string>
+    <string name="settings_battery_help_button">¿El fondo no se actualiza?</string>
+
+    <string name="battery_help_title">Mantené el fondo actualizado</string>
+    <string name="battery_help_body">Algunos fabricantes (Xiaomi, Huawei, Samsung y otros) restringen agresivamente las apps en segundo plano para ahorrar batería. Si tu pantalla de bloqueo deja de actualizarse, excluí a MementoLife de la optimización de batería y permitile el inicio automático.</string>
+    <string name="battery_help_open_settings_button">Abrir ajustes de batería</string>
+    <string name="battery_help_back">Volver</string>
+
+    <string name="date_picker_confirm">Aceptar</string>
+    <string name="date_picker_cancel">Cancelar</string>
+</resources>
