@@ -24,7 +24,7 @@
 
     <string name="battery_help_title">Mantené el fondo actualizado</string>
     <string name="battery_help_body">Algunos fabricantes (Xiaomi, Huawei, Samsung y otros) restringen agresivamente las apps en segundo plano para ahorrar batería. Si tu pantalla de bloqueo deja de actualizarse, excluí a MementoLife de la optimización de batería y permitile el inicio automático.</string>
-    <string name="battery_help_low_usage">No te preocupes por la batería: el impacto de MementoLife es insignificante. Se despierta unas pocas veces por día para chequear si cambió la fecha —una tarea de milisegundos— y solo redibuja el fondo una vez al día. Esta exención únicamente evita que el teléfono bloquee esos chequeos breves; no aumenta el consumo.</string>
+    <string name="battery_help_low_usage">Tranquilo: el consumo de batería es mínimo, solo se actualiza una vez al día.</string>
     <string name="battery_help_open_settings_button">Abrir ajustes de batería</string>
     <string name="battery_help_back">Volver</string>
 

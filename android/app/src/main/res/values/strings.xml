@@ -24,7 +24,7 @@
 
     <string name="battery_help_title">Keep the wallpaper updating</string>
     <string name="battery_help_body">Some phone manufacturers (Xiaomi, Huawei, Samsung, and others) aggressively restrict background apps to save battery. If your lock screen stops updating, exclude MementoLife from battery optimization and allow it to auto-start.</string>
-    <string name="battery_help_low_usage">Don\'t worry about battery: MementoLife\'s impact is negligible. It briefly checks a few times a day whether the date changed — a task of milliseconds — and only redraws the wallpaper once a day. This exemption just keeps your phone from blocking those brief check-ins; it doesn\'t increase consumption.</string>
+    <string name="battery_help_low_usage">Don\'t worry — battery use is minimal, it only updates once a day.</string>
     <string name="battery_help_open_settings_button">Open battery settings</string>
     <string name="battery_help_back">Back</string>
 
