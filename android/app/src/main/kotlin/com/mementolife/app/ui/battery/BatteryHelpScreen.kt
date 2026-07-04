@@ -34,7 +34,7 @@ fun BatteryHelpScreen(strings: UiStrings, onBack: () -> Unit) {
             Text(strings.unrestrictedBatteryButton)
         }
 
-        Text(strings.miuiTip, style = MaterialTheme.typography.bodySmall)
+        Text(strings.dualScreenNote, style = MaterialTheme.typography.bodySmall)
 
         TextButton(onClick = onBack) { Text(strings.back) }
     }

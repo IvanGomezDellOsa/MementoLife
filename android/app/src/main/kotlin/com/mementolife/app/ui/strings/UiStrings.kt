@@ -45,7 +45,7 @@ data class UiStrings(
     val batteryHelpLowUsage: String,
     val autostartButton: String,
     val unrestrictedBatteryButton: String,
-    val miuiTip: String,
+    val dualScreenNote: String,
 
     val back: String,
     val datePickerConfirm: String,
@@ -93,7 +93,7 @@ data class UiStrings(
             batteryHelpLowUsage = "Tranquilo: el consumo es mínimo, solo se actualiza una vez al día.",
             autostartButton = "Permitir inicio automático",
             unrestrictedBatteryButton = "Batería sin restricciones",
-            miuiTip = "Xiaomi/MIUI: si el fondo no cambia, además revisá que \"Pantalla de bloqueo personalizada\" esté desactivada en Ajustes › Pantalla de bloqueo.",
+            dualScreenNote = "En Xiaomi y Samsung, el sistema no permite actualizar solo la pantalla de bloqueo: MementoLife actualiza bloqueo e inicio juntos en esos celulares.",
 
             back = "Volver",
             datePickerConfirm = "Aceptar",
@@ -137,7 +137,7 @@ data class UiStrings(
             batteryHelpLowUsage = "Don't worry — battery use is minimal, it only updates once a day.",
             autostartButton = "Allow auto-start",
             unrestrictedBatteryButton = "Unrestricted battery",
-            miuiTip = "Xiaomi/MIUI: if the wallpaper doesn't change, also check that \"Customized lock screen\" is off in Settings › Lock screen.",
+            dualScreenNote = "On Xiaomi and Samsung, the system won't let apps update only the lock screen: MementoLife updates lock and home together on those phones.",
 
             back = "Back",
             datePickerConfirm = "OK",

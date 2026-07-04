@@ -36,8 +36,26 @@ class WallpaperApplier(
         if (!force && prefs.lastAppliedDate == today) return
 
         val bitmap = render(prefs, birthDate, today)
-        WallpaperManager.getInstance(context).setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK)
+        WallpaperManager.getInstance(context).setBitmap(bitmap, null, true, wallpaperFlags())
         preferencesRepository.setLastAppliedDate(today)
+    }
+
+    /**
+     * Xiaomi/MIUI y Samsung/One UI ignoran en silencio `setBitmap(..., FLAG_LOCK)` —
+     * no tiran excepción, simplemente no aplican nada (confirmado: es una restricción
+     * de fabricante documentada por el propio soporte de Xiaomi, no un bug nuestro ni
+     * algo resoluble con otro flag o permiso). En esos fabricantes se aplica también
+     * a la pantalla de inicio (única forma de que el fondo cambie de verdad); en el
+     * resto de los dispositivos se respeta "solo bloqueo" (plan §6.3).
+     */
+    private fun wallpaperFlags(): Int {
+        val manufacturer = Build.MANUFACTURER.lowercase()
+        val restrictsLockOnly = manufacturer == "xiaomi" || manufacturer == "samsung"
+        return if (restrictsLockOnly) {
+            WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK
+        } else {
+            WallpaperManager.FLAG_LOCK
+        }
     }
 
     /** Renderiza sin tocar WallpaperManager: para la vista previa en la app. */

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
             var subScreen by remember { mutableStateOf(SubScreen.SETTINGS) }
             val scope = rememberCoroutineScope()
 
-            MementoLifeTheme(darkTheme = prefs?.theme?.let { it == Theme.DARK } ?: isSystemInDarkTheme()) {
+            MementoLifeTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     val currentPrefs = prefs
                     when {

@@ -82,7 +82,11 @@ fun SettingsScreen(
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(strings.settingsTitle, style = MaterialTheme.typography.headlineSmall)
+        Text(
+            strings.settingsTitle,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.primary,
+        )
 
         SettingCard(Icons.Filled.Language, strings.languageLabel, strings.languageCaption) {
             SingleChoiceSegmentedButtonRow {

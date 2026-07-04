@@ -31,10 +31,19 @@ object BatteryOptimizationHelper {
     }
 
     /**
-     * Lista del sistema de optimización de batería por app (sin el permiso especial
-     * `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`, escrutado por la política de Play).
+     * Pide la excepción directo para MementoLife (no la lista genérica de todas las
+     * apps, que era donde caía antes — reportado por Ivan). `ACTION_IGNORE_BATTERY_
+     * OPTIMIZATION_SETTINGS` sin datos abre esa lista general; con `ACTION_REQUEST_
+     * IGNORE_BATTERY_OPTIMIZATIONS` + `package:` el sistema apunta directo a esta
+     * app. Requiere declarar el permiso especial en el manifest — justificado acá:
+     * el propósito central de la app es trabajo en segundo plano (plan §6.2).
      */
     fun openUnrestrictedBatterySettings(context: Context) {
+        val direct = Intent(
+            Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+            Uri.parse("package:${context.packageName}"),
+        )
+        if (tryStart(context, direct)) return
         if (tryStart(context, Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))) return
         tryStart(context, appDetailsIntent(context))
     }

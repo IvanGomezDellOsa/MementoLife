@@ -48,7 +48,11 @@ fun OnboardingScreen(strings: UiStrings, onConfirm: (birthDate: LocalDate) -> Un
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                Text(strings.onboardingTitle, style = MaterialTheme.typography.headlineSmall)
+                Text(
+                    strings.onboardingTitle,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
                 Text(
                     strings.onboardingSubtitle,
                     style = MaterialTheme.typography.bodyMedium,
