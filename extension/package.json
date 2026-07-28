@@ -10,14 +10,21 @@
   },
   "scripts": {
     "gen:data": "node scripts/gen-data.ts",
-    "typecheck": "npm run gen:data && tsc --noEmit",
+    "typecheck": "npm run gen:data && tsc -p tsconfig.build.json && tsc --noEmit",
     "test": "npm run gen:data && vitest run",
     "test:watch": "npm run gen:data && vitest",
-    "verify:font": "python scripts/verify-font-coverage.py"
+    "verify:font": "python scripts/verify-font-coverage.py",
+    "build:ts": "tsc -p tsconfig.build.json",
+    "preview": "npm run gen:data && tsc -p tsconfig.build.json && node scripts/preview.ts",
+    "shots": "npm run gen:data && tsc -p tsconfig.build.json && node scripts/screenshots.ts"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
     "@types/chrome": "^0.0.287",
     "@types/node": "^22.10.2",
+    "@types/pngjs": "^6.0.5",
+    "pixelmatch": "^6.0.0",
+    "pngjs": "^7.0.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }

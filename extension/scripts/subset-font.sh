@@ -66,6 +66,9 @@ python -m fontTools.subset "$INSTANCED" \
   --desubroutinize \
   --drop-tables+=DSIG
 
+echo "subset-font: extrayendo anchos de avance para el corte de linea..."
+python scripts/extract-metrics.py
+
 SRC_KB=$(( $(wc -c < "$SRC") / 1024 ))
 OUT_KB=$(( $(wc -c < "$OUT") / 1024 ))
 echo "subset-font: listo — $SRC_KB KB -> $OUT_KB KB  ($OUT)"

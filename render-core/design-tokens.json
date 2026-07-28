@@ -82,8 +82,7 @@
       "marginBottomPx": 68,
       "marginLeftPx": 88,
       "marginRightPx": 88,
-      "typeColumnWidthPx": 340,
-      "gutterPx": 89.2
+      "typeColumnWidthPx": 340
     },
     "typography": {
       "date": {
@@ -111,12 +110,27 @@
         "lineHeightMultiplier": 1.55
       }
     },
+    "compositionA": {
+      "_note": "Composicion A centrada, la que toma el relevo en viewports que no dan para B (tablets en vertical, ventanas angostas). Los valores son los de la opcion A de landscape-options.html en el lienzo 1440x720, y se escalan por typeScale.",
+      "dateBaselineFromTopPx": 60,
+      "timeBaselineFromTopPx": 136,
+      "gridTopFromTopPx": 180,
+      "footerGapBelowGridPx": 34,
+      "efemerideGapBelowFooterPx": 36,
+      "efemerideMaxWidthPx": 880,
+      "typography": {
+        "date": { "sizePx": 15 },
+        "time": { "sizePx": 68 },
+        "footer": { "sizePx": 11.5 },
+        "efemeride": { "sizePx": 12 }
+      }
+    },
     "responsive": {
       "referenceK": 1.7914,
-      "verticalMarginRatio": 0.094444,
+      "_note": "minGridHeightRatioB y gutterMinPx gobiernan la degradacion suave de B; ver core/layout.ts.",
+      "minGridHeightRatioB": 0.62,
       "verticalMarginMinPx": 40,
       "verticalMarginMaxPx": 96,
-      "horizontalMarginRatio": 0.061111,
       "horizontalMarginMinPx": 48,
       "horizontalMarginMaxPx": 120,
       "typeColumnMinPx": 280,

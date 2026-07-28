@@ -4,7 +4,10 @@
     "rootDir": "src",
     "outDir": "dist",
     "noEmit": false,
-    "declaration": false,
+    // Se emiten .d.ts para que scripts/preview.ts y scripts/screenshots.ts, que importan
+    // desde dist/, sigan tipados. Sin esto entrarian como `any` implicito y el typecheck
+    // estricto no seria tal. El ZIP de la tienda los excluye: no son codigo ejecutable.
+    "declaration": true,
     "sourceMap": false,
     // La politica de la tienda desaconseja ofuscar y pide "enviar el codigo tal como fue
     // escrito" (RESTRICCIONES-CHROME-WEB-STORE.md 3.8): los comentarios se conservan.

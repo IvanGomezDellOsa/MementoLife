@@ -151,6 +151,18 @@
       "viewport": { "widthPx": 1280, "heightPx": 720 }
     },
     {
+      "id": "viewport_tablet_portrait_compA",
+      "note": "Tablet en vertical (810x1080). La grilla apaisada no entra: encogerla la dejaria por debajo del 62% del alto disponible, asi que toma el relevo la composicion A centrada, con la grilla ajustada por ancho. Es el unico fixture que ejercita ese camino.",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 810, "heightPx": 1080 }
+    },
+    {
       "id": "viewport_short_no_efemeride",
       "note": "Ventana baja: vh 400 < 420, asi que se oculta la efemeride y el pie queda (plan 5.7.6). El ancho 1440 mantiene composicion B, para aislar la regla de alto de la del breakpoint. La grilla nunca se recorta.",
       "view": "weeks",

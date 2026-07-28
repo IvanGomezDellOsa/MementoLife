@@ -142,6 +142,25 @@ ${lines}
   writeFileSync(join(OUT_DIR, `efemerides.${locale}.ts`), source, "utf8");
 }
 
+function emitFontMetrics(): void {
+  const raw = readFileSync(
+    join(EXTENSION_DIR, "assets", "fonts", "Fraunces-metrics.json"),
+    "utf8",
+  );
+  const source = `${BANNER}
+/**
+ * Anchos de avance de Fraunces-subset.woff2 a wght=400, en unidades de em.
+ * Los produce scripts/extract-metrics.py desde el .woff2 realmente empaquetado.
+ *
+ * Existen para que el corte de linea de la efemeride sea exacto sin tocar el DOM: el core
+ * mide con esta tabla, devuelve las lineas ya cortadas y el navegador solo dibuja. Es lo
+ * que hace que los snapshots SVG sean deterministicos.
+ */
+export const FONT_METRICS = ${raw.trim()} as const;
+`;
+  writeFileSync(join(OUT_DIR, "font-metrics.ts"), source, "utf8");
+}
+
 function emitTokens(tokens: unknown): void {
   const source = `${BANNER}
 /**
@@ -169,9 +188,10 @@ function main(): void {
 
   const tokens = readJson<unknown>("render-core/design-tokens.json");
   emitTokens(tokens);
+  emitFontMetrics();
 
   console.log(
-    `gen-data: OK — ${tableEs.length} efemerides es, ${tableEn.length} en, tokens generados en src/data/`,
+    `gen-data: OK — ${tableEs.length} efemerides es, ${tableEn.length} en, tokens y metricas en src/data/`,
   );
 }
 

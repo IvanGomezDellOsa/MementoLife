@@ -53,3 +53,6 @@ docs/
 .claude/
 .cowork/
 *_probe.txt
+
+# Pagina de revision visual: se regenera con `npm run preview`
+extension/preview/
