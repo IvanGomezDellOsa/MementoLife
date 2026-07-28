@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   currentIndex,
   daysFromCivil,
-  footerText,
+  percentText,
+  unitText,
   isLeapYear,
   lifeStats,
   percentLived,
@@ -63,15 +64,15 @@ describe("celdas vividas", () => {
   });
 });
 
-describe("texto del pie", () => {
+describe("textos del bloque de dato", () => {
   const stats = lifeStats({ year: 1990, month: 1, day: 1 }, { year: 2023, month: 7, day: 2 }, 80);
 
-  it("espanol", () => {
-    expect(footerText("es", stats)).toBe("42 % · semana 1742 de 4160");
+  it("el porcentaje es el titular", () => {
+    expect(percentText(stats)).toBe("42 %");
   });
 
-  it("ingles", () => {
-    expect(footerText("en", stats)).toBe("42 % · week 1742 of 4160");
+  it("el subtitulo va en el idioma activo", () => {
+    expect(unitText("es", stats)).toBe("semana 1742 de 4160");
+    expect(unitText("en", stats)).toBe("week 1742 of 4160");
   });
-
 });

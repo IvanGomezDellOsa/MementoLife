@@ -91,18 +91,10 @@ export function mount(
 /** Ubica el bloque sobre la columna tipografica del layout vigente. */
 export function position(container: HTMLElement, layout: LayoutResult): void {
   const { column, grid } = layout;
-  const width = Math.max(240, column.widthPx);
-
+  const width = Math.max(260, column.widthPx);
   container.style.width = `${width}px`;
-  if (column.anchor === "middle") {
-    container.style.left = `${column.x - width / 2}px`;
-    container.style.textAlign = "center";
-    // En composicion A la grilla esta centrada y el bloque va debajo.
-    container.style.top = `${grid.originY + grid.heightPx + 28}px`;
-  } else {
-    container.style.left = `${column.x}px`;
-    container.style.textAlign = "left";
-    // En composicion B ocupa la mitad inferior de la columna, donde iran pie y efemeride.
-    container.style.top = `${grid.originY + grid.heightPx * 0.52}px`;
-  }
+  container.style.left = `${column.x}px`;
+  container.style.textAlign = "left";
+  // Debajo de donde va la fecha, que es lo unico que se dibuja mientras no hay datos.
+  container.style.top = `${grid.originY + grid.metrics.heightPx * 0.34}px`;
 }

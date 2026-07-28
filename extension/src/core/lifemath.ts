@@ -10,7 +10,7 @@
  * ano/mes/dia explicitos y aritmetica de dias propia, el core no tiene husos horarios.
  */
 
-import { UNITS_PER_YEAR } from "./tokens.js";
+import { WEEKS_PER_YEAR } from "./tokens.js";
 import type { Locale } from "./tokens.js";
 
 /** Fecha civil, sin hora ni huso. Es lo unico que el core entiende como "fecha". */
@@ -65,13 +65,13 @@ export function yearsLived(birthDate: CalendarDate, today: CalendarDate): number
  * fuera de la grilla. Es el caso del fixture edge_lifeYears_40.
  */
 export function currentIndex(yearsLivedValue: number, lifeYears: number): number {
-  const raw = Math.floor(yearsLivedValue * UNITS_PER_YEAR);
+  const raw = Math.floor(yearsLivedValue * WEEKS_PER_YEAR);
   const lastValid = totalUnits(lifeYears) - 1;
   return Math.max(0, Math.min(raw, lastValid));
 }
 
 export function totalUnits(lifeYears: number): number {
-  return lifeYears * UNITS_PER_YEAR;
+  return lifeYears * WEEKS_PER_YEAR;
 }
 
 export function percentLived(yearsLivedValue: number, lifeYears: number): number {
@@ -96,11 +96,16 @@ export function lifeStats(
 }
 
 /**
- * Pie: "{n} % · semana X de Y" / "{n} % · week X of Y". El espacio antes del % y la
- * ausencia de "vivido"/"lived" vienen del handoff; no son un descuido de formato.
+ * El porcentaje, que ahora es el titular de la composicion. Con el espacio antes del signo,
+ * como en el handoff: no es un descuido de formato.
  */
-export function footerText(locale: Locale, stats: LifeStats): string {
+export function percentText(stats: LifeStats): string {
+  return `${stats.percent} %`;
+}
+
+/** "semana 1742 de 4160" / "week 1742 of 4160". Es el subtitulo del porcentaje. */
+export function unitText(locale: Locale, stats: LifeStats): string {
   const unit = locale === "es" ? "semana" : "week";
   const joiner = locale === "es" ? "de" : "of";
-  return `${stats.percent} % · ${unit} ${stats.currentNumber} ${joiner} ${stats.totalUnits}`;
+  return `${unit} ${stats.currentNumber} ${joiner} ${stats.totalUnits}`;
 }

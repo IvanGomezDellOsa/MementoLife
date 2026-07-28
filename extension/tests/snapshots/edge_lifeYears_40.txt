@@ -1,39 +1,44 @@
 fixture      edge_lifeYears_40
 viewport     1440 x 720
 tema         dark   idioma es   lifeYears 40
-composicion  B
-typeScale    1.000000
+typeScale    0.757895
 
 grilla
-  origen     517.20, 68.00
-  tamano     834.80 x 584.00
-  k          1.791411
-  punto r    2.78
-  anillo w   1.97
+  origen     675.90, 67.97
+  tamano     476.24 x 584.06
+  celda      11.2320 x 11.2320  (aspecto 1.0000)
+  hueco      6.29 px
+  punto r    2.47
+  anillo     r 3.90 trazo 1.78
   celdas     2080 (40 anios x 52 semanas)
-  paso anio  11.0448 u
-  banda      8.0693 u x 3
+  banda      8.99 px x 3
+  opacidad   pasado 0.95 futuro 0.27
+
+columna      x 87.98 ancho 318.32
+filete       y 379.32 op 0.15
 
 paths
-  pasado  celdas=2079  sha=334cc4e6348eec46
-          primera M524.32 73.62a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
-          ultima  M1339.33 635.15a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
+  pasado  celdas=2079  sha=128d0a5236617b29
+          primera M679.05 73.58a2.47 2.47 0 1 0 4.94 0a2.47 2.47 0 1 0 -4.94 0
+          ultima  M1144.05 635.18a2.47 2.47 0 1 0 4.94 0a2.47 2.47 0 1 0 -4.94 0
   futuro  vacio
-  anillo  celdas=1     sha=f99e8130bbf0ed29
-          primera M1337.72 646.38a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
-          ultima  M1337.72 646.38a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
+  anillo  celdas=1     sha=63039ecb536a0c95
+          primera M1142.62 646.42a3.90 3.90 0 1 0 7.81 0a3.90 3.90 0 1 0 -7.81 0
+          ultima  M1142.62 646.42a3.90 3.90 0 1 0 7.81 0a3.90 3.90 0 1 0 -7.81 0
 
 textos
-  date      x=   88.00 y=   83.00 size= 16.00 peso=400 op=0.68 anchor=start
+  date      x=   87.98 y=  244.42 size= 14.00 peso=400 op=0.62 ls=0.15
             "domingo, 10 de junio"
-  time      x=   88.00 y=  173.00 size= 78.00 peso=300 op=1 anchor=start
-            "07:41"
-  efemeride x=   88.00 y=  632.63 size= 12.50 peso=400 op=0.48 anchor=start
-            "10 de junio, 1940 — Italia declaró la guerra a Francia y al"
-  efemeride x=   88.00 y=  652.00 size= 12.50 peso=400 op=0.48 anchor=start
-            "Reino Unido, sumándose a la Segunda Guerra Mundial."
-  footer    x=   88.00 y=  592.63 size= 11.50 peso=400 op=0.55 anchor=start ls=1.40
-            "100 % · semana 2080 de 2080"
+  hero      x=   87.98 y=  323.24 size= 78.82 peso=300 op=1
+            "100 %"
+  sub       x=   87.98 y=  347.49 size= 12.50 peso=400 op=0.62 ls=0.91
+            "semana 2080 de 2080"
+  efemeride x=   87.98 y=  406.61 size= 14.50 peso=400 op=0.6
+            "10 de junio, 1940 — Italia declaró la guerra a"
+  efemeride x=   87.98 y=  429.81 size= 14.50 peso=400 op=0.6
+            "Francia y al Reino Unido, sumándose a la"
+  efemeride x=   87.98 y=  453.01 size= 14.50 peso=400 op=0.6
+            "Segunda Guerra Mundial."
 
-svg          8 elementos, 128727 caracteres
-svg sha      b18c7af006c40e78
+svg          10 elementos, 128615 caracteres
+svg sha      616450627c547073

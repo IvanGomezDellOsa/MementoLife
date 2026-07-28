@@ -1,37 +1,40 @@
 fixture      viewport_short_no_efemeride
 viewport     1440 x 400
 tema         dark   idioma es   lifeYears 80
-composicion  B
-typeScale    0.547945
+typeScale    0.415239
 
 grilla
-  origen     894.58, 40.00
-  tamano     457.42 x 320.00
-  k          0.981595
-  punto r    1.52
-  anillo w   1.08
+  origen     625.72, 40.00
+  tamano     526.77 x 320.00
+  celda      6.1538 x 6.1538  (aspecto 1.0000)
+  hueco      3.45 px
+  punto r    1.35
+  anillo     r 2.14 trazo 0.97
   celdas     4160 (80 anios x 52 semanas)
-  paso anio  5.4750 u
-  banda      4.0000 u x 7
+  banda      4.92 px x 7
+  opacidad   pasado 0.95 futuro 0.27
+
+columna      x 87.98 ancho 300.00
+filete       no
 
 paths
-  pasado  celdas=1741  sha=1b13770b0bd13b19
-          primera M895.74 43.08a1.52 1.52 0 1 0 3.04 0a1.52 1.52 0 1 0 -3.04 0
-          ultima  M1084.87 190.77a1.52 1.52 0 1 0 3.04 0a1.52 1.52 0 1 0 -3.04 0
-  futuro  celdas=2418  sha=56be5811bb4f480f
-          primera M1084.87 203.08a1.52 1.52 0 1 0 3.04 0a1.52 1.52 0 1 0 -3.04 0
-          ultima  M1347.79 356.92a1.52 1.52 0 1 0 3.04 0a1.52 1.52 0 1 0 -3.04 0
-  anillo  celdas=1     sha=26f637228eb34832
-          primera M1083.99 196.92a2.40 2.40 0 1 0 4.81 0a2.40 2.40 0 1 0 -4.81 0
-          ultima  M1083.99 196.92a2.40 2.40 0 1 0 4.81 0a2.40 2.40 0 1 0 -4.81 0
+  pasado  celdas=1741  sha=9538778e29d23441
+          primera M627.44 43.08a1.35 1.35 0 1 0 2.71 0a1.35 1.35 0 1 0 -2.71 0
+          ultima  M845.29 190.77a1.35 1.35 0 1 0 2.71 0a1.35 1.35 0 1 0 -2.71 0
+  futuro  celdas=2418  sha=81a656e383db2160
+          primera M845.29 203.08a1.35 1.35 0 1 0 2.71 0a1.35 1.35 0 1 0 -2.71 0
+          ultima  M1148.05 356.92a1.35 1.35 0 1 0 2.71 0a1.35 1.35 0 1 0 -2.71 0
+  anillo  celdas=1     sha=5a7ebd52132508c0
+          primera M844.50 196.92a2.14 2.14 0 1 0 4.28 0a2.14 2.14 0 1 0 -4.28 0
+          ultima  M844.50 196.92a2.14 2.14 0 1 0 4.28 0a2.14 2.14 0 1 0 -4.28 0
 
 textos
-  date      x=   88.00 y=   48.22 size= 14.00 peso=400 op=0.68 anchor=start
+  date      x=   87.98 y=  165.94 size= 14.00 peso=400 op=0.62 ls=0.08
             "domingo, 2 de julio"
-  time      x=   88.00 y=   97.53 size= 56.00 peso=300 op=1 anchor=start
-            "07:41"
-  footer    x=   88.00 y=  360.00 size= 11.00 peso=400 op=0.55 anchor=start ls=0.77
-            "42 % · semana 1742 de 4160"
+  hero      x=   87.98 y=  229.94 size= 64.00 peso=300 op=1
+            "42 %"
+  sub       x=   87.98 y=  243.23 size= 12.50 peso=400 op=0.62 ls=0.50
+            "semana 1742 de 4160"
 
-svg          7 elementos, 256904 caracteres
-svg sha      a852c2874281dd34
+svg          7 elementos, 254885 caracteres
+svg sha      a7a2e72c576a13f0

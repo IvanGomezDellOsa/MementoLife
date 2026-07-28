@@ -79,8 +79,6 @@ function pageHtml(shot: Shot, fontBase64: string): string {
     lifeYears: shot.lifeYears,
     birthDate: shot.onboarding === true ? null : BIRTH,
     today: TODAY,
-    hour: 7,
-    minute: 41,
     efemerideText: shot.efemeride ? efemerideFor(shot.locale === "es" ? ES : EN, TODAY) : null,
     viewport: { widthPx: shot.widthPx, heightPx: shot.heightPx },
   });

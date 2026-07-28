@@ -1,150 +1,113 @@
 {
-  "_note": "Fuente de verdad de diseno. El bloque raiz son los invariantes cerrados del handoff (paleta, opacidades, radios, banda, columnas): valen para cualquier medio. El bloque landscape es la adaptacion a la pestana nueva. La geometria del lienzo 360x780 del telefono se elimino junto con el renderer Android: la caja de grilla apaisada la declara landscape.gridBox, y sus 466x326 salen de ahi (eran areaHeightPx 494 - footerReservedPx 28, y usefulWidthPx 326).",
+  "_note": "Fuente de verdad de diseno de la extension de Chrome. Reemplaza al bloque heredado del handoff de telefono: aquella geometria estaba dirigida por una caja fija de 466x326 unidades, y aca manda la CELDA. Ver core/geometry.ts.",
   "colors": {
+    "_note": "El fondo baja de #161310 a #0f0e0d: el croma pasa de 6 a 2 sobre 255, que es lo que hacia que se leyera marron en vez de negro calido. El punto NO comparte color con la tinta del texto — a #eae3d4 la grilla producia centelleo (contraste 11.84 a alta frecuencia espacial); con arena baja a 8.0 y deja de vibrar, y de paso el texto queda por encima de la grilla en jerarquia.",
     "background": {
-      "dark": "#161310",
+      "dark": "#0f0e0d",
       "light": "#f4f0e8"
     },
     "ink": {
-      "dark": "#eae3d4",
+      "dark": "#ece5d8",
       "light": "#2b2721"
-    }
-  },
-  "typography": {
-    "fontFamily": "Fraunces",
-    "efemeride": {
-      "opacity": {
-        "dark": 0.48,
-        "light": 0.55
-      }
+    },
+    "dot": {
+      "dark": "#cfc1a6",
+      "light": "#5e5243"
     }
   },
   "grid": {
-    "weeks": {
-      "columns": 52,
-      "dotRadiusPx": 1.55,
-      "bandEveryRows": 10,
-      "bandGapPx": 4,
-      "currentRingRadiusPx": 2.45,
-      "currentRingStrokePx": 1.1,
-      "_note": "dotRadiusPx baja de 1.9 (handoff retrato) a 1.55: en apaisado y a tamano de monitor, 1.9 dejaba solo 3.96 px de hueco entre puntos de 8.98 px y la grilla vibraba. Con 1.55 el hueco pasa a 5.61 px (+42%) y las semanas se cuentan de a una sin que el pasado pierda cuerpo."
+    "weeksPerYear": 52,
+    "bandEveryYears": 10,
+    "cell": {
+      "_note": "Todo es proporcion respecto del paso de celda, no medidas absolutas: asi la grilla se ve igual a cualquier tamano de pantalla y con cualquier lifeYears.",
+      "aspect": 1.0,
+      "dotDiameterRatio": 0.44,
+      "bandGapRatio": 0.8,
+      "ringRadiusRatio": 1.58,
+      "ringStrokeRatio": 0.72
     },
     "opacity": {
       "past": {
-        "dark": 0.9,
-        "light": 0.82
+        "dark": 0.95,
+        "light": 0.9
       },
       "future": {
-        "dark": 0.21,
-        "light": 0.23
-      },
-      "_note": "La opacidad de futuro sube de .14/.15 a .21/.23. Dos razones que apuntan al mismo numero: compensa la perdida de area del punto mas chico (1.55/1.9 al cuadrado = 0.665, o sea .14/0.665 = .21) y ataca la ilegibilidad que el plan 10.2 dejaba como decision abierta. Es el unico ajuste de opacidad que el plan autoriza."
+        "dark": 0.27,
+        "light": 0.26
+      }
     }
   },
-  "landscape": {
+  "lifeYears": {
+    "_note": "Rango elegible por el usuario. Con la geometria dirigida por la celda, un valor bajo produce una grilla mas angosta en vez de celdas estiradas.",
+    "min": 20,
+    "max": 100,
+    "default": 80
+  },
+  "layout": {
+    "_note": "Composicion editorial. El reloj se elimino: en una pantalla de bloqueo era la funcion principal, pero en una pestana nueva es redundante (el sistema ya muestra la hora) y se llevaba la jerarquia. Su lugar lo ocupa el porcentaje, que es el dato que el producto existe para mostrar.",
     "canvas": {
-      "refWidthPx": 1440,
-      "refHeightPx": 720
+      "refWidthPx": 1920,
+      "refHeightPx": 950
     },
-    "gridBox": {
-      "yearAxisUnits": 466,
-      "unitAxisUnits": 326,
-      "aspect": 1.4294,
-      "transposed": true,
-      "_bandGapNote": "La banda de decada es PROPORCIONAL al paso del eje de anios, no fija. Con paso fijo, un lifeYears bajo ensancha las columnas y deja la banda relativamente invisible: en 40 el paso pasaba a 20,33 px con la banda todavia en 7,17 px, y las decadas dejaban de contarse. La proporcion se deriva de referenceLifeYears para que ese caso salga identico al aprobado.",
-      "referenceLifeYears": 80
+    "marginRatio": {
+      "vertical": 0.0944,
+      "horizontal": 0.0611
     },
-    "lifeYears": {
-      "_note": "Rango elegible por el usuario. El minimo baja de 40 a 20: con la banda proporcional los valores cortos ya se leen bien, y sirven para mirar a corto plazo.",
-      "min": 20,
-      "max": 100,
-      "default": 80
+    "marginClampPx": {
+      "verticalMin": 40,
+      "verticalMax": 96,
+      "horizontalMin": 48,
+      "horizontalMax": 120
     },
-    "layout": {
-      "marginTopPx": 68,
-      "marginBottomPx": 68,
-      "marginLeftPx": 88,
-      "marginRightPx": 88,
-      "typeColumnWidthPx": 340
+    "columnWidthPx": 420,
+    "columnMinPx": 300,
+    "columnMaxPx": 460,
+    "gutterPx": 92,
+    "minGridWidthRatio": 0.42
+  },
+  "typography": {
+    "fontFamily": "Fraunces",
+    "_note": "Las opacidades cumplen AA (4,5:1) sobre el fondo nuevo. Con los valores anteriores ningun texto llegaba: la fecha daba 4,49 y la efemeride 3,97. La opacidad minima que cumple sobre #0f0e0d es .51.",
+    "date": {
+      "sizePx": 16,
+      "weight": 400,
+      "opacity": 0.62,
+      "letterSpacingPx": 0.2
     },
-    "typography": {
-      "date": {
-        "sizePx": 16,
-        "weight": 400,
-        "opacity": 0.68,
-        "baselineFromGridTopPx": 15
-      },
-      "time": {
-        "sizePx": 78,
-        "weight": 300,
-        "opacity": 1.0,
-        "baselineFromGridTopPx": 105
-      },
-      "footer": {
-        "sizePx": 11.5,
-        "weight": 400,
-        "opacity": 0.55,
-        "letterSpacingPx": 1.4,
-        "gapAboveEfemeridePx": 40
-      },
-      "efemeride": {
-        "sizePx": 12.5,
-        "weight": 400,
-        "lineHeightMultiplier": 1.55
-      }
+    "hero": {
+      "sizePx": 104,
+      "weight": 300,
+      "opacity": 1.0,
+      "gapAbovePx": 22,
+      "gapBelowPx": 32
     },
-    "compositionA": {
-      "_note": "Composicion A centrada, la que toma el relevo en viewports que no dan para B (tablets en vertical, ventanas angostas). Los valores son los de la opcion A de landscape-options.html en el lienzo 1440x720, y se escalan por typeScale.",
-      "dateBaselineFromTopPx": 60,
-      "timeBaselineFromTopPx": 136,
-      "gridTopFromTopPx": 180,
-      "footerGapBelowGridPx": 34,
-      "efemerideGapBelowFooterPx": 36,
-      "efemerideMaxWidthPx": 880,
-      "typography": {
-        "date": {
-          "sizePx": 15
-        },
-        "time": {
-          "sizePx": 68
-        },
-        "footer": {
-          "sizePx": 11.5
-        },
-        "efemeride": {
-          "sizePx": 12
-        }
-      }
+    "sub": {
+      "sizePx": 14,
+      "weight": 400,
+      "opacity": 0.62,
+      "letterSpacingPx": 1.2
     },
-    "responsive": {
-      "_note": "minGridHeightRatioB gobierna la degradacion suave de B: por debajo de esa fraccion del alto disponible toma el relevo la composicion A. Ver core/layout.ts.",
-      "minGridHeightRatioB": 0.62,
-      "verticalMarginMinPx": 40,
-      "verticalMarginMaxPx": 96,
-      "horizontalMarginMinPx": 48,
-      "horizontalMarginMaxPx": 120,
-      "typeColumnMinPx": 280,
-      "typeColumnMaxPx": 380,
-      "fontClampPx": {
-        "date": {
-          "min": 14,
-          "max": 20
-        },
-        "time": {
-          "min": 56,
-          "max": 104
-        },
-        "footer": {
-          "min": 11,
-          "max": 15
-        },
-        "efemeride": {
-          "min": 12,
-          "max": 16
-        }
-      },
-      "hideEfemerideBelowVhPx": 420,
-      "hideFooterBelowVhPx": 340
+    "rule": {
+      "opacity": 0.15,
+      "gapAbovePx": 42,
+      "gapBelowPx": 36
+    },
+    "efemeride": {
+      "sizePx": 16,
+      "weight": 400,
+      "opacity": 0.6,
+      "lineHeightMultiplier": 1.6
+    },
+    "clampPx": {
+      "date": { "min": 14, "max": 20 },
+      "hero": { "min": 64, "max": 132 },
+      "sub": { "min": 12.5, "max": 17 },
+      "efemeride": { "min": 14.5, "max": 19 }
     }
+  },
+  "responsive": {
+    "_note": "Por debajo de estos altos se empieza a soltar contenido. La grilla nunca se recorta: es lo ultimo que se toca.",
+    "hideEfemerideBelowVhPx": 460,
+    "hideSubBelowVhPx": 360
   }
 }

@@ -1,96 +1,115 @@
 /**
- * El invariante que ordena todo el rediseno apaisado: la caja de grilla mide SIEMPRE
- * 466 x 326 unidades de diseno, para cualquier lifeYears del rango.
+ * Los dos invariantes de la geometria nueva. Reemplazan al viejo "la caja mide siempre
+ * 466 x 326", que era la causa de las celdas estiradas y del centelleo:
  *
- * Si esto se rompe, se rompio la premisa entera del plan 5.1 — que la grilla no se
- * rediseña sino que se transpone y se multiplica por un unico factor k — y todos los
- * ratios del handoff dejan de conservarse solos.
+ *   1. La celda conserva su relacion de aspecto para cualquier lifeYears del rango.
+ *   2. La grilla entra siempre en el espacio disponible, sin recortarse.
+ *
+ * El primero es mas fuerte que el anterior: antes se garantizaba el tamano de la CAJA y la
+ * celda quedaba librada a la suerte; ahora se garantiza la CELDA, que es lo que se ve.
  */
 
 import { describe, expect, it } from "vitest";
-import {
-  BOX_ASPECT,
-  BOX_UNIT_UNITS,
-  BOX_YEAR_UNITS,
-  cellCenter,
-  geometry,
-  unitAxisSpan,
-  yearAxisSpan,
-} from "../src/core/geometry.js";
-import { LIFE_YEARS } from "../src/core/tokens.js";
+import { cellCenter, geometry, metricsFor } from "../src/core/geometry.js";
+import { CELL, LIFE_YEARS, WEEKS_PER_YEAR, T } from "../src/core/tokens.js";
 
 const RANGE = Array.from(
   { length: LIFE_YEARS.max - LIFE_YEARS.min + 1 },
   (_, i) => LIFE_YEARS.min + i,
 );
 
-describe("invariante de la caja de grilla", () => {
-  it(`cubre todo el rango elegible (${LIFE_YEARS.min}..${LIFE_YEARS.max})`, () => {
-    expect(RANGE).toHaveLength(81);
+/** Espacios realistas: de una ventana chica a un monitor grande. */
+const SPACES: readonly { w: number; h: number }[] = [
+  { w: 600, h: 400 },
+  { w: 900, h: 520 },
+  { w: 1173, h: 771 },
+  { w: 1500, h: 900 },
+  { w: 2100, h: 1100 },
+];
+
+describe("conteo de celdas", () => {
+  it("una columna por anio, 52 filas siempre", () => {
+    const g = geometry(80);
+    expect(g.weekCount).toBe(WEEKS_PER_YEAR);
+    expect(g.yearCount).toBe(80);
+    expect(g.totalCells).toBe(4160);
+    expect(g.bandCount).toBe(7);
   });
 
+  it("la banda de decada aparece cada 10 anios", () => {
+    expect(geometry(20).bandCount).toBe(1);
+    expect(geometry(40).bandCount).toBe(3);
+    expect(geometry(100).bandCount).toBe(9);
+    expect(geometry(80).bandEvery).toBe(T.grid.bandEveryYears);
+  });
+});
+
+describe("INVARIANTE 1 — la celda conserva su aspecto", () => {
   for (const lifeYears of RANGE) {
-    it(`lifeYears=${lifeYears} -> caja ${BOX_YEAR_UNITS} x ${BOX_UNIT_UNITS}`, () => {
-      const g = geometry(lifeYears);
-      expect(yearAxisSpan(g)).toBeCloseTo(BOX_YEAR_UNITS, 9);
-      expect(unitAxisSpan(g)).toBeCloseTo(BOX_UNIT_UNITS, 9);
+    it(`lifeYears=${lifeYears}`, () => {
+      for (const space of SPACES) {
+        const g = geometry(lifeYears);
+        const m = metricsFor(g, space.w, space.h);
+        expect(m.yearPitch / m.weekPitch).toBeCloseTo(CELL.aspect, 9);
+      }
     });
   }
 });
 
-describe("geometria derivada", () => {
-  it("reproduce exactamente el caso aprobado del handoff", () => {
-    const g = geometry(80);
-    expect(g.unitCount).toBe(52);
-    expect(g.yearCount).toBe(80);
-    expect(g.totalCells).toBe(4160);
-    expect(g.bandCount).toBe(7);
-    expect(g.yearPitch).toBeCloseTo(5.475, 6); // (466 - 7*4) / 80
-    expect(g.bandGap).toBeCloseTo(4, 6); // la banda proporcional NO mueve el caso aprobado
-    expect(g.unitPitch).toBeCloseTo(6.269, 3); // 326 / 52
+describe("INVARIANTE 2 — la grilla nunca se recorta", () => {
+  it(`entra en el espacio disponible en ${RANGE.length * SPACES.length} combinaciones`, () => {
+    const offenders: string[] = [];
+    for (const lifeYears of RANGE) {
+      for (const space of SPACES) {
+        const g = geometry(lifeYears);
+        const m = metricsFor(g, space.w, space.h);
+        if (m.widthPx > space.w + 0.001 || m.heightPx > space.h + 0.001 || m.widthPx <= 0) {
+          offenders.push(
+            `${lifeYears} anios en ${space.w}x${space.h}: ${m.widthPx.toFixed(1)}x${m.heightPx.toFixed(1)}`,
+          );
+        }
+      }
+    }
+    expect(offenders).toEqual([]);
   });
 
-  it("el aspecto se deriva de la caja, no se lee de un token suelto", () => {
-    expect(BOX_ASPECT).toBeCloseTo(466 / 326, 12);
-    expect(BOX_ASPECT).toBeCloseTo(1.4294, 4);
-  });
-
-  it("ninguna celda se sale de la caja en todo el rango", () => {
+  it("ninguna celda cae fuera de la caja", () => {
     for (const lifeYears of RANGE) {
       const g = geometry(lifeYears);
+      const m = metricsFor(g, 1173, 771);
       for (const index of [0, Math.floor(g.totalCells / 2), g.totalCells - 1]) {
-        const { alongYear, alongUnit } = cellCenter(g, index);
-        expect(alongYear).toBeGreaterThanOrEqual(0);
-        expect(alongYear).toBeLessThanOrEqual(BOX_YEAR_UNITS);
-        expect(alongUnit).toBeGreaterThanOrEqual(0);
-        expect(alongUnit).toBeLessThanOrEqual(BOX_UNIT_UNITS);
+        const c = cellCenter(g, m, index);
+        expect(c.x).toBeGreaterThanOrEqual(0);
+        expect(c.x).toBeLessThanOrEqual(m.widthPx);
+        expect(c.y).toBeGreaterThanOrEqual(0);
+        expect(c.y).toBeLessThanOrEqual(m.heightPx);
       }
     }
   });
 });
 
-/**
- * El bug que motivo la banda proporcional: con banda fija, un lifeYears bajo dejaba la
- * separacion de decada MAS CHICA que el aire normal entre columnas, y las decadas no se
- * podian contar. Ahora la banda tiene que ser siempre mayor que el hueco entre dos puntos
- * contiguos del eje de anios, en todo el rango.
- */
-describe("la banda de decada se lee en todo el rango", () => {
-  for (const lifeYears of RANGE) {
-    const g = geometry(lifeYears);
-    if (g.bandCount === 0) continue;
-    it(`lifeYears=${lifeYears}: la banda supera el aire normal entre columnas`, () => {
-      expect(g.bandGap).toBeGreaterThan(g.yearPitch * 0.7);
-    });
-  }
+describe("aire entre puntos", () => {
+  it("el hueco es siempre positivo y proporcional al paso", () => {
+    for (const lifeYears of RANGE) {
+      const g = geometry(lifeYears);
+      const m = metricsFor(g, 1173, 771);
+      expect(m.gapPx).toBeGreaterThan(0);
+      expect(m.gapPx / m.yearPitch).toBeCloseTo(1 - CELL.dotDiameterRatio, 9);
+    }
+  });
 
-  it("mantiene la proporcion constante en todo el rango", () => {
-    const ratios = RANGE.map((y) => {
-      const g = geometry(y);
-      return g.bandGap / g.yearPitch;
-    });
-    const first = ratios[0] ?? 0;
-    for (const ratio of ratios) expect(ratio).toBeCloseTo(first, 9);
-    expect(first).toBeCloseTo(4 / 5.475, 6);
+  it("la banda de decada supera al aire normal entre columnas, en todo el rango", () => {
+    for (const lifeYears of RANGE) {
+      const g = geometry(lifeYears);
+      if (g.bandCount === 0) continue;
+      const m = metricsFor(g, 1173, 771);
+      expect(m.bandGap).toBeGreaterThan(m.gapPx);
+    }
+  });
+
+  it("a 1920x950 el hueco supera los 7 px, que es el objetivo del rediseno", () => {
+    const g = geometry(80);
+    const m = metricsFor(g, 1173, 771);
+    expect(m.gapPx).toBeGreaterThan(7);
   });
 });

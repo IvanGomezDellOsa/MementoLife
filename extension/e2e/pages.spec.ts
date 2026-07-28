@@ -213,12 +213,13 @@ test.describe("pestana nueva", () => {
   test("respeta el tema del sistema y el elegido por el usuario", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light" });
     await openNewTab(page);
-    await expect(page.locator("#canvas svg rect")).toHaveAttribute("fill", "#f4f0e8");
+    // .first() porque el filete de la columna tambien es un <rect>.
+    await expect(page.locator("#canvas svg rect").first()).toHaveAttribute("fill", "#f4f0e8");
 
     await page.emulateMedia({ colorScheme: "dark" });
     await page.reload();
     await page.waitForSelector("#canvas svg");
-    await expect(page.locator("#canvas svg rect")).toHaveAttribute("fill", "#161310");
+    await expect(page.locator("#canvas svg rect").first()).toHaveAttribute("fill", "#0f0e0d");
   });
 });
 

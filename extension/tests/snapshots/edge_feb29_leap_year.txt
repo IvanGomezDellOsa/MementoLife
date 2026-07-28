@@ -1,45 +1,50 @@
 fixture      edge_feb29_leap_year
 viewport     1440 x 720
 tema         dark   idioma es   lifeYears 80
-composicion  B
-typeScale    1.000000
+typeScale    0.757895
 
 grilla
-  origen     517.20, 68.00
-  tamano     834.80 x 584.00
-  k          1.791411
-  punto r    2.78
-  anillo w   1.97
+  origen     476.03, 93.93
+  tamano     875.99 x 532.14
+  celda      10.2335 x 10.2335  (aspecto 1.0000)
+  hueco      5.73 px
+  punto r    2.25
+  anillo     r 3.56 trazo 1.62
   celdas     4160 (80 anios x 52 semanas)
-  paso anio  5.4750 u
-  banda      4.0000 u x 7
+  banda      8.19 px x 7
+  opacidad   pasado 0.95 futuro 0.27
+
+columna      x 87.98 ancho 318.32
+filete       y 356.12 op 0.15
 
 paths
-  pasado  celdas=208   sha=438bdba6e50c9746
-          primera M519.33 73.62a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
-          ultima  M548.75 646.38a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
-  futuro  celdas=3951  sha=98a7f9cc1d7b9fc1
-          primera M558.56 84.85a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
-          ultima  M1344.32 646.38a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
-  anillo  celdas=1     sha=63cd243f56bb7fa9
-          primera M556.95 73.62a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
-          ultima  M556.95 73.62a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
+  pasado  celdas=208   sha=c63dbc512f9a195e
+          primera M478.89 99.05a2.25 2.25 0 1 0 4.50 0a2.25 2.25 0 1 0 -4.50 0
+          ultima  M509.59 620.95a2.25 2.25 0 1 0 4.50 0a2.25 2.25 0 1 0 -4.50 0
+  futuro  celdas=3951  sha=425aa987758bafc1
+          primera M519.83 109.28a2.25 2.25 0 1 0 4.50 0a2.25 2.25 0 1 0 -4.50 0
+          ultima  M1344.65 620.95a2.25 2.25 0 1 0 4.50 0a2.25 2.25 0 1 0 -4.50 0
+  anillo  celdas=1     sha=fa4f59d18cdf7c2a
+          primera M518.52 99.05a3.56 3.56 0 1 0 7.11 0a3.56 3.56 0 1 0 -7.11 0
+          ultima  M518.52 99.05a3.56 3.56 0 1 0 7.11 0a3.56 3.56 0 1 0 -7.11 0
 
 textos
-  date      x=   88.00 y=   83.00 size= 16.00 peso=400 op=0.68 anchor=start
+  date      x=   87.98 y=  221.22 size= 14.00 peso=400 op=0.62 ls=0.15
             "jueves, 29 de febrero"
-  time      x=   88.00 y=  173.00 size= 78.00 peso=300 op=1 anchor=start
-            "07:41"
-  efemeride x=   88.00 y=  593.88 size= 12.50 peso=400 op=0.48 anchor=start
-            "29 de febrero, 1504 — Cristóbal Colón, varado en Jamaica,"
-  efemeride x=   88.00 y=  613.25 size= 12.50 peso=400 op=0.48 anchor=start
-            "utilizó su conocimiento de un eclipse lunar inminente"
-  efemeride x=   88.00 y=  632.63 size= 12.50 peso=400 op=0.48 anchor=start
-            "para persuadir a los habitantes locales de seguir"
-  efemeride x=   88.00 y=  652.00 size= 12.50 peso=400 op=0.48 anchor=start
-            "abasteciendo a su tripulación."
-  footer    x=   88.00 y=  553.88 size= 11.50 peso=400 op=0.55 anchor=start ls=1.40
-            "5 % · semana 209 de 4160"
+  hero      x=   87.98 y=  300.04 size= 78.82 peso=300 op=1
+            "5 %"
+  sub       x=   87.98 y=  324.29 size= 12.50 peso=400 op=0.62 ls=0.91
+            "semana 209 de 4160"
+  efemeride x=   87.98 y=  383.41 size= 14.50 peso=400 op=0.6
+            "29 de febrero, 1504 — Cristóbal Colón, varado"
+  efemeride x=   87.98 y=  406.61 size= 14.50 peso=400 op=0.6
+            "en Jamaica, utilizó su conocimiento de un"
+  efemeride x=   87.98 y=  429.81 size= 14.50 peso=400 op=0.6
+            "eclipse lunar inminente para persuadir a los"
+  efemeride x=   87.98 y=  453.01 size= 14.50 peso=400 op=0.6
+            "habitantes locales de seguir abasteciendo a su"
+  efemeride x=   87.98 y=  476.21 size= 14.50 peso=400 op=0.6
+            "tripulación."
 
-svg          11 elementos, 256678 caracteres
-svg sha      482391ab36bb2602
+svg          13 elementos, 256840 caracteres
+svg sha      ed96950f49ff9a33

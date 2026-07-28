@@ -1,115 +1,112 @@
 /**
- * geometry.ts — la caja de grilla mide SIEMPRE 466 x 326 unidades de diseno.
+ * geometry.ts — la geometría de la grilla, dirigida por la CELDA.
  *
- * Es el hallazgo que ordena todo el rediseno apaisado (plan 5.1): la grilla no se rediseña
- * cuando cambia lifeYears, se TRANSPONE y se multiplica por un unico factor k. Todos los
- * ratios internos del handoff se conservan por construccion, no por disciplina — y por eso
- * el test parametrizado sobre todo el rango es el gate de verdad.
+ * ── Por qué cambió respecto de la v1 ──────────────────────────────────────────────
  *
- * Nomenclatura, que es donde es facil perderse: "eje de unidad" son las 52 semanas del
- * anio (fijo); "eje de anios" es el que crece con lifeYears. En retrato el eje de unidad
- * era horizontal; en apaisado es vertical. La matematica no cambia, solo que eje se dibuja
- * en que direccion.
+ * El handoff de teléfono definía una caja fija de 466 × 326 unidades y sacaba de ahí el
+ * tamaño de celda. En una pantalla apaisada eso producía dos defectos:
  *
- * ── La banda de decada es PROPORCIONAL, no fija ──────────────────────────────────────
+ *   1. Las celdas quedaban más angostas que altas (12,94 × 14,82 px a 1920×950), y el
+ *      hueco horizontal entre puntos caía a 3,96 px sobre puntos de 9 px. A esa proporción
+ *      una trama regular deja de leerse como puntos y empieza a centellear.
+ *   2. Con lifeYears bajo era peor: la caja seguía midiendo lo mismo pero con menos
+ *      columnas, así que las celdas se estiraban hasta parecer rayas verticales.
  *
- * En el handoff la banda media 4 unidades fijas, porque el unico caso real era lifeYears
- * = 80. Con un valor bajo eso se rompe: en 40, el paso del eje de anios se duplica a 11,35
- * unidades (20,33 px en pantalla) y la banda se queda en 4 (7,17 px). El resultado es que
- * la separacion de decada es MAS CHICA que el espacio normal entre columnas y las decadas
- * dejan de poder contarse — la grilla se lee como columnas uniformes.
+ * Ahora se elige la celda y la caja es la consecuencia. La celda sale cuadrada, que es lo
+ * que reparte el aire por igual en los dos ejes, y con lifeYears bajo la grilla simplemente
+ * queda más angosta en vez de deformarse. Los dos defectos desaparecen con el mismo cambio.
  *
- * La solucion es hacer que la banda sea una fraccion constante del paso, con la fraccion
- * derivada del propio caso aprobado (4 / 5,475 = 0,7306). Eso deja lifeYears = 80 exacto
- * al pixel y arregla todo el resto del rango. Despejando:
+ * El invariante viejo ("la caja mide siempre 466 × 326") se reemplaza por dos más fuertes,
+ * que son los que los tests verifican:
  *
- *   paso = (466 - bandas x banda) / anios       y      banda = ratio x paso
- *   =>  paso = 466 / (anios + bandas x ratio)
+ *   · la celda conserva su relación de aspecto para cualquier lifeYears del rango;
+ *   · la grilla entra siempre en el espacio disponible, sin recortarse.
  */
 
-import { GRID, T, UNITS_PER_YEAR } from "./tokens.js";
-
-/** Lado largo de la caja (eje de anios), en unidades de diseno. */
-export const BOX_YEAR_UNITS = T.landscape.gridBox.yearAxisUnits;
-/** Lado corto de la caja (eje de unidad), en unidades de diseno. */
-export const BOX_UNIT_UNITS = T.landscape.gridBox.unitAxisUnits;
-/** 466 / 326 = 1,42945. Se deriva, no se lee: el token "aspect" es documentacion. */
-export const BOX_ASPECT = BOX_YEAR_UNITS / BOX_UNIT_UNITS;
-
-function bandCountFor(yearCount: number): number {
-  return yearCount > 1 ? Math.floor((yearCount - 1) / GRID.bandEveryRows) : 0;
-}
-
-/**
- * Fraccion del paso que ocupa la banda. Se deriva del caso de referencia en vez de
- * guardarse redondeada, por la misma razon que los margenes: un decimal cortado hace que
- * el lienzo aprobado deje de reproducirse exacto.
- */
-const BAND_GAP_RATIO = (() => {
-  const reference = T.landscape.gridBox.referenceLifeYears;
-  const bands = bandCountFor(reference);
-  const referencePitch = (BOX_YEAR_UNITS - bands * GRID.bandGapPx) / reference;
-  return GRID.bandGapPx / referencePitch;
-})();
+import { CELL, T, WEEKS_PER_YEAR } from "./tokens.js";
 
 export interface GridGeometry {
-  /** Celdas del eje de unidad: 52. Fijo. */
-  readonly unitCount: number;
-  /** Celdas del eje de anios. Igual a lifeYears. */
+  /** Celdas del eje vertical: las 52 semanas del año. Fijo. */
+  readonly weekCount: number;
+  /** Celdas del eje horizontal: un año por columna. */
   readonly yearCount: number;
-  /** Total de celdas dibujadas. */
   readonly totalCells: number;
-  /** Paso del eje de anios, en unidades de diseno. */
-  readonly yearPitch: number;
-  /** Paso del eje de unidad, en unidades de diseno. */
-  readonly unitPitch: number;
-  /** Cada cuantas celdas del eje de anios entra una banda de aire. */
+  /** Cada cuántos años entra una banda de aire. */
   readonly bandEvery: number;
-  /** Ancho de la banda, en unidades de diseno. Proporcional al paso. */
-  readonly bandGap: number;
-  /** Cuantas bandas entran. */
   readonly bandCount: number;
 }
 
+/** Cuántas celdas hay y cómo se agrupan. No depende del tamaño en pantalla. */
 export function geometry(lifeYears: number): GridGeometry {
-  const unitCount = GRID.columns;
-  const totalCells = lifeYears * UNITS_PER_YEAR;
-  const yearCount = Math.ceil(totalCells / unitCount);
-  const bandCount = bandCountFor(yearCount);
-
-  // Despeje de la ecuacion del encabezado: mantiene la caja en 466 exactas.
-  const yearPitch = BOX_YEAR_UNITS / (yearCount + bandCount * BAND_GAP_RATIO);
-
+  const bandEvery = T.grid.bandEveryYears;
   return {
-    unitCount,
-    yearCount,
-    totalCells,
-    yearPitch,
-    unitPitch: BOX_UNIT_UNITS / unitCount,
-    bandEvery: GRID.bandEveryRows,
-    bandGap: yearPitch * BAND_GAP_RATIO,
-    bandCount,
+    weekCount: WEEKS_PER_YEAR,
+    yearCount: lifeYears,
+    totalCells: lifeYears * WEEKS_PER_YEAR,
+    bandEvery,
+    bandCount: lifeYears > 1 ? Math.floor((lifeYears - 1) / bandEvery) : 0,
   };
 }
 
-/** Extension real ocupada por la grilla en el eje de anios. Debe dar 466 siempre. */
-export function yearAxisSpan(g: GridGeometry): number {
-  return g.yearCount * g.yearPitch + g.bandCount * g.bandGap;
+/** Medidas en píxeles de la grilla, una vez que se sabe cuánto espacio hay. */
+export interface GridMetrics {
+  /** Paso horizontal (un año) en px. */
+  readonly yearPitch: number;
+  /** Paso vertical (una semana) en px. */
+  readonly weekPitch: number;
+  /** Ancho de la banda de década en px. */
+  readonly bandGap: number;
+  readonly widthPx: number;
+  readonly heightPx: number;
+  readonly dotRadius: number;
+  readonly ringRadius: number;
+  readonly ringStroke: number;
+  /** Aire libre entre dos puntos contiguos en horizontal. El número que importaba. */
+  readonly gapPx: number;
 }
 
-/** Extension real ocupada por la grilla en el eje de unidad. Debe dar 326 siempre. */
-export function unitAxisSpan(g: GridGeometry): number {
-  return g.unitCount * g.unitPitch;
+/**
+ * Ajusta la grilla al espacio disponible conservando la celda cuadrada.
+ *
+ * Primero manda el alto: 52 semanas tienen que entrar sí o sí. Si con ese paso la grilla
+ * se pasa de ancho, se reduce todo en bloque — nunca se deforma la celda.
+ */
+export function metricsFor(g: GridGeometry, availWidthPx: number, availHeightPx: number): GridMetrics {
+  let weekPitch = availHeightPx / g.weekCount;
+  let yearPitch = weekPitch * CELL.aspect;
+
+  let widthPx = g.yearCount * yearPitch + g.bandCount * yearPitch * CELL.bandGapRatio;
+  if (widthPx > availWidthPx && widthPx > 0) {
+    const scale = availWidthPx / widthPx;
+    weekPitch *= scale;
+    yearPitch *= scale;
+    widthPx = availWidthPx;
+  }
+
+  const dotRadius = (yearPitch * CELL.dotDiameterRatio) / 2;
+  return {
+    yearPitch,
+    weekPitch,
+    bandGap: yearPitch * CELL.bandGapRatio,
+    widthPx,
+    heightPx: g.weekCount * weekPitch,
+    dotRadius,
+    ringRadius: dotRadius * CELL.ringRadiusRatio,
+    ringStroke: dotRadius * CELL.ringStrokeRatio,
+    gapPx: yearPitch - 2 * dotRadius,
+  };
 }
 
-/** Centro de una celda dentro de la caja, en unidades de diseno y sin transponer aun. */
+/** Centro de una celda, en píxeles y relativo al origen de la grilla. */
 export function cellCenter(
   g: GridGeometry,
+  m: GridMetrics,
   index: number,
-): { readonly alongYear: number; readonly alongUnit: number } {
-  const yearStep = Math.floor(index / g.unitCount);
+): { readonly x: number; readonly y: number } {
+  const year = Math.floor(index / g.weekCount);
+  const week = index % g.weekCount;
   return {
-    alongYear: yearStep * g.yearPitch + Math.floor(yearStep / g.bandEvery) * g.bandGap + g.yearPitch / 2,
-    alongUnit: (index % g.unitCount) * g.unitPitch + g.unitPitch / 2,
+    x: year * m.yearPitch + Math.floor(year / g.bandEvery) * m.bandGap + m.yearPitch / 2,
+    y: week * m.weekPitch + m.weekPitch / 2,
   };
 }

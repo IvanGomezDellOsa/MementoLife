@@ -1,41 +1,44 @@
 fixture      edge_lifeYears_20
 viewport     1440 x 720
 tema         dark   idioma es   lifeYears 20
-composicion  B
-typeScale    1.000000
+typeScale    0.757895
 
 grilla
-  origen     517.20, 68.00
-  tamano     834.80 x 584.00
-  k          1.791411
-  punto r    2.78
-  anillo w   1.97
+  origen     797.21, 67.97
+  tamano     233.63 x 584.06
+  celda      11.2320 x 11.2320  (aspecto 1.0000)
+  hueco      6.29 px
+  punto r    2.47
+  anillo     r 3.90 trazo 1.78
   celdas     1040 (20 anios x 52 semanas)
-  paso anio  22.4789 u
-  banda      16.4229 u x 1
+  banda      8.99 px x 1
+  opacidad   pasado 0.95 futuro 0.27
+
+columna      x 87.98 ancho 318.32
+filete       y 379.32 op 0.15
 
 paths
-  pasado  celdas=1039  sha=40be7d75462ece67
-          primera M534.56 73.62a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
-          ultima  M1329.09 635.15a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
+  pasado  celdas=1039  sha=6c133e3d89aff0c5
+          primera M800.35 73.58a2.47 2.47 0 1 0 4.94 0a2.47 2.47 0 1 0 -4.94 0
+          ultima  M1022.75 635.18a2.47 2.47 0 1 0 4.94 0a2.47 2.47 0 1 0 -4.94 0
   futuro  vacio
-  anillo  celdas=1     sha=05637fbb3d7c49ff
-          primera M1327.48 646.38a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
-          ultima  M1327.48 646.38a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
+  anillo  celdas=1     sha=e9ab38acb8eec42e
+          primera M1021.31 646.42a3.90 3.90 0 1 0 7.81 0a3.90 3.90 0 1 0 -7.81 0
+          ultima  M1021.31 646.42a3.90 3.90 0 1 0 7.81 0a3.90 3.90 0 1 0 -7.81 0
 
 textos
-  date      x=   88.00 y=   83.00 size= 16.00 peso=400 op=0.68 anchor=start
+  date      x=   87.98 y=  244.42 size= 14.00 peso=400 op=0.62 ls=0.15
             "domingo, 2 de julio"
-  time      x=   88.00 y=  173.00 size= 78.00 peso=300 op=1 anchor=start
-            "07:41"
-  efemeride x=   88.00 y=  613.25 size= 12.50 peso=400 op=0.48 anchor=start
-            "2 de julio, 1937 — La aviadora Amelia Earhart desapareció"
-  efemeride x=   88.00 y=  632.63 size= 12.50 peso=400 op=0.48 anchor=start
-            "sobre el océano Pacífico durante su intento de vuelo"
-  efemeride x=   88.00 y=  652.00 size= 12.50 peso=400 op=0.48 anchor=start
-            "alrededor del mundo."
-  footer    x=   88.00 y=  573.25 size= 11.50 peso=400 op=0.55 anchor=start ls=1.40
-            "100 % · semana 1040 de 1040"
+  hero      x=   87.98 y=  323.24 size= 78.82 peso=300 op=1
+            "100 %"
+  sub       x=   87.98 y=  347.49 size= 12.50 peso=400 op=0.62 ls=0.91
+            "semana 1040 de 1040"
+  efemeride x=   87.98 y=  406.61 size= 14.50 peso=400 op=0.6
+            "2 de julio, 1937 — La aviadora Amelia Earhart"
+  efemeride x=   87.98 y=  429.81 size= 14.50 peso=400 op=0.6
+            "desapareció sobre el océano Pacífico durante"
+  efemeride x=   87.98 y=  453.01 size= 14.50 peso=400 op=0.6
+            "su intento de vuelo alrededor del mundo."
 
-svg          9 elementos, 65069 caracteres
-svg sha      4662e7a35a3fd810
+svg          10 elementos, 64734 caracteres
+svg sha      dd1fd2423cca5310

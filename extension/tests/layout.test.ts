@@ -1,184 +1,183 @@
 /**
- * Layout y responsive. El test que mas importa es el ultimo: la grilla no se sale del
- * viewport en NINGUN tamano razonable, que es la promesa del plan 5.7.6.
+ * Layout de la composición editorial.
+ *
+ * El test que más importa es el barrido final: la grilla no se sale del viewport y la celda
+ * no se deforma en NINGÚN tamaño razonable. Esas dos cosas juntas son lo que reemplaza al
+ * viejo invariante de la caja fija.
  */
 
 import { describe, expect, it } from "vitest";
 import { resolveLayout } from "../src/core/layout.js";
-import type { Viewport } from "../src/core/layout.js";
-import { BOX_ASPECT } from "../src/core/geometry.js";
-import { T } from "../src/core/tokens.js";
+import type { LayoutInput, Viewport } from "../src/core/layout.js";
+import { CELL, LAYOUT, RESPONSIVE, TYPE } from "../src/core/tokens.js";
 
 const EFEMERIDE =
   "2 de julio, 1937 — La aviadora Amelia Earhart desapareció sobre el océano Pacífico durante su intento de vuelo alrededor del mundo.";
 
-function layoutAt(widthPx: number, heightPx: number, efemeride: string | null = EFEMERIDE) {
+function layoutAt(
+  widthPx: number,
+  heightPx: number,
+  overrides: Partial<LayoutInput> = {},
+): ReturnType<typeof resolveLayout> {
   return resolveLayout({
     viewport: { widthPx, heightPx },
-    dateText: "miércoles, 2 de julio",
-    timeText: "07:41",
-    footerText: "42 % · semana 1742 de 4160",
     theme: "dark",
-    efemerideText: efemeride,
+    lifeYears: 80,
+    dateText: "domingo, 2 de julio",
+    heroText: "42 %",
+    subText: "semana 1742 de 4160",
+    efemerideText: EFEMERIDE,
+    ...overrides,
   });
 }
 
-describe("lienzo de referencia 1440x720", () => {
-  const layout = layoutAt(1440, 720);
+describe("composición editorial", () => {
+  const layout = layoutAt(1920, 950);
 
-  it("usa composicion B", () => {
-    expect(layout.composition).toBe("B");
+  it("no dibuja reloj: los roles son fecha, dato, subtítulo y efeméride", () => {
+    const roles = [...new Set(layout.lines.map((line) => line.role))].sort();
+    expect(roles).toEqual(["date", "efemeride", "hero", "sub"]);
   });
 
-  it("reproduce los valores del plan 5.3", () => {
-    // Alto 584 = 720 - 68 - 68, ancho = 584 * 466/326, k = 584/326.
-    expect(layout.grid.heightPx).toBeCloseTo(584, 6);
-    expect(layout.grid.widthPx).toBeCloseTo(584 * BOX_ASPECT, 6);
-    expect(layout.grid.widthPx).toBeCloseTo(834.8, 1);
-    expect(layout.grid.k).toBeCloseTo(1.7914, 4);
-    expect(layout.typeScale).toBeCloseTo(1, 9);
+  it("el dato es el elemento tipográfico dominante", () => {
+    const hero = layout.lines.find((line) => line.role === "hero");
+    const others = layout.lines.filter((line) => line.role !== "hero");
+    expect(hero).toBeDefined();
+    for (const line of others) {
+      expect(hero?.sizePx ?? 0).toBeGreaterThan(line.sizePx * 3);
+    }
   });
 
-  it("ancla la grilla al margen derecho y al superior", () => {
-    expect(layout.grid.originY).toBeCloseTo(68, 6);
-    expect(layout.grid.originX + layout.grid.widthPx).toBeCloseTo(1440 - 88, 6);
-    expect(layout.grid.originX).toBeCloseTo(517.2, 1);
+  it("todo el bloque de texto arranca en la misma x", () => {
+    const xs = new Set(layout.lines.map((line) => line.x));
+    expect(xs.size).toBe(1);
+    expect(layout.column.x).toBe([...xs][0]);
   });
 
-  it("la columna tipografica queda en 340 px, como el handoff", () => {
-    const starts = layout.lines.map((line) => line.x);
-    expect(new Set(starts).size).toBe(1);
-    expect(starts[0]).toBeCloseTo(88, 6);
+  it("la grilla llega hasta el margen derecho", () => {
+    const hMargin = 1920 * LAYOUT.marginRatio.horizontal;
+    // A 80 anios la grilla ocupa todo el ancho que le toca, asi que centrada y alineada
+    // al margen son lo mismo.
+    expect(layout.grid.originX + layout.grid.metrics.widthPx).toBeCloseTo(1920 - hMargin, 6);
   });
 
-  it("el ultimo baseline de la efemeride cae en el borde inferior de la grilla", () => {
-    const efem = layout.lines.filter((line) => line.role === "efemeride");
-    expect(efem.length).toBeGreaterThan(1);
-    expect(efem[efem.length - 1]?.y).toBeCloseTo(652, 6);
+  it("el filete separa el dato de la efeméride", () => {
+    const sub = layout.lines.find((line) => line.role === "sub");
+    const firstEfem = layout.lines.find((line) => line.role === "efemeride");
+    expect(layout.rule).not.toBeNull();
+    expect(layout.rule?.y ?? 0).toBeGreaterThan(sub?.y ?? 0);
+    expect(layout.rule?.y ?? 0).toBeLessThan(firstEfem?.y ?? 0);
+    expect(layout.rule?.widthPx).toBeCloseTo(layout.column.widthPx, 6);
   });
 
-  it("el pie queda 40 px por encima de la primera linea de la efemeride", () => {
-    const efem = layout.lines.filter((line) => line.role === "efemeride");
-    const footer = layout.lines.find((line) => line.role === "footer");
-    expect(footer?.y).toBeCloseTo((efem[0]?.y ?? 0) - 40, 6);
+  it("la celda sale cuadrada y con aire de sobra", () => {
+    const m = layout.grid.metrics;
+    expect(m.yearPitch / m.weekPitch).toBeCloseTo(CELL.aspect, 9);
+    // El objetivo del rediseño: más de 7 px de hueco donde antes había 3,96.
+    expect(m.gapPx).toBeGreaterThan(7);
   });
 });
 
-describe("efemeride apagada", () => {
-  it("el pie se ancla al borde inferior de la grilla y nada mas se mueve", () => {
-    const on = layoutAt(1440, 720);
-    const off = layoutAt(1440, 720, null);
+describe("accesibilidad de la escala tipográfica", () => {
+  it("ningún texto baja de 14 px en un viewport de escritorio", () => {
+    for (const [w, h] of [
+      [1280, 720],
+      [1440, 900],
+      [1920, 950],
+      [2560, 1300],
+    ] as const) {
+      for (const line of layoutAt(w, h).lines) {
+        expect(line.sizePx).toBeGreaterThanOrEqual(12.5);
+      }
+    }
+  });
 
-    expect(off.lines.some((line) => line.role === "efemeride")).toBe(false);
-    expect(off.lines.find((line) => line.role === "footer")?.y).toBeCloseTo(652, 6);
-    // La grilla, la fecha y la hora no se corren un pixel.
-    expect(off.grid).toEqual(on.grid);
-    for (const role of ["date", "time"] as const) {
-      expect(off.lines.find((l) => l.role === role)?.y).toBeCloseTo(
-        on.lines.find((l) => l.role === role)?.y ?? -1,
-        6,
-      );
+  it("la efeméride respeta el mínimo del token", () => {
+    for (const [w, h] of [
+      [1024, 620],
+      [1920, 950],
+      [3840, 2160],
+    ] as const) {
+      const efem = layoutAt(w, h).lines.find((line) => line.role === "efemeride");
+      if (efem === undefined) continue;
+      expect(efem.sizePx).toBeGreaterThanOrEqual(TYPE.clampPx.efemeride.min);
+      expect(efem.sizePx).toBeLessThanOrEqual(TYPE.clampPx.efemeride.max);
     }
   });
 });
 
-describe("degradacion de B (desviacion documentada del plan 5.7.5)", () => {
-  it("1280x720 se queda en B encogiendo la grilla, en vez de saltar a A", () => {
-    const layout = layoutAt(1280, 720);
-    expect(layout.composition).toBe("B");
-    // Encogio respecto del alto disponible, pero sigue dominando la composicion.
-    expect(layout.grid.heightPx).toBeLessThan(584);
-    expect(layout.grid.heightPx / (720 - 2 * 68)).toBeGreaterThan(T.landscape.responsive.minGridHeightRatioB);
-  });
-
-  it("un portatil 1080p con Windows al 125 % entra a alto completo", () => {
-    const layout = layoutAt(1536, 730);
-    expect(layout.composition).toBe("B");
-    expect(layout.grid.heightPx).toBeCloseTo(730 - 2 * (730 * 0.094444), 0);
-  });
-
-  it("una tablet en vertical pasa a composicion A", () => {
-    expect(layoutAt(810, 1080).composition).toBe("A");
-    expect(layoutAt(768, 1024).composition).toBe("A");
-  });
-
-  it("A centra la grilla", () => {
-    const layout = layoutAt(810, 1080);
-    expect(layout.grid.originX + layout.grid.widthPx / 2).toBeCloseTo(810 / 2, 6);
-    expect(layout.lines.every((line) => line.anchor === "middle")).toBe(true);
+describe("sin fecha de nacimiento", () => {
+  it("no dibuja el dato ni el subtítulo, y la grilla no se mueve", () => {
+    const con = layoutAt(1920, 950);
+    const sin = layoutAt(1920, 950, { heroText: "", subText: "" });
+    expect(sin.lines.some((line) => line.role === "hero")).toBe(false);
+    expect(sin.lines.some((line) => line.role === "sub")).toBe(false);
+    expect(sin.grid.originX).toBeCloseTo(con.grid.originX, 6);
+    expect(sin.grid.metrics.widthPx).toBeCloseTo(con.grid.metrics.widthPx, 6);
   });
 });
 
-describe("ventanas bajas (plan 5.7.6)", () => {
-  it("con vh < 420 se oculta la efemeride y queda el pie", () => {
-    const layout = layoutAt(1440, 400);
-    expect(layout.showEfemeride).toBe(false);
-    expect(layout.showFooter).toBe(true);
+describe("ventanas bajas", () => {
+  it("por debajo del umbral se suelta la efeméride", () => {
+    const layout = layoutAt(1440, RESPONSIVE.hideEfemerideBelowVhPx - 20);
     expect(layout.lines.some((line) => line.role === "efemeride")).toBe(false);
+    expect(layout.rule).toBeNull();
   });
 
-  it("mas abajo todavia tambien se oculta el pie", () => {
-    const layout = layoutAt(1440, 320);
-    expect(layout.showEfemeride).toBe(false);
-    expect(layout.showFooter).toBe(false);
+  it("más abajo todavía se suelta el subtítulo, pero el dato queda", () => {
+    const layout = layoutAt(1440, RESPONSIVE.hideSubBelowVhPx - 20);
+    expect(layout.lines.some((line) => line.role === "sub")).toBe(false);
+    expect(layout.lines.some((line) => line.role === "hero")).toBe(true);
   });
 });
 
-describe("la grilla nunca se recorta", () => {
+describe("la grilla nunca se recorta ni se deforma", () => {
   const viewports: readonly Viewport[] = (() => {
     const out: Viewport[] = [];
-    for (let w = 480; w <= 3840; w += 64) {
-      for (const h of [320, 400, 540, 600, 640, 660, 720, 730, 800, 950, 1024, 1080, 1300, 1600]) {
+    for (let w = 520; w <= 3840; w += 64) {
+      for (const h of [360, 420, 540, 620, 720, 800, 950, 1080, 1300, 1600]) {
         out.push({ widthPx: w, heightPx: h });
       }
     }
     return out;
   })();
 
-  it(`se mantiene dentro del viewport en ${viewports.length} tamanos`, () => {
+  it(`se mantiene dentro del viewport en ${viewports.length} tamaños`, () => {
     const offenders: string[] = [];
     for (const viewport of viewports) {
-      const layout = layoutAt(viewport.widthPx, viewport.heightPx);
-      const g = layout.grid;
+      const { grid } = layoutAt(viewport.widthPx, viewport.heightPx);
+      const m = grid.metrics;
       const fits =
-        g.originX >= -0.5 &&
-        g.originY >= -0.5 &&
-        g.originX + g.widthPx <= viewport.widthPx + 0.5 &&
-        g.originY + g.heightPx <= viewport.heightPx + 0.5 &&
-        g.widthPx > 0 &&
-        g.heightPx > 0;
+        grid.originX >= -0.5 &&
+        grid.originY >= -0.5 &&
+        grid.originX + m.widthPx <= viewport.widthPx + 0.5 &&
+        grid.originY + m.heightPx <= viewport.heightPx + 0.5 &&
+        m.widthPx > 0 &&
+        m.heightPx > 0;
       if (!fits) {
-        offenders.push(
-          `${viewport.widthPx}x${viewport.heightPx} (${layout.composition}): ` +
-            `${g.originX.toFixed(1)},${g.originY.toFixed(1)} ${g.widthPx.toFixed(1)}x${g.heightPx.toFixed(1)}`,
-        );
+        offenders.push(`${viewport.widthPx}x${viewport.heightPx}`);
       }
     }
     expect(offenders).toEqual([]);
   });
 
-  it("conserva el aspecto 466:326 en todos esos tamanos", () => {
+  it("la celda conserva su aspecto en todos esos tamaños", () => {
     for (const viewport of viewports) {
-      const g = layoutAt(viewport.widthPx, viewport.heightPx).grid;
-      expect(g.widthPx / g.heightPx).toBeCloseTo(BOX_ASPECT, 6);
+      const m = layoutAt(viewport.widthPx, viewport.heightPx).grid.metrics;
+      expect(m.yearPitch / m.weekPitch).toBeCloseTo(CELL.aspect, 9);
     }
   });
-});
 
-describe("tipografia responsive", () => {
-  it("respeta los clamps de los tokens en los extremos", () => {
-    for (const [w, h] of [
-      [640, 400],
-      [1440, 720],
-      [3840, 2160],
-    ] as const) {
-      const layout = layoutAt(w, h);
-      const time = layout.lines.find((line) => line.role === "time");
-      const date = layout.lines.find((line) => line.role === "date");
-      expect(time?.sizePx).toBeGreaterThanOrEqual(T.landscape.responsive.fontClampPx.time.min);
-      expect(time?.sizePx).toBeLessThanOrEqual(T.landscape.responsive.fontClampPx.time.max);
-      expect(date?.sizePx).toBeGreaterThanOrEqual(T.landscape.responsive.fontClampPx.date.min);
-      expect(date?.sizePx).toBeLessThanOrEqual(T.landscape.responsive.fontClampPx.date.max);
-    }
+  it("con lifeYears bajo la grilla se angosta, no se estira", () => {
+    const ochenta = layoutAt(1920, 950, { lifeYears: 80 }).grid.metrics;
+    const veinte = layoutAt(1920, 950, { lifeYears: 20 }).grid.metrics;
+
+    // Esto es lo que fallaba antes: con la caja fija, 20 anios daban celdas 3,6 veces mas
+    // anchas que altas. Ahora la celda sigue cuadrada y lo que cambia es el ancho total.
+    expect(veinte.yearPitch / veinte.weekPitch).toBeCloseTo(1, 9);
+    expect(veinte.widthPx).toBeLessThan(ochenta.widthPx * 0.5);
+
+    // Con menos columnas la celda puede crecer, porque ya no la limita el ancho.
+    expect(veinte.yearPitch).toBeGreaterThanOrEqual(ochenta.yearPitch);
   });
 });

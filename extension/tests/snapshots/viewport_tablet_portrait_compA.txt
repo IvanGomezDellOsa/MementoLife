@@ -1,41 +1,50 @@
 fixture      viewport_tablet_portrait_compA
 viewport     810 x 1080
 tema         dark   idioma es   lifeYears 80
-composicion  A
-typeScale    1.520548
+typeScale    1.152289
 
 grilla
-  origen     49.50, 306.70
-  tamano     711.00 x 497.39
-  k          1.525751
-  punto r    2.36
-  anillo w   1.68
+  origen     461.88, 449.30
+  tamano     298.63 x 181.41
+  celda      3.4886 x 3.4886  (aspecto 1.0000)
+  hueco      1.95 px
+  punto r    0.77
+  anillo     r 1.21 trazo 0.55
   celdas     4160 (80 anios x 52 semanas)
-  paso anio  5.4750 u
-  banda      4.0000 u x 7
+  banda      2.79 px x 7
+  opacidad   pasado 0.95 futuro 0.27
+
+columna      x 49.49 ancho 306.38
+filete       y 547.11 op 0.15
 
 paths
-  pasado  celdas=1741  sha=301a2ec2d4249dd6
-          primera M51.31 311.48a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
-          ultima  M345.29 541.05a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
-  futuro  celdas=2418  sha=8cd8dd997f06e364
-          primera M345.29 560.18a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
-          ultima  M753.96 799.31a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
-  anillo  celdas=1     sha=35ebefa4f5dfdb2c
-          primera M343.91 550.61a3.74 3.74 0 1 0 7.48 0a3.74 3.74 0 1 0 -7.48 0
-          ultima  M343.91 550.61a3.74 3.74 0 1 0 7.48 0a3.74 3.74 0 1 0 -7.48 0
+  pasado  celdas=1741  sha=1eccb5a5490aa657
+          primera M462.86 451.04a0.77 0.77 0 1 0 1.54 0a0.77 0.77 0 1 0 -1.54 0
+          ultima  M586.36 534.77a0.77 0.77 0 1 0 1.54 0a0.77 0.77 0 1 0 -1.54 0
+  futuro  celdas=2418  sha=3213048c9fa8b44e
+          primera M586.36 541.74a0.77 0.77 0 1 0 1.54 0a0.77 0.77 0 1 0 -1.54 0
+          ultima  M758.00 628.96a0.77 0.77 0 1 0 1.54 0a0.77 0.77 0 1 0 -1.54 0
+  anillo  celdas=1     sha=0e8cc1a3be208815
+          primera M585.91 538.26a1.21 1.21 0 1 0 2.43 0a1.21 1.21 0 1 0 -2.43 0
+          ultima  M585.91 538.26a1.21 1.21 0 1 0 2.43 0a1.21 1.21 0 1 0 -2.43 0
 
 textos
-  date      x=  405.00 y=  124.23 size= 20.00 peso=400 op=0.68 anchor=middle
+  date      x=   49.49 y=  342.00 size= 18.44 peso=400 op=0.62 ls=0.23
             "domingo, 2 de julio"
-  time      x=  405.00 y=  239.79 size=103.40 peso=300 op=1 anchor=middle
-            "07:41"
-  footer    x=  405.00 y=  870.79 size= 15.00 peso=400 op=0.55 anchor=middle ls=2.13
-            "42 % · semana 1742 de 4160"
-  efemeride x=  405.00 y=  941.53 size= 16.00 peso=400 op=0.48 anchor=middle
-            "2 de julio, 1937 — La aviadora Amelia Earhart desapareció sobre el océano Pacífico durante su"
-  efemeride x=  405.00 y=  966.33 size= 16.00 peso=400 op=0.48 anchor=middle
-            "intento de vuelo alrededor del mundo."
+  hero      x=   49.49 y=  461.84 size=119.84 peso=300 op=1
+            "42 %"
+  sub       x=   49.49 y=  498.71 size= 16.13 peso=400 op=0.62 ls=1.38
+            "semana 1742 de 4160"
+  efemeride x=   49.49 y=  588.59 size= 18.44 peso=400 op=0.6
+            "2 de julio, 1937 — La aviadora"
+  efemeride x=   49.49 y=  618.09 size= 18.44 peso=400 op=0.6
+            "Amelia Earhart desapareció sobre"
+  efemeride x=   49.49 y=  647.58 size= 18.44 peso=400 op=0.6
+            "el océano Pacífico durante su"
+  efemeride x=   49.49 y=  677.08 size= 18.44 peso=400 op=0.6
+            "intento de vuelo alrededor del"
+  efemeride x=   49.49 y=  706.58 size= 18.44 peso=400 op=0.6
+            "mundo."
 
-svg          9 elementos, 254603 caracteres
-svg sha      a1ef6b09ffab7c0b
+svg          13 elementos, 255196 caracteres
+svg sha      67ececab25cd2891

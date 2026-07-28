@@ -1,5 +1,5 @@
 /**
- * format.ts — fecha y hora como cadenas, segun el plan 5.4.
+ * format.ts — la fecha como cadena.
  *
  * El core no lee el reloj: la fecha y la hora entran como parametros. Lo que si hace es
  * construir un Date a partir de esos parametros para pasarselo a Intl, siempre en UTC.
@@ -23,14 +23,3 @@ export function formatDate(date: CalendarDate, locale: Locale): string {
   }).format(utc);
 }
 
-/**
- * "07:41" en los dos idiomas.
- *
- * 24 h a proposito: el diseno se aprobo con un reloj de 5 caracteres, y en-US en 12 h
- * agregaria "AM/PM" y cambiaria el peso del bloque. Se formatea a mano en vez de con Intl
- * porque `hourCycle: "h23"` sigue devolviendo separadores y digitos que dependen del
- * locale, y aca hace falta exactamente HH:MM.
- */
-export function formatTime(hour: number, minute: number): string {
-  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-}

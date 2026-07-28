@@ -37,37 +37,27 @@ const tables = new Map<Locale, readonly string[]>();
 let prefs: Prefs = readCache();
 let lastRenderedDay = "";
 
-/** Fecha y hora LOCALES. El core no lee el reloj: se le pasan como parametros. */
-function nowParts(): {
-  today: { year: number; month: number; day: number };
-  hour: number;
-  minute: number;
-} {
+/** Fecha LOCAL. El core no lee el reloj: se le pasa como parametro. */
+function today(): { year: number; month: number; day: number } {
   const now = new Date();
-  return {
-    today: { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() },
-    hour: now.getHours(),
-    minute: now.getMinutes(),
-  };
+  return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
 }
 
 function draw(): RenderResult {
-  const { today, hour, minute } = nowParts();
+  const now = today();
   const theme = resolveTheme(prefs.theme);
   const birthDate = parseBirthDate(prefs.birthDate);
   const table = tables.get(prefs.locale);
 
   const efemerideText =
-    prefs.efemeride && table !== undefined ? efemerideFor(table, today) : null;
+    prefs.efemeride && table !== undefined ? efemerideFor(table, now) : null;
 
   const result = render({
     theme,
     locale: prefs.locale,
     lifeYears: prefs.lifeYears,
     birthDate,
-    today,
-    hour,
-    minute,
+    today: now,
     efemerideText,
     viewport: { widthPx: window.innerWidth, heightPx: window.innerHeight },
   });
@@ -78,7 +68,7 @@ function draw(): RenderResult {
   document.documentElement.lang = prefs.locale;
   settingsButton.title = t(prefs.locale, "openOptions");
   settingsButton.setAttribute("aria-label", t(prefs.locale, "openOptions"));
-  lastRenderedDay = `${today.year}-${today.month}-${today.day}`;
+  lastRenderedDay = `${now.year}-${now.month}-${now.day}`;
 
   if (birthDate === null) {
     onboardingEl.hidden = false;
@@ -109,20 +99,20 @@ async function loadEfemerides(locale: Locale): Promise<void> {
 }
 
 /**
- * Tick alineado al borde de minuto. Se reprograma en cada vuelta en vez de usar
- * setInterval: con setInterval el reloj se va corriendo respecto del minuto real, y a la
- * larga el cambio de digito se ve tarde.
+ * Sin reloj en pantalla ya no hace falta un tick por minuto para redibujar digitos, pero si
+ * hay que detectar el cruce de medianoche: cambia la celda actual, el porcentaje y la
+ * efemeride. Se chequea cada minuto, alineado al borde, y solo se redibuja si cambio el dia.
  */
-function scheduleMinuteTick(): void {
+function scheduleDayCheck(): void {
   const delay = 60_000 - (Date.now() % 60_000);
   window.setTimeout(() => {
-    const { today } = nowParts();
-    const day = `${today.year}-${today.month}-${today.day}`;
-    // Cruce de medianoche con la pestana abierta: cambia la celda actual, el pie y la
-    // efemeride, asi que se redibuja todo y no solo el reloj.
-    draw();
-    if (day !== lastRenderedDay && prefs.efemeride) void loadEfemerides(prefs.locale);
-    scheduleMinuteTick();
+    const now = today();
+    const day = `${now.year}-${now.month}-${now.day}`;
+    if (day !== lastRenderedDay) {
+      draw();
+      if (prefs.efemeride) void loadEfemerides(prefs.locale);
+    }
+    scheduleDayCheck();
   }, delay);
 }
 
@@ -167,7 +157,7 @@ function start(): void {
     resizeHandle = window.setTimeout(draw, 80);
   });
 
-  scheduleMinuteTick();
+  scheduleDayCheck();
 }
 
 start();

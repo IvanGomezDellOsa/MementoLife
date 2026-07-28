@@ -1,22 +1,12 @@
 /**
- * Snapshots — el gate de regresion visual (plan 8.2), en formato digest.
+ * Snapshots — el gate de regresión visual, en formato digest.
  *
- * El plan pedia snapshotear el SVG entero, con el argumento de que "el diff de un PR
- * muestra exactamente que coordenada se movio". En la practica eso no se cumplia: el path
- * del pasado son 4160 circulos en UNA sola linea de 250 KB, asi que el diff mostraba una
- * linea cambiada e ilegible. Doce archivos asi eran 2,7 MB de los 3 MB del repo.
+ * Snapshotear el SVG entero pesaba 250 KB por fixture y el diff era ilegible: el path del
+ * pasado son miles de círculos en una sola línea. El digest conserva la detección —un hash
+ * por path cambia con cualquier coordenada— y pone en claro lo que uno realmente quiere
+ * leer en un diff: geometría, colores, opacidades y cada línea de texto.
  *
- * El digest conserva la fuerza de regresion y recupera el beneficio que se buscaba:
- *
- *   - un hash por path detecta CUALQUIER cambio de coordenada, hasta el ultimo decimal;
- *   - el conteo de celdas por estado dice si lo que cambio fue el reparto pasado/futuro;
- *   - la primera y la ultima celda de cada path acotan donde empezo a moverse;
- *   - la geometria (origen, k, radio) y cada linea de texto van en claro, que es lo que
- *     uno realmente quiere leer en un diff.
- *
- * Resultado: ~2 KB por fixture en vez de 250 KB, y un diff que se entiende.
- *
- * Si un cambio de diseno es intencional, se actualizan con `vitest -u` y se revisan en el
+ * Si un cambio de diseño es intencional, se actualizan con `vitest -u` y se revisan en el
  * diff antes de commitear.
  */
 
@@ -53,10 +43,6 @@ function parseDate(iso: string): { year: number; month: number; day: number } {
   return { year: year ?? 0, month: month ?? 1, day: day ?? 1 };
 }
 
-// Hora fija: la del handoff. El reloj real no entra en el snapshot, obviamente.
-const HOUR = 7;
-const MINUTE = 41;
-
 function renderFixture(fixture: Fixture): RenderResult {
   const today = parseDate(fixture.today);
   return render({
@@ -65,8 +51,6 @@ function renderFixture(fixture: Fixture): RenderResult {
     lifeYears: fixture.lifeYears,
     birthDate: parseDate(fixture.birthDate),
     today,
-    hour: HOUR,
-    minute: MINUTE,
     efemerideText: fixture.efemerideEnabled
       ? efemerideFor(fixture.locale === "es" ? ES : EN, today)
       : null,
@@ -83,67 +67,74 @@ function cellCount(path: string): number {
   return path === "" ? 0 : path.split("M").length - 1;
 }
 
-function firstCell(path: string): string {
+function edgeCell(path: string, which: "first" | "last"): string {
   const parts = path.split("M");
-  return parts.length > 1 ? `M${parts[1] ?? ""}` : "—";
-}
-
-function lastCell(path: string): string {
-  const parts = path.split("M");
-  return parts.length > 1 ? `M${parts[parts.length - 1] ?? ""}` : "—";
+  if (parts.length < 2) return "-";
+  return `M${(which === "first" ? parts[1] : parts[parts.length - 1]) ?? ""}`;
 }
 
 function describePath(name: string, path: string): string {
   if (path === "") return `  ${name.padEnd(7)} vacio`;
   return [
     `  ${name.padEnd(7)} celdas=${String(cellCount(path)).padEnd(5)} sha=${sha(path)}`,
-    `          primera ${firstCell(path)}`,
-    `          ultima  ${lastCell(path)}`,
+    `          primera ${edgeCell(path, "first")}`,
+    `          ultima  ${edgeCell(path, "last")}`,
   ].join("\n");
 }
 
 function digest(fixture: Fixture, result: RenderResult): string {
-  const g = result.layout.grid;
-  const geo = result.paths.geometry;
-  const lines = result.layout.lines
+  const { originX, originY, geometry: g, metrics: m } = result.layout.grid;
+  const layout = result.layout;
+
+  const textBlock = layout.lines
     .filter((line) => line.text !== "")
-    .map(
-      (line) =>
+    .map((line) => {
+      const ls = line.letterSpacingPx !== 0 ? ` ls=${line.letterSpacingPx.toFixed(2)}` : "";
+      return (
         `  ${line.role.padEnd(9)} x=${line.x.toFixed(2).padStart(8)} y=${line.y.toFixed(2).padStart(8)}` +
-        ` size=${line.sizePx.toFixed(2).padStart(6)} peso=${line.weight} op=${line.opacity}` +
-        ` anchor=${line.anchor}${line.letterSpacingPx !== 0 ? ` ls=${line.letterSpacingPx.toFixed(2)}` : ""}` +
-        `\n            "${line.text}"`,
-    );
+        ` size=${line.sizePx.toFixed(2).padStart(6)} peso=${line.weight} op=${line.opacity}${ls}\n` +
+        `            "${line.text}"`
+      );
+    })
+    .join("\n");
 
   const elements = (result.svg.match(/<(rect|path|text)\b/g) ?? []).length;
+  const aspect = (m.yearPitch / m.weekPitch).toFixed(4);
+  const rule =
+    layout.rule === null ? "no" : `y ${layout.rule.y.toFixed(2)} op ${layout.rule.opacity}`;
 
-  return `fixture      ${fixture.id}
-viewport     ${fixture.viewport.widthPx} x ${fixture.viewport.heightPx}
-tema         ${fixture.theme}   idioma ${fixture.locale}   lifeYears ${fixture.lifeYears}
-composicion  ${result.layout.composition}
-typeScale    ${result.layout.typeScale.toFixed(6)}
-
-grilla
-  origen     ${g.originX.toFixed(2)}, ${g.originY.toFixed(2)}
-  tamano     ${g.widthPx.toFixed(2)} x ${g.heightPx.toFixed(2)}
-  k          ${g.k.toFixed(6)}
-  punto r    ${result.dotRadius.toFixed(2)}
-  anillo w   ${result.paths.ringStroke.toFixed(2)}
-  celdas     ${geo.totalCells} (${geo.yearCount} anios x ${geo.unitCount} semanas)
-  paso anio  ${geo.yearPitch.toFixed(4)} u
-  banda      ${geo.bandGap.toFixed(4)} u x ${geo.bandCount}
-
-paths
-${describePath("pasado", result.paths.past)}
-${describePath("futuro", result.paths.future)}
-${describePath("anillo", result.paths.ring)}
-
-textos
-${lines.join("\n")}
-
-svg          ${elements} elementos, ${result.svg.length} caracteres
-svg sha      ${sha(result.svg)}
-`;
+  return [
+    `fixture      ${fixture.id}`,
+    `viewport     ${fixture.viewport.widthPx} x ${fixture.viewport.heightPx}`,
+    `tema         ${fixture.theme}   idioma ${fixture.locale}   lifeYears ${fixture.lifeYears}`,
+    `typeScale    ${layout.typeScale.toFixed(6)}`,
+    ``,
+    `grilla`,
+    `  origen     ${originX.toFixed(2)}, ${originY.toFixed(2)}`,
+    `  tamano     ${m.widthPx.toFixed(2)} x ${m.heightPx.toFixed(2)}`,
+    `  celda      ${m.yearPitch.toFixed(4)} x ${m.weekPitch.toFixed(4)}  (aspecto ${aspect})`,
+    `  hueco      ${m.gapPx.toFixed(2)} px`,
+    `  punto r    ${m.dotRadius.toFixed(2)}`,
+    `  anillo     r ${m.ringRadius.toFixed(2)} trazo ${m.ringStroke.toFixed(2)}`,
+    `  celdas     ${g.totalCells} (${g.yearCount} anios x ${g.weekCount} semanas)`,
+    `  banda      ${m.bandGap.toFixed(2)} px x ${g.bandCount}`,
+    `  opacidad   pasado ${layout.pastOpacity} futuro ${layout.futureOpacity}`,
+    ``,
+    `columna      x ${layout.column.x.toFixed(2)} ancho ${layout.column.widthPx.toFixed(2)}`,
+    `filete       ${rule}`,
+    ``,
+    `paths`,
+    describePath("pasado", result.paths.past),
+    describePath("futuro", result.paths.future),
+    describePath("anillo", result.paths.ring),
+    ``,
+    `textos`,
+    textBlock,
+    ``,
+    `svg          ${elements} elementos, ${result.svg.length} caracteres`,
+    `svg sha      ${sha(result.svg)}`,
+    ``,
+  ].join("\n");
 }
 
 describe("snapshots por fixture", () => {
@@ -165,7 +156,6 @@ describe("propiedades que valen para todos los fixtures", () => {
     it(`${fixture.id}: el DOM queda en pocos nodos, no uno por celda`, () => {
       const result = renderFixture(fixture);
       const elements = result.svg.match(/<(rect|path|text)\b/g) ?? [];
-      // 1 fondo + hasta 3 paths + unas pocas lineas de texto. Nunca miles.
       expect(elements.length).toBeLessThan(20);
       expect(result.svg).not.toMatch(/<circle/);
     });
@@ -174,7 +164,16 @@ describe("propiedades que valen para todos los fixtures", () => {
       const result = renderFixture(fixture);
       const total =
         cellCount(result.paths.past) + cellCount(result.paths.future) + cellCount(result.paths.ring);
-      expect(total).toBe(result.paths.geometry.totalCells);
+      expect(total).toBe(result.layout.grid.geometry.totalCells);
+    });
+
+    it(`${fixture.id}: la grilla entra en el viewport`, () => {
+      const result = renderFixture(fixture);
+      const { originX, originY, metrics } = result.layout.grid;
+      expect(originX).toBeGreaterThanOrEqual(-0.5);
+      expect(originY).toBeGreaterThanOrEqual(-0.5);
+      expect(originX + metrics.widthPx).toBeLessThanOrEqual(fixture.viewport.widthPx + 0.5);
+      expect(originY + metrics.heightPx).toBeLessThanOrEqual(fixture.viewport.heightPx + 0.5);
     });
   }
 });

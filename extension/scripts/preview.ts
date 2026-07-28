@@ -72,15 +72,13 @@ function cardHtml(card: Card, onboarding = false): string {
     lifeYears: card.lifeYears,
     birthDate: onboarding ? null : BIRTH,
     today: TODAY,
-    hour: 7,
-    minute: 41,
     efemerideText: card.efemeride ? efemerideFor(card.locale === "es" ? ES : EN, TODAY) : null,
     viewport: { widthPx: card.widthPx, heightPx: card.heightPx },
   });
-  const g = result.layout.grid;
+  const m = result.layout.grid.metrics;
   const meta =
-    `composicion ${result.layout.composition} · caja ${g.widthPx.toFixed(0)}x${g.heightPx.toFixed(0)} · ` +
-    `k = ${g.k.toFixed(3)} · r punto = ${result.dotRadius.toFixed(2)} px · ` +
+    `caja ${m.widthPx.toFixed(0)}x${m.heightPx.toFixed(0)} · celda ${m.yearPitch.toFixed(2)} px · ` +
+    `hueco ${m.gapPx.toFixed(2)} px · r punto ${m.dotRadius.toFixed(2)} px · ` +
     `${(result.svg.match(/<(rect|path|text)\b/g) ?? []).length} nodos SVG`;
 
   return `<figure class="card">
