@@ -13,6 +13,7 @@ import type { Locale } from "./tokens.js";
 
 const ES = {
   optionsTitle: "MementoLife — Opciones",
+  openOptions: "Opciones",
   newTabTitle: "Pestaña nueva",
 
   birthDateLabel: "Fecha de nacimiento",
@@ -48,6 +49,7 @@ type Strings = { readonly [K in keyof typeof ES]: string };
 
 const EN: Strings = {
   optionsTitle: "MementoLife — Options",
+  openOptions: "Options",
   newTabTitle: "New tab",
 
   birthDateLabel: "Date of birth",

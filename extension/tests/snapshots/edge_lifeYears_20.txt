@@ -8,20 +8,20 @@ grilla
   origen     517.20, 68.00
   tamano     834.80 x 584.00
   k          1.791411
-  punto r    3.40
+  punto r    2.78
   anillo w   1.97
   celdas     1040 (20 anios x 52 semanas)
   paso anio  22.4789 u
   banda      16.4229 u x 1
 
 paths
-  pasado  celdas=1039  sha=e5f4126eb1b36390
-          primera M533.93 73.62a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
-          ultima  M1328.46 635.15a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+  pasado  celdas=1039  sha=40be7d75462ece67
+          primera M534.56 73.62a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
+          ultima  M1329.09 635.15a2.78 2.78 0 1 0 5.55 0a2.78 2.78 0 1 0 -5.55 0
   futuro  vacio
-  anillo  celdas=1     sha=e476b619d17a6707
-          primera M1326.58 646.38a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
-          ultima  M1326.58 646.38a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
+  anillo  celdas=1     sha=05637fbb3d7c49ff
+          primera M1327.48 646.38a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
+          ultima  M1327.48 646.38a4.39 4.39 0 1 0 8.78 0a4.39 4.39 0 1 0 -8.78 0
 
 textos
   date      x=   88.00 y=   83.00 size= 16.00 peso=400 op=0.68 anchor=start
@@ -37,5 +37,5 @@ textos
   footer    x=   88.00 y=  573.25 size= 11.50 peso=400 op=0.55 anchor=start ls=1.40
             "100 % · semana 1040 de 1040"
 
-svg          9 elementos, 65071 caracteres
-svg sha      f9b799d7ae83c84a
+svg          9 elementos, 65069 caracteres
+svg sha      4662e7a35a3fd810

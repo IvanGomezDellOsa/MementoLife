@@ -8,22 +8,22 @@ grilla
   origen     447.42, 96.14
   tamano     754.35 x 527.72
   k          1.618783
-  punto r    3.08
+  punto r    2.51
   anillo w   1.78
   celdas     4160 (80 anios x 52 semanas)
   paso anio  5.4750 u
   banda      4.0000 u x 7
 
 paths
-  pasado  celdas=1741  sha=2423f6b9028ad17b
-          primera M448.78 101.21a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
-          ultima  M760.68 344.78a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
-  futuro  celdas=2418  sha=13d54c62d3a55248
-          primera M760.68 365.07a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
-          ultima  M1194.27 618.79a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
-  anillo  celdas=1     sha=b30a3eff96794ccd
-          primera M758.98 354.93a4.78 4.78 0 1 0 9.55 0a4.78 4.78 0 1 0 -9.55 0
-          ultima  M758.98 354.93a4.78 4.78 0 1 0 9.55 0a4.78 4.78 0 1 0 -9.55 0
+  pasado  celdas=1741  sha=e2f9f36c7fa0963c
+          primera M449.35 101.21a2.51 2.51 0 1 0 5.02 0a2.51 2.51 0 1 0 -5.02 0
+          ultima  M761.25 344.78a2.51 2.51 0 1 0 5.02 0a2.51 2.51 0 1 0 -5.02 0
+  futuro  celdas=2418  sha=fda7c6b7271e467e
+          primera M761.25 365.07a2.51 2.51 0 1 0 5.02 0a2.51 2.51 0 1 0 -5.02 0
+          ultima  M1194.84 618.79a2.51 2.51 0 1 0 5.02 0a2.51 2.51 0 1 0 -5.02 0
+  anillo  celdas=1     sha=554a582cfe7079dd
+          primera M759.79 354.93a3.97 3.97 0 1 0 7.93 0a3.97 3.97 0 1 0 -7.93 0
+          ultima  M759.79 354.93a3.97 3.97 0 1 0 7.93 0a3.97 3.97 0 1 0 -7.93 0
 
 textos
   date      x=   78.22 y=  109.69 size= 14.46 peso=400 op=0.68 anchor=start
@@ -40,4 +40,4 @@ textos
             "42 % · semana 1742 de 4160"
 
 svg          10 elementos, 256115 caracteres
-svg sha      643e7788127643a3
+svg sha      687aecb386f9ccf9

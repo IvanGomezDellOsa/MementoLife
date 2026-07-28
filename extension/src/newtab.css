@@ -119,3 +119,46 @@ html, body {
 }
 
 .onboarding-error:empty { visibility: hidden; }
+
+/*
+ * Acceso a opciones.
+ *
+ * Va arriba a la derecha y no abajo: Brave y algunos navegadores dibujan su propia barra
+ * sobre el borde inferior de la pestana nueva, y ahi el boton quedaria tapado.
+ *
+ * Discreto por defecto (.22) porque no es el contenido: la pestana nueva es la grilla. Sube
+ * a .8 con hover o con foco de teclado, asi que se descubre al pasar por encima y es
+ * alcanzable con Tab. No se autofocusea nada, igual que el onboarding.
+ */
+#settings {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  opacity: 0.22;
+  transition: opacity 140ms ease, background-color 140ms ease;
+}
+
+#settings:hover,
+#settings:focus-visible {
+  opacity: 0.8;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+#settings:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #settings { transition: none; }
+}

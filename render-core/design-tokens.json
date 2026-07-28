@@ -22,11 +22,12 @@
   "grid": {
     "weeks": {
       "columns": 52,
-      "dotRadiusPx": 1.9,
+      "dotRadiusPx": 1.55,
       "bandEveryRows": 10,
       "bandGapPx": 4,
-      "currentRingRadiusPx": 2.95,
-      "currentRingStrokePx": 1.1
+      "currentRingRadiusPx": 2.45,
+      "currentRingStrokePx": 1.1,
+      "_note": "dotRadiusPx baja de 1.9 (handoff retrato) a 1.55: en apaisado y a tamano de monitor, 1.9 dejaba solo 3.96 px de hueco entre puntos de 8.98 px y la grilla vibraba. Con 1.55 el hueco pasa a 5.61 px (+42%) y las semanas se cuentan de a una sin que el pasado pierda cuerpo."
     },
     "opacity": {
       "past": {
@@ -34,9 +35,10 @@
         "light": 0.82
       },
       "future": {
-        "dark": 0.14,
-        "light": 0.15
-      }
+        "dark": 0.21,
+        "light": 0.23
+      },
+      "_note": "La opacidad de futuro sube de .14/.15 a .21/.23. Dos razones que apuntan al mismo numero: compensa la perdida de area del punto mas chico (1.55/1.9 al cuadrado = 0.665, o sea .14/0.665 = .21) y ataca la ilegibilidad que el plan 10.2 dejaba como decision abierta. Es el unico ajuste de opacidad que el plan autoriza."
     }
   },
   "landscape": {

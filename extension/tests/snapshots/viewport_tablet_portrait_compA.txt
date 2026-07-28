@@ -8,22 +8,22 @@ grilla
   origen     49.50, 306.70
   tamano     711.00 x 497.39
   k          1.525751
-  punto r    2.90
+  punto r    2.36
   anillo w   1.68
   celdas     4160 (80 anios x 52 semanas)
   paso anio  5.4750 u
   banda      4.0000 u x 7
 
 paths
-  pasado  celdas=1741  sha=189ffad85e17fcee
-          primera M50.78 311.48a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
-          ultima  M344.75 541.05a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
-  futuro  celdas=2418  sha=0b6301a0c16d94ab
-          primera M344.75 560.18a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
-          ultima  M753.42 799.31a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
-  anillo  celdas=1     sha=f41bc02d0e44a9f1
-          primera M343.15 550.61a4.50 4.50 0 1 0 9.00 0a4.50 4.50 0 1 0 -9.00 0
-          ultima  M343.15 550.61a4.50 4.50 0 1 0 9.00 0a4.50 4.50 0 1 0 -9.00 0
+  pasado  celdas=1741  sha=301a2ec2d4249dd6
+          primera M51.31 311.48a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
+          ultima  M345.29 541.05a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
+  futuro  celdas=2418  sha=8cd8dd997f06e364
+          primera M345.29 560.18a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
+          ultima  M753.96 799.31a2.36 2.36 0 1 0 4.73 0a2.36 2.36 0 1 0 -4.73 0
+  anillo  celdas=1     sha=35ebefa4f5dfdb2c
+          primera M343.91 550.61a3.74 3.74 0 1 0 7.48 0a3.74 3.74 0 1 0 -7.48 0
+          ultima  M343.91 550.61a3.74 3.74 0 1 0 7.48 0a3.74 3.74 0 1 0 -7.48 0
 
 textos
   date      x=  405.00 y=  124.23 size= 20.00 peso=400 op=0.68 anchor=middle
@@ -38,4 +38,4 @@ textos
             "intento de vuelo alrededor del mundo."
 
 svg          9 elementos, 254603 caracteres
-svg sha      76f2b9fc3f0f1316
+svg sha      a1ef6b09ffab7c0b

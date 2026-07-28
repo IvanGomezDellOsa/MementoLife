@@ -29,6 +29,7 @@ import { requireElement } from "./dom.js";
 
 const canvas = requireElement("canvas");
 const onboardingEl = requireElement("onboarding");
+const settingsButton = requireElement("settings");
 
 /** Tablas de efemerides ya cargadas, por idioma. El import() se hace una sola vez. */
 const tables = new Map<Locale, readonly string[]>();
@@ -75,6 +76,8 @@ function draw(): RenderResult {
   document.documentElement.dataset["theme"] = theme;
   document.title = t(prefs.locale, "newTabTitle");
   document.documentElement.lang = prefs.locale;
+  settingsButton.title = t(prefs.locale, "openOptions");
+  settingsButton.setAttribute("aria-label", t(prefs.locale, "openOptions"));
   lastRenderedDay = `${today.year}-${today.month}-${today.day}`;
 
   if (birthDate === null) {
@@ -124,6 +127,10 @@ function scheduleMinuteTick(): void {
 }
 
 function start(): void {
+  settingsButton.addEventListener("click", () => {
+    chrome.runtime.openOptionsPage();
+  });
+
   // Paso 1: primer cuadro con lo que hay en cache. Sin await, sin red, sin esperas.
   draw();
 

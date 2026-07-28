@@ -117,6 +117,35 @@ test.describe("pestana nueva", () => {
     await expect(page.locator("#canvas svg path")).toHaveCount(1);
   });
 
+  test("tiene acceso visible a las opciones, y no roba el foco", async ({ page }) => {
+    await openNewTab(page);
+    const settings = page.locator("#settings");
+    await expect(settings).toBeVisible();
+    // Bilingue y anunciado: es un boton con icono, sin texto.
+    await expect(settings).toHaveAttribute("aria-label", "Opciones");
+    // Alcanzable con teclado.
+    await settings.focus();
+    await expect(settings).toBeFocused();
+  });
+
+  test("el acceso a opciones se traduce", async ({ page }) => {
+    await openNewTab(page, "en-US");
+    await expect(page.locator("#settings")).toHaveAttribute("aria-label", "Options");
+  });
+
+  test("la pagina ocupa exactamente el viewport y no genera scroll", async ({ page }) => {
+    await openNewTab(page);
+    const overflow = await page.evaluate(() => ({
+      scrollH: document.documentElement.scrollHeight,
+      clientH: document.documentElement.clientHeight,
+      scrollW: document.documentElement.scrollWidth,
+      clientW: document.documentElement.clientWidth,
+    }));
+    // Si esto falla, la barra que aparece abajo en Brave seria culpa nuestra.
+    expect(overflow.scrollH).toBeLessThanOrEqual(overflow.clientH);
+    expect(overflow.scrollW).toBeLessThanOrEqual(overflow.clientW);
+  });
+
   test("NO le roba el foco a la barra de direcciones", async ({ page }) => {
     await openNewTab(page);
     const active = await page.evaluate(() => document.activeElement?.tagName ?? "NONE");
