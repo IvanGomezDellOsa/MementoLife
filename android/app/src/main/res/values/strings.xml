@@ -1,5 +1,0 @@
-<resources>
-    <!-- El resto de los textos de la UI vive en ui/strings/UiStrings.kt (catálogo
-         bilingüe propio, no ligado a la configuración de Android): ver esa clase. -->
-    <string name="app_name">MementoLife</string>
-</resources>
