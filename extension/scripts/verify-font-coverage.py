@@ -36,12 +36,16 @@ SOURCE_FILE = REPO_ROOT / "docs" / "design-handoff" / "fonts" / "Fraunces.ttf"
 # Caracteres que la Fraunces del handoff NO tiene y que igual aparecen en el contenido.
 # Cada uno es una decision aceptada conscientemente, no un descuido.
 #
-#   U+2153 VULGAR FRACTION ONE THIRD (⅓)
-#     Aparece una sola vez en el dataset, en la efemeride del 20 de junio ("33⅓
-#     revoluciones por minuto"), en ES y en EN. Fraunces no trae el glifo (624 glifos,
-#     ninguna fraccion vulgar). Ese dia el navegador va a caer a una fuente de sistema
-#     solo para ese caracter. El dataset esta cerrado (plan 1) y por eso no se toca.
-KNOWN_MISSING_FROM_FONT = {0x2153}
+# Vacio a proposito: el unico hueco que habia era U+2153 (⅓), en la efemeride del 20 de
+# junio ("33⅓ revoluciones por minuto"). Fraunces no trae el glifo —624 glifos, ninguna
+# fraccion vulgar— asi que ningun subset podia arreglarlo: ese dia el navegador caia a una
+# fuente de sistema para ese unico caracter. Se resolvio en el contenido, cambiando "33⅓"
+# por "33 1/3" en los dos idiomas. No es regenerar ni retraducir el dataset: es corregir un
+# caracter que la tipografia del proyecto no puede dibujar.
+#
+# Si algun dia aparece otro hueco, este set vuelve a tener sentido: se agrega ahi el
+# codepoint con su justificacion y el script pasa de fallar a avisar.
+KNOWN_MISSING_FROM_FONT: set[int] = set()
 
 # Objetivo de tamano del plan (5.5).
 SIZE_TARGET_KB = 80
