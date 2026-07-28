@@ -140,7 +140,7 @@ function build(): void {
   birth.addEventListener("change", () => {
     if (birth.value !== "") void update({ birthDate: birth.value });
   });
-  form.append(field("birthDateLabel", birth, "birthDateHint"));
+  form.append(field("birthDateLabel", birth));
 
   const life = document.createElement("input");
   life.type = "number";

@@ -16,7 +16,6 @@ const ES = {
   newTabTitle: "Pestaña nueva",
 
   birthDateLabel: "Fecha de nacimiento",
-  birthDateHint: "Se guarda solo en este equipo.",
   birthDateInvalid: "Revisá la fecha: tiene que ser anterior a hoy.",
   save: "Guardar",
 
@@ -52,7 +51,6 @@ const EN: Strings = {
   newTabTitle: "New tab",
 
   birthDateLabel: "Date of birth",
-  birthDateHint: "Stored on this device only.",
   birthDateInvalid: "Check the date: it must be in the past.",
   save: "Save",
 

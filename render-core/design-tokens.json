@@ -1,8 +1,5 @@
 {
-  "canvas": {
-    "widthPx": 360,
-    "heightPx": 780
-  },
+  "_note": "Fuente de verdad de diseno. El bloque raiz son los invariantes cerrados del handoff (paleta, opacidades, radios, banda, columnas): valen para cualquier medio. El bloque landscape es la adaptacion a la pestana nueva. La geometria del lienzo 360x780 del telefono se elimino junto con el renderer Android: la caja de grilla apaisada la declara landscape.gridBox, y sus 466x326 salen de ahi (eran areaHeightPx 494 - footerReservedPx 28, y usefulWidthPx 326).",
   "colors": {
     "background": {
       "dark": "#161310",
@@ -15,17 +12,7 @@
   },
   "typography": {
     "fontFamily": "Fraunces",
-    "footer": {
-      "sizePx": 10,
-      "letterSpacingPx": 1.2,
-      "opacity": 0.55,
-      "baselineFromGridAreaBottomPx": 6
-    },
     "efemeride": {
-      "sizePx": 8.5,
-      "lineHeightMultiplier": 1.3,
-      "marginSidePx": 64,
-      "marginBottomPx": 32,
       "opacity": {
         "dark": 0.48,
         "light": 0.55
@@ -33,12 +20,6 @@
     }
   },
   "grid": {
-    "areaTopPx": 206,
-    "areaWidthPx": 360,
-    "areaHeightPx": 494,
-    "footerReservedPx": 28,
-    "usefulWidthPx": 326,
-    "marginSidePx": 17,
     "weeks": {
       "columns": 52,
       "dotRadiusPx": 1.9,
@@ -49,7 +30,7 @@
     },
     "opacity": {
       "past": {
-        "dark": 0.90,
+        "dark": 0.9,
         "light": 0.82
       },
       "future": {
@@ -94,7 +75,7 @@
       "time": {
         "sizePx": 78,
         "weight": 300,
-        "opacity": 1.00,
+        "opacity": 1.0,
         "baselineFromGridTopPx": 105
       },
       "footer": {
@@ -119,15 +100,22 @@
       "efemerideGapBelowFooterPx": 36,
       "efemerideMaxWidthPx": 880,
       "typography": {
-        "date": { "sizePx": 15 },
-        "time": { "sizePx": 68 },
-        "footer": { "sizePx": 11.5 },
-        "efemeride": { "sizePx": 12 }
+        "date": {
+          "sizePx": 15
+        },
+        "time": {
+          "sizePx": 68
+        },
+        "footer": {
+          "sizePx": 11.5
+        },
+        "efemeride": {
+          "sizePx": 12
+        }
       }
     },
     "responsive": {
-      "referenceK": 1.7914,
-      "_note": "minGridHeightRatioB y gutterMinPx gobiernan la degradacion suave de B; ver core/layout.ts.",
+      "_note": "minGridHeightRatioB gobierna la degradacion suave de B: por debajo de esa fraccion del alto disponible toma el relevo la composicion A. Ver core/layout.ts.",
       "minGridHeightRatioB": 0.62,
       "verticalMarginMinPx": 40,
       "verticalMarginMaxPx": 96,
@@ -136,10 +124,22 @@
       "typeColumnMinPx": 280,
       "typeColumnMaxPx": 380,
       "fontClampPx": {
-        "date": { "min": 14, "max": 20 },
-        "time": { "min": 56, "max": 104 },
-        "footer": { "min": 11, "max": 15 },
-        "efemeride": { "min": 12, "max": 16 }
+        "date": {
+          "min": 14,
+          "max": 20
+        },
+        "time": {
+          "min": 56,
+          "max": 104
+        },
+        "footer": {
+          "min": 11,
+          "max": 15
+        },
+        "efemeride": {
+          "min": 12,
+          "max": 16
+        }
       },
       "hideEfemerideBelowVhPx": 420,
       "hideFooterBelowVhPx": 340

@@ -17,7 +17,7 @@ import { footerText } from "./lifemath.js";
 import { resolveLayout } from "./layout.js";
 import type { LayoutResult, TextLine, Viewport } from "./layout.js";
 import { escapeXml } from "./text.js";
-import { background, futureOpacity, ink, pastOpacity } from "./tokens.js";
+import { T, background, futureOpacity, ink, pastOpacity } from "./tokens.js";
 import type { Locale, Theme } from "./tokens.js";
 
 export interface RenderRequest {
@@ -106,7 +106,7 @@ export function render(request: RenderRequest): RenderResult {
 
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(viewport.widthPx)} ${n(viewport.heightPx)}" ` +
-    `width="100%" height="100%" font-family="Fraunces" style="display:block">${parts.join("")}</svg>`;
+    `width="100%" height="100%" font-family="${T.typography.fontFamily}" style="display:block">${parts.join("")}</svg>`;
 
   return { svg, layout, stats, dotRadius: paths.dotRadius, paths };
 }

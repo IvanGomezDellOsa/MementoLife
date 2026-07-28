@@ -57,6 +57,18 @@ jobs:
         env:
           CI: "true"
 
+      # Los goldens PNG solo tienen sentido generados y comparados en Linux (plan 10.5).
+      # Si un caso nuevo todavia no tiene golden, el test lo escribe y queda como artefacto
+      # para revisarlo a ojo y commitearlo.
+      - name: Guardar goldens nuevos o cambiados
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: goldens
+          path: extension/e2e/golden/
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Guardar el reporte si algo falla
         uses: actions/upload-artifact@v4
         if: failure()
