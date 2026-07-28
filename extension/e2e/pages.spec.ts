@@ -87,6 +87,13 @@ async function serve(page: Page, uiLanguage = "es-AR"): Promise<void> {
   }, uiLanguage);
 }
 
+/** El campo de fecha son tres controles, no un <input type="date"> (ver birthdate-field.ts). */
+async function fillBirthDate(page: Page, day: string, month: string, year: string): Promise<void> {
+  await page.locator("#birth-day").fill(day);
+  await page.locator("#birth-month").selectOption(month);
+  await page.locator("#birth-year").fill(year);
+}
+
 async function openNewTab(page: Page, uiLanguage = "es-AR"): Promise<void> {
   await serve(page, uiLanguage);
   await page.goto(`${ORIGIN}/newtab.html`);
@@ -96,7 +103,7 @@ async function openNewTab(page: Page, uiLanguage = "es-AR"): Promise<void> {
 test.describe("pestana nueva", () => {
   test("dibuja la grilla en tres paths y no un nodo por celda", async ({ page }) => {
     await openNewTab(page);
-    await page.locator("#birth-date").fill("1990-01-01");
+    await fillBirthDate(page, "01", "1", "1990");
     await page.locator("#onboarding button").click();
     await expect(page.locator("#onboarding")).toBeHidden();
 
@@ -146,6 +153,19 @@ test.describe("pestana nueva", () => {
     expect(overflow.scrollW).toBeLessThanOrEqual(overflow.clientW);
   });
 
+  test("el onboarding no se superpone con la fecha", async ({ page }) => {
+    await openNewTab(page);
+    const dateBottom = await page.evaluate(() => {
+      const texts = [...document.querySelectorAll("#canvas svg text")];
+      const first = texts[0];
+      return first === undefined ? 0 : first.getBoundingClientRect().bottom;
+    });
+    const formTop = await page.evaluate(
+      () => document.getElementById("onboarding")?.getBoundingClientRect().top ?? 0,
+    );
+    expect(formTop).toBeGreaterThan(dateBottom);
+  });
+
   test("NO le roba el foco a la barra de direcciones", async ({ page }) => {
     await openNewTab(page);
     const active = await page.evaluate(() => document.activeElement?.tagName ?? "NONE");
@@ -154,7 +174,7 @@ test.describe("pestana nueva", () => {
 
   test("rechaza una fecha futura y no guarda nada", async ({ page }) => {
     await openNewTab(page);
-    await page.locator("#birth-date").fill("2999-01-01");
+    await fillBirthDate(page, "01", "1", "2999");
     await page.locator("#onboarding button").click();
     await expect(page.locator(".onboarding-error")).not.toBeEmpty();
     await expect(page.locator("#onboarding")).toBeVisible();
@@ -176,7 +196,7 @@ test.describe("pestana nueva", () => {
 
   test("el pie sale en el idioma activo", async ({ page }) => {
     await openNewTab(page, "en-US");
-    await page.locator("#birth-date").fill("1990-01-01");
+    await fillBirthDate(page, "01", "1", "1990");
     await page.locator("#onboarding button").click();
     await expect(page.locator("#canvas svg")).toContainText(/week \d+ of \d+/);
   });
@@ -185,7 +205,7 @@ test.describe("pestana nueva", () => {
     await serve(page, "es-AR");
     await page.goto(`${ORIGIN}/newtab.html`);
     await page.waitForSelector("#canvas svg");
-    await page.locator("#birth-date").fill("1990-01-01");
+    await fillBirthDate(page, "01", "1", "1990");
     await page.locator("#onboarding button").click();
 
     const gridBefore = await page.locator("#canvas svg path").first().getAttribute("d");
@@ -259,6 +279,21 @@ test.describe("pagina de opciones", () => {
     await page.locator("#life-years").fill("40");
     await page.locator("#life-years").blur();
     await expect(page.locator("#status")).toHaveText("Guardado.");
+  });
+
+  test("el campo de fecha es de tres controles, sin ambiguedad de formato", async ({ page }) => {
+    await openOptions(page, "es-AR");
+    // El mes es una lista de nombres: nunca se confunde con el dia.
+    await expect(page.locator("#birth-month option").nth(7)).toHaveText("julio");
+    await expect(page.locator("#birth-day")).toBeVisible();
+    await expect(page.locator("#birth-year")).toBeVisible();
+    // Y no queda ningun <input type="date">, que era el que mostraba mm/dd/yyyy.
+    await expect(page.locator('input[type="date"]')).toHaveCount(0);
+  });
+
+  test("los nombres de mes se traducen", async ({ page }) => {
+    await openOptions(page, "en-US");
+    await expect(page.locator("#birth-month option").nth(7)).toHaveText("July");
   });
 
   test("acota la esperanza de vida al rango elegible", async ({ page }) => {

@@ -79,7 +79,9 @@
       "weight": 300,
       "opacity": 1.0,
       "gapAbovePx": 22,
-      "gapBelowPx": 32
+      "gapBelowPx": 32,
+      "emptySlotPx": 200,
+      "_note": "emptySlotPx es el alto que se reserva cuando todavia no hay fecha de nacimiento: ahi va el formulario de onboarding. Sin reservarlo, el formulario se dibujaba encima de la fecha."
     },
     "sub": {
       "sizePx": 14,
@@ -99,10 +101,22 @@
       "lineHeightMultiplier": 1.6
     },
     "clampPx": {
-      "date": { "min": 14, "max": 20 },
-      "hero": { "min": 64, "max": 132 },
-      "sub": { "min": 12.5, "max": 17 },
-      "efemeride": { "min": 14.5, "max": 19 }
+      "date": {
+        "min": 14,
+        "max": 20
+      },
+      "hero": {
+        "min": 64,
+        "max": 132
+      },
+      "sub": {
+        "min": 12.5,
+        "max": 17
+      },
+      "efemeride": {
+        "min": 14.5,
+        "max": 19
+      }
     }
   },
   "responsive": {

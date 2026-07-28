@@ -17,6 +17,12 @@ const ES = {
   newTabTitle: "Pestaña nueva",
 
   birthDateLabel: "Fecha de nacimiento",
+  dayLabel: "Día",
+  dayShort: "DD",
+  monthLabel: "Mes",
+  monthPlaceholder: "Mes",
+  yearLabel: "Año",
+  yearShort: "AAAA",
   birthDateInvalid: "Revisá la fecha: tiene que ser anterior a hoy.",
   save: "Guardar",
 
@@ -53,6 +59,12 @@ const EN: Strings = {
   newTabTitle: "New tab",
 
   birthDateLabel: "Date of birth",
+  dayLabel: "Day",
+  dayShort: "DD",
+  monthLabel: "Month",
+  monthPlaceholder: "Month",
+  yearLabel: "Year",
+  yearShort: "YYYY",
   birthDateInvalid: "Check the date: it must be in the past.",
   save: "Save",
 

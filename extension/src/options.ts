@@ -19,6 +19,7 @@ import { LIFE_YEARS } from "./core/tokens.js";
 import type { Locale } from "./core/tokens.js";
 import { load, resolveTheme, save } from "./prefs.js";
 import { requireElement } from "./dom.js";
+import { createBirthDateField } from "./birthdate-field.js";
 import type { Prefs, ThemePref } from "./prefs.js";
 
 const form = requireElement("form");
@@ -122,25 +123,21 @@ function segmented<T extends string>(
   return wrapper;
 }
 
-function todayIso(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-}
-
 function build(): void {
   title.textContent = t(prefs.locale, "optionsTitle");
   document.title = t(prefs.locale, "optionsTitle");
   form.innerHTML = "";
 
-  const birth = document.createElement("input");
-  birth.type = "date";
-  birth.id = "birth-date";
-  birth.max = todayIso();
-  birth.value = prefs.birthDate ?? "";
-  birth.addEventListener("change", () => {
-    if (birth.value !== "") void update({ birthDate: birth.value });
-  });
-  form.append(field("birthDateLabel", birth));
+  const birth = createBirthDateField(prefs.locale, () => commitBirthDate());
+  birth.setValue(prefs.birthDate);
+  const commitBirthDate = (): void => {
+    const value = birth.value();
+    if (value !== null && value !== prefs.birthDate) void update({ birthDate: value });
+  };
+  // Cada control avisa por su cuenta: no hay boton de guardar en ningun lado.
+  birth.element.addEventListener("change", commitBirthDate);
+  birth.element.addEventListener("blur", commitBirthDate, true);
+  form.append(field("birthDateLabel", birth.element));
 
   const life = document.createElement("input");
   life.type = "number";

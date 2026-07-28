@@ -18,6 +18,7 @@ import type { Locale } from "./core/tokens.js";
 import type { LayoutResult } from "./core/layout.js";
 import { daysFromCivil } from "./core/lifemath.js";
 import { parseBirthDate } from "./prefs.js";
+import { createBirthDateField } from "./birthdate-field.js";
 
 export interface OnboardingHandlers {
   readonly onSubmit: (birthDate: string) => void;
@@ -46,14 +47,10 @@ export function mount(
   body.className = "onboarding-body";
   body.textContent = t(locale, "onboardingBody");
 
-  const field = document.createElement("div");
-  field.className = "onboarding-field";
+  const row = document.createElement("div");
+  row.className = "onboarding-field";
 
-  const input = document.createElement("input");
-  input.type = "date";
-  input.id = "birth-date";
-  input.max = todayIso();
-  input.setAttribute("aria-label", t(locale, "birthDateLabel"));
+  const field = createBirthDateField(locale, () => submit());
 
   const button = document.createElement("button");
   button.type = "button";
@@ -63,16 +60,16 @@ export function mount(
   error.className = "onboarding-error";
   error.setAttribute("role", "alert");
 
-  field.append(input, button);
-  container.append(heading, body, field, error);
+  row.append(field.element, button);
+  container.append(heading, body, row, error);
 
   const submit = (): void => {
-    const value = input.value;
-    const parsed = parseBirthDate(value === "" ? null : value);
+    const value = field.value();
+    const parsed = parseBirthDate(value);
     const isPast = parsed !== null && daysFromCivil(parsed) < daysFromCivil(parseBirthDate(todayIso()) ?? parsed);
-    if (parsed === null || !isPast) {
+    if (parsed === null || !isPast || value === null) {
       error.textContent = t(locale, "birthDateInvalid");
-      input.focus();
+      field.focus();
       return;
     }
     error.textContent = "";
@@ -80,21 +77,18 @@ export function mount(
   };
 
   button.addEventListener("click", submit);
-  input.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      submit();
-    }
-  });
 }
 
-/** Ubica el bloque sobre la columna tipografica del layout vigente. */
+/**
+ * Ubica el bloque en el hueco que el layout reservo para el.
+ *
+ * Antes se posicionaba a ojo, como una fraccion del alto de la grilla, y se dibujaba encima
+ * de la fecha. Ahora el lugar lo calcula el layout —que es el unico que sabe donde termina
+ * cada texto— y aca solo se aplica.
+ */
 export function position(container: HTMLElement, layout: LayoutResult): void {
-  const { column, grid } = layout;
-  const width = Math.max(260, column.widthPx);
-  container.style.width = `${width}px`;
-  container.style.left = `${column.x}px`;
-  container.style.textAlign = "left";
-  // Debajo de donde va la fecha, que es lo unico que se dibuja mientras no hay datos.
-  container.style.top = `${grid.originY + grid.metrics.heightPx * 0.34}px`;
+  const { slot } = layout;
+  container.style.left = `${slot.x}px`;
+  container.style.top = `${slot.y}px`;
+  container.style.width = `${slot.widthPx}px`;
 }

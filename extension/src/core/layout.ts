@@ -76,6 +76,17 @@ export interface LayoutResult {
   readonly rule: Rule | null;
   /** Columna tipográfica, para que el onboarding se ubique encima. */
   readonly column: { readonly x: number; readonly widthPx: number };
+  /**
+   * Hueco reservado para el formulario de onboarding: es el lugar que ocuparían el dato y
+   * su subtítulo cuando los haya. Lo calcula el layout y no el DOM, porque si no las dos
+   * cosas se dibujan una encima de la otra.
+   */
+  readonly slot: {
+    readonly x: number;
+    readonly y: number;
+    readonly widthPx: number;
+    readonly heightPx: number;
+  };
   readonly pastOpacity: number;
   readonly futureOpacity: number;
   /** Escala tipográfica aplicada. 1 = lienzo de referencia. */
@@ -143,9 +154,14 @@ export function resolveLayout(input: LayoutInput): LayoutResult {
   const ruleGapAbove = TYPE.rule.gapAbovePx * typeScale;
   const ruleGapBelow = TYPE.rule.gapBelowPx * typeScale;
 
+  // Sin fecha de nacimiento el dato no se dibuja, pero su espacio SÍ se reserva: ahí va el
+  // formulario. Con un poco más de alto, porque un formulario ocupa más que un número.
+  const heroBlock =
+    input.heroText === "" ? TYPE.hero.emptySlotPx * typeScale : heroSize;
+
   const blockHeight =
     heroGapAbove +
-    heroSize +
+    heroBlock +
     (showSub ? heroGapBelow + subSize : 0) +
     (efemLines.length > 0 ? ruleGapAbove + 1 + ruleGapBelow + efemLines.length * efemLineHeight : 0);
 
@@ -176,7 +192,8 @@ export function resolveLayout(input: LayoutInput): LayoutResult {
     role: "date",
   });
 
-  y += heroSize;
+  const slotTop = y + dateSize * 0.4;
+  y += heroBlock;
   if (input.heroText !== "") {
     lines.push({
       x: colX,
@@ -228,6 +245,7 @@ export function resolveLayout(input: LayoutInput): LayoutResult {
     lines,
     rule,
     column: { x: colX, widthPx: textWidth },
+    slot: { x: colX, y: slotTop, widthPx: textWidth, heightPx: heroBlock },
     pastOpacity: pastOpacity(input.theme),
     futureOpacity: futureOpacity(input.theme),
     typeScale,

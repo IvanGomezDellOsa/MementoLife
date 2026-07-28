@@ -130,3 +130,32 @@ input:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .status { transition: none; }
 }
+
+/* Campo de fecha en tres controles, igual que en la pestaña nueva. */
+.birthdate {
+  display: flex;
+  gap: 6px;
+}
+
+.birthdate input,
+.birthdate select {
+  box-sizing: border-box;
+  font: inherit;
+  padding: 8px 9px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent);
+  border-radius: 6px;
+  min-width: 0;
+}
+
+.birthdate select { cursor: pointer; }
+.birthdate-day { width: 3.4em; text-align: center; }
+.birthdate-year { width: 4.8em; text-align: center; }
+.birthdate-month { flex: 1 1 auto; }
+
+.birthdate input:focus-visible,
+.birthdate select:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}

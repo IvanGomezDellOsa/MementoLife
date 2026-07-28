@@ -66,11 +66,17 @@ html, body {
   line-height: 1.5;
 }
 
+/* Los tres controles de fecha llenan la fila, asi que el boton cae debajo. Se le da aire
+   para que se lea como un paso deliberado y no como un salto de linea accidental. */
 .onboarding-field {
   display: flex;
   gap: 8px;
   align-items: stretch;
   flex-wrap: wrap;
+}
+
+.onboarding-field button {
+  margin-top: 4px;
 }
 
 .onboarding-field input {
@@ -161,4 +167,37 @@ html, body {
 
 @media (prefers-reduced-motion: reduce) {
   #settings { transition: none; }
+}
+
+/* Campo de fecha en tres controles. Ver src/birthdate-field.ts para el porqué. */
+.birthdate {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.birthdate input,
+.birthdate select {
+  font: inherit;
+  font-size: 15px;
+  padding: 10px 11px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 26%, transparent);
+  border-radius: 6px;
+  min-width: 0;
+}
+
+.birthdate select { cursor: pointer; }
+.birthdate-day { width: 3.6em; text-align: center; }
+.birthdate-year { width: 5em; text-align: center; }
+.birthdate-month { flex: 1 1 auto; }
+
+.birthdate input::placeholder { color: color-mix(in srgb, var(--ink) 45%, transparent); }
+
+.birthdate input:focus-visible,
+.birthdate select:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
 }
