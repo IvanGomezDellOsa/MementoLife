@@ -1,0 +1,41 @@
+fixture      viewport_tablet_portrait_compA
+viewport     810 x 1080
+tema         dark   idioma es   lifeYears 80
+composicion  A
+typeScale    1.520548
+
+grilla
+  origen     49.50, 306.70
+  tamano     711.00 x 497.39
+  k          1.525751
+  punto r    2.90
+  anillo w   1.68
+  celdas     4160 (80 anios x 52 semanas)
+  paso anio  5.4750 u
+  banda      4.0000 u x 7
+
+paths
+  pasado  celdas=1741  sha=189ffad85e17fcee
+          primera M50.78 311.48a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
+          ultima  M344.75 541.05a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
+  futuro  celdas=2418  sha=0b6301a0c16d94ab
+          primera M344.75 560.18a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
+          ultima  M753.42 799.31a2.90 2.90 0 1 0 5.80 0a2.90 2.90 0 1 0 -5.80 0
+  anillo  celdas=1     sha=f41bc02d0e44a9f1
+          primera M343.15 550.61a4.50 4.50 0 1 0 9.00 0a4.50 4.50 0 1 0 -9.00 0
+          ultima  M343.15 550.61a4.50 4.50 0 1 0 9.00 0a4.50 4.50 0 1 0 -9.00 0
+
+textos
+  date      x=  405.00 y=  124.23 size= 20.00 peso=400 op=0.68 anchor=middle
+            "domingo, 2 de julio"
+  time      x=  405.00 y=  239.79 size=103.40 peso=300 op=1 anchor=middle
+            "07:41"
+  footer    x=  405.00 y=  870.79 size= 15.00 peso=400 op=0.55 anchor=middle ls=2.13
+            "42 % · semana 1742 de 4160"
+  efemeride x=  405.00 y=  941.53 size= 16.00 peso=400 op=0.48 anchor=middle
+            "2 de julio, 1937 — La aviadora Amelia Earhart desapareció sobre el océano Pacífico durante su"
+  efemeride x=  405.00 y=  966.33 size= 16.00 peso=400 op=0.48 anchor=middle
+            "intento de vuelo alrededor del mundo."
+
+svg          9 elementos, 254603 caracteres
+svg sha      76f2b9fc3f0f1316

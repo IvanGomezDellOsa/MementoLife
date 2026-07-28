@@ -1,0 +1,45 @@
+fixture      edge_feb29_leap_year
+viewport     1440 x 720
+tema         dark   idioma es   lifeYears 80
+composicion  B
+typeScale    1.000000
+
+grilla
+  origen     517.20, 68.00
+  tamano     834.80 x 584.00
+  k          1.791411
+  punto r    3.40
+  anillo w   1.97
+  celdas     4160 (80 anios x 52 semanas)
+  paso anio  5.4750 u
+  banda      4.0000 u x 7
+
+paths
+  pasado  celdas=208   sha=caab6d24e70c89bb
+          primera M518.70 73.62a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+          ultima  M548.13 646.38a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+  futuro  celdas=3951  sha=53b61f15b7d0dc5d
+          primera M557.93 84.85a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+          ultima  M1343.69 646.38a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+  anillo  celdas=1     sha=602fcbfebe0ba055
+          primera M556.05 73.62a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
+          ultima  M556.05 73.62a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
+
+textos
+  date      x=   88.00 y=   83.00 size= 16.00 peso=400 op=0.68 anchor=start
+            "jueves, 29 de febrero"
+  time      x=   88.00 y=  173.00 size= 78.00 peso=300 op=1 anchor=start
+            "07:41"
+  efemeride x=   88.00 y=  593.88 size= 12.50 peso=400 op=0.48 anchor=start
+            "29 de febrero, 1504 — Cristóbal Colón, varado en Jamaica,"
+  efemeride x=   88.00 y=  613.25 size= 12.50 peso=400 op=0.48 anchor=start
+            "utilizó su conocimiento de un eclipse lunar inminente"
+  efemeride x=   88.00 y=  632.63 size= 12.50 peso=400 op=0.48 anchor=start
+            "para persuadir a los habitantes locales de seguir"
+  efemeride x=   88.00 y=  652.00 size= 12.50 peso=400 op=0.48 anchor=start
+            "abasteciendo a su tripulación."
+  footer    x=   88.00 y=  553.88 size= 11.50 peso=400 op=0.55 anchor=start ls=1.40
+            "5 % · semana 209 de 4160"
+
+svg          11 elementos, 256680 caracteres
+svg sha      155db09ae22569e3

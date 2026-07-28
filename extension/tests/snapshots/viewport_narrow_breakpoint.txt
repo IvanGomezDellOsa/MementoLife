@@ -1,0 +1,43 @@
+fixture      viewport_narrow_breakpoint
+viewport     1280 x 720
+tema         dark   idioma es   lifeYears 80
+composicion  B
+typeScale    0.903636
+
+grilla
+  origen     447.42, 96.14
+  tamano     754.35 x 527.72
+  k          1.618783
+  punto r    3.08
+  anillo w   1.78
+  celdas     4160 (80 anios x 52 semanas)
+  paso anio  5.4750 u
+  banda      4.0000 u x 7
+
+paths
+  pasado  celdas=1741  sha=2423f6b9028ad17b
+          primera M448.78 101.21a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
+          ultima  M760.68 344.78a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
+  futuro  celdas=2418  sha=13d54c62d3a55248
+          primera M760.68 365.07a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
+          ultima  M1194.27 618.79a3.08 3.08 0 1 0 6.15 0a3.08 3.08 0 1 0 -6.15 0
+  anillo  celdas=1     sha=b30a3eff96794ccd
+          primera M758.98 354.93a4.78 4.78 0 1 0 9.55 0a4.78 4.78 0 1 0 -9.55 0
+          ultima  M758.98 354.93a4.78 4.78 0 1 0 9.55 0a4.78 4.78 0 1 0 -9.55 0
+
+textos
+  date      x=   78.22 y=  109.69 size= 14.46 peso=400 op=0.68 anchor=start
+            "domingo, 2 de julio"
+  time      x=   78.22 y=  191.02 size= 70.48 peso=300 op=1 anchor=start
+            "07:41"
+  efemeride x=   78.22 y=  586.66 size= 12.00 peso=400 op=0.48 anchor=start
+            "2 de julio, 1937 — La aviadora Amelia Earhart"
+  efemeride x=   78.22 y=  605.26 size= 12.00 peso=400 op=0.48 anchor=start
+            "desapareció sobre el océano Pacífico durante su"
+  efemeride x=   78.22 y=  623.86 size= 12.00 peso=400 op=0.48 anchor=start
+            "intento de vuelo alrededor del mundo."
+  footer    x=   78.22 y=  550.52 size= 11.00 peso=400 op=0.55 anchor=start ls=1.27
+            "42 % · semana 1742 de 4160"
+
+svg          10 elementos, 256115 caracteres
+svg sha      643e7788127643a3

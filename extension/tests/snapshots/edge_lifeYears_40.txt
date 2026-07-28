@@ -1,0 +1,39 @@
+fixture      edge_lifeYears_40
+viewport     1440 x 720
+tema         dark   idioma es   lifeYears 40
+composicion  B
+typeScale    1.000000
+
+grilla
+  origen     517.20, 68.00
+  tamano     834.80 x 584.00
+  k          1.791411
+  punto r    3.40
+  anillo w   1.97
+  celdas     2080 (40 anios x 52 semanas)
+  paso anio  11.0448 u
+  banda      8.0693 u x 3
+
+paths
+  pasado  celdas=2079  sha=d4a58a838e804133
+          primera M523.69 73.62a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+          ultima  M1338.70 635.15a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+  futuro  vacio
+  anillo  celdas=1     sha=7f6bf86ef1862833
+          primera M1336.82 646.38a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
+          ultima  M1336.82 646.38a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
+
+textos
+  date      x=   88.00 y=   83.00 size= 16.00 peso=400 op=0.68 anchor=start
+            "domingo, 10 de junio"
+  time      x=   88.00 y=  173.00 size= 78.00 peso=300 op=1 anchor=start
+            "07:41"
+  efemeride x=   88.00 y=  632.63 size= 12.50 peso=400 op=0.48 anchor=start
+            "10 de junio, 1940 — Italia declaró la guerra a Francia y al"
+  efemeride x=   88.00 y=  652.00 size= 12.50 peso=400 op=0.48 anchor=start
+            "Reino Unido, sumándose a la Segunda Guerra Mundial."
+  footer    x=   88.00 y=  592.63 size= 11.50 peso=400 op=0.55 anchor=start ls=1.40
+            "100 % · semana 2080 de 2080"
+
+svg          8 elementos, 128729 caracteres
+svg sha      63ff482fa4601716

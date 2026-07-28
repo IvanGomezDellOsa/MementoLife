@@ -18,6 +18,7 @@ function layoutAt(widthPx: number, heightPx: number, efemeride: string | null = 
     dateText: "miércoles, 2 de julio",
     timeText: "07:41",
     footerText: "42 % · semana 1742 de 4160",
+    theme: "dark",
     efemerideText: efemeride,
   });
 }

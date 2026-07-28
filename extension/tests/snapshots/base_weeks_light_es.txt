@@ -1,0 +1,43 @@
+fixture      base_weeks_light_es
+viewport     1440 x 720
+tema         light   idioma es   lifeYears 80
+composicion  B
+typeScale    1.000000
+
+grilla
+  origen     517.20, 68.00
+  tamano     834.80 x 584.00
+  k          1.791411
+  punto r    3.40
+  anillo w   1.97
+  celdas     4160 (80 anios x 52 semanas)
+  paso anio  5.4750 u
+  banda      4.0000 u x 7
+
+paths
+  pasado  celdas=1741  sha=1e6f2405ef1eae09
+          primera M518.70 73.62a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+          ultima  M863.86 343.15a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+  futuro  celdas=2418  sha=4f0dce8650cefa5e
+          primera M863.86 365.62a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+          ultima  M1343.69 646.38a3.40 3.40 0 1 0 6.81 0a3.40 3.40 0 1 0 -6.81 0
+  anillo  celdas=1     sha=e15fd77bdec19b3e
+          primera M861.98 354.38a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
+          ultima  M861.98 354.38a5.28 5.28 0 1 0 10.57 0a5.28 5.28 0 1 0 -10.57 0
+
+textos
+  date      x=   88.00 y=   83.00 size= 16.00 peso=400 op=0.68 anchor=start
+            "domingo, 2 de julio"
+  time      x=   88.00 y=  173.00 size= 78.00 peso=300 op=1 anchor=start
+            "07:41"
+  efemeride x=   88.00 y=  613.25 size= 12.50 peso=400 op=0.55 anchor=start
+            "2 de julio, 1937 — La aviadora Amelia Earhart desapareció"
+  efemeride x=   88.00 y=  632.63 size= 12.50 peso=400 op=0.55 anchor=start
+            "sobre el océano Pacífico durante su intento de vuelo"
+  efemeride x=   88.00 y=  652.00 size= 12.50 peso=400 op=0.55 anchor=start
+            "alrededor del mundo."
+  footer    x=   88.00 y=  573.25 size= 11.50 peso=400 op=0.55 anchor=start ls=1.40
+            "42 % · semana 1742 de 4160"
+
+svg          10 elementos, 256501 caracteres
+svg sha      81f4dee2ae5d46e6

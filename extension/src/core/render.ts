@@ -10,13 +10,14 @@
 
 import { formatDate, formatTime } from "./format.js";
 import { gridPaths } from "./grid.js";
+import type { GridPaths } from "./grid.js";
 import { lifeStats } from "./lifemath.js";
 import type { CalendarDate, LifeStats } from "./lifemath.js";
 import { footerText } from "./lifemath.js";
 import { resolveLayout } from "./layout.js";
 import type { LayoutResult, TextLine, Viewport } from "./layout.js";
 import { escapeXml } from "./text.js";
-import { background, efemerideOpacity, futureOpacity, ink, pastOpacity } from "./tokens.js";
+import { background, futureOpacity, ink, pastOpacity } from "./tokens.js";
 import type { Locale, Theme } from "./tokens.js";
 
 export interface RenderRequest {
@@ -38,18 +39,19 @@ export interface RenderResult {
   readonly stats: LifeStats | null;
   /** Radio del punto en px. Lo consume el informe de diseno. */
   readonly dotRadius: number;
+  /** Los tres paths acumulados. Lo consume el digest de snapshot. */
+  readonly paths: GridPaths;
 }
 
 function n(value: number): string {
   return value.toFixed(2);
 }
 
-function textElement(line: TextLine, inkColor: string, theme: Theme): string {
-  const opacity = line.role === "efemeride" ? efemerideOpacity(theme) : line.opacity;
+function textElement(line: TextLine, inkColor: string): string {
   const spacing = line.letterSpacingPx !== 0 ? ` letter-spacing="${n(line.letterSpacingPx)}"` : "";
   return (
     `<text x="${n(line.x)}" y="${n(line.y)}" font-size="${n(line.sizePx)}" ` +
-    `font-weight="${line.weight}" fill="${inkColor}" opacity="${opacity}" ` +
+    `font-weight="${line.weight}" fill="${inkColor}" opacity="${line.opacity}" ` +
     `text-anchor="${line.anchor}"${spacing}>${escapeXml(line.text)}</text>`
   );
 }
@@ -61,6 +63,7 @@ export function render(request: RenderRequest): RenderResult {
 
   const layout = resolveLayout({
     viewport,
+    theme,
     dateText: formatDate(today, locale),
     timeText: formatTime(request.hour, request.minute),
     // Sin fecha de nacimiento no hay pie que mostrar: el bloque de onboarding ocupa ese lugar.
@@ -98,12 +101,12 @@ export function render(request: RenderRequest): RenderResult {
 
   for (const line of layout.lines) {
     if (line.text === "") continue;
-    parts.push(textElement(line, inkColor, theme));
+    parts.push(textElement(line, inkColor));
   }
 
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(viewport.widthPx)} ${n(viewport.heightPx)}" ` +
     `width="100%" height="100%" font-family="Fraunces" style="display:block">${parts.join("")}</svg>`;
 
-  return { svg, layout, stats, dotRadius: paths.dotRadius };
+  return { svg, layout, stats, dotRadius: paths.dotRadius, paths };
 }

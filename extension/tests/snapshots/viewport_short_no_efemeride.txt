@@ -1,0 +1,37 @@
+fixture      viewport_short_no_efemeride
+viewport     1440 x 400
+tema         dark   idioma es   lifeYears 80
+composicion  B
+typeScale    0.547945
+
+grilla
+  origen     894.58, 40.00
+  tamano     457.42 x 320.00
+  k          0.981595
+  punto r    1.87
+  anillo w   1.08
+  celdas     4160 (80 anios x 52 semanas)
+  paso anio  5.4750 u
+  banda      4.0000 u x 7
+
+paths
+  pasado  celdas=1741  sha=2f24db7ef24b721b
+          primera M895.40 43.08a1.87 1.87 0 1 0 3.73 0a1.87 1.87 0 1 0 -3.73 0
+          ultima  M1084.53 190.77a1.87 1.87 0 1 0 3.73 0a1.87 1.87 0 1 0 -3.73 0
+  futuro  celdas=2418  sha=2c0c098743ed18de
+          primera M1084.53 203.08a1.87 1.87 0 1 0 3.73 0a1.87 1.87 0 1 0 -3.73 0
+          ultima  M1347.45 356.92a1.87 1.87 0 1 0 3.73 0a1.87 1.87 0 1 0 -3.73 0
+  anillo  celdas=1     sha=9b4e7209c85aaf2a
+          primera M1083.50 196.92a2.90 2.90 0 1 0 5.79 0a2.90 2.90 0 1 0 -5.79 0
+          ultima  M1083.50 196.92a2.90 2.90 0 1 0 5.79 0a2.90 2.90 0 1 0 -5.79 0
+
+textos
+  date      x=   88.00 y=   48.22 size= 14.00 peso=400 op=0.68 anchor=start
+            "domingo, 2 de julio"
+  time      x=   88.00 y=   97.53 size= 56.00 peso=300 op=1 anchor=start
+            "07:41"
+  footer    x=   88.00 y=  360.00 size= 11.00 peso=400 op=0.55 anchor=start ls=0.77
+            "42 % · semana 1742 de 4160"
+
+svg          7 elementos, 256904 caracteres
+svg sha      22c15c83fc77b180

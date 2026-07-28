@@ -27,7 +27,8 @@
  */
 
 import { BOX_ASPECT, BOX_UNIT_UNITS } from "./geometry.js";
-import { T } from "./tokens.js";
+import { T, efemerideOpacity } from "./tokens.js";
+import type { Theme } from "./tokens.js";
 import { wrapText } from "./text.js";
 
 export type Composition = "A" | "B";
@@ -62,6 +63,8 @@ export interface LayoutBox {
 
 export interface LayoutInput {
   readonly viewport: Viewport;
+  /** Hace falta aca porque la opacidad de la efemeride depende del tema. */
+  readonly theme: Theme;
   readonly dateText: string;
   readonly timeText: string;
   readonly footerText: string;
@@ -227,7 +230,7 @@ function compositionB(input: LayoutInput, frame: FrameB): LayoutResult {
       text: line,
       sizePx: efemSize,
       weight: L.typography.efemeride.weight,
-      opacity: 0, // lo completa el renderer segun el tema
+      opacity: efemerideOpacity(input.theme),
       anchor: "start",
       letterSpacingPx: 0,
       role: "efemeride",
@@ -374,7 +377,7 @@ function compositionA(input: LayoutInput, frame: Frame): LayoutResult {
         text: line,
         sizePx: efemSize,
         weight: L.typography.efemeride.weight,
-        opacity: 0, // lo completa el renderer segun el tema
+        opacity: efemerideOpacity(input.theme),
         anchor: "middle",
         letterSpacingPx: 0,
         role: "efemeride",
