@@ -17,10 +17,9 @@ import { resolveLayout } from "./layout.js";
 import type { LayoutResult, TextLine, Viewport } from "./layout.js";
 import { escapeXml } from "./text.js";
 import { background, efemerideOpacity, futureOpacity, ink, pastOpacity } from "./tokens.js";
-import type { Locale, Theme, View } from "./tokens.js";
+import type { Locale, Theme } from "./tokens.js";
 
 export interface RenderRequest {
-  readonly view: View;
   readonly theme: Theme;
   readonly locale: Locale;
   readonly lifeYears: number;
@@ -56,21 +55,20 @@ function textElement(line: TextLine, inkColor: string, theme: Theme): string {
 }
 
 export function render(request: RenderRequest): RenderResult {
-  const { view, theme, locale, lifeYears, birthDate, today, viewport } = request;
+  const { theme, locale, lifeYears, birthDate, today, viewport } = request;
 
-  const stats = birthDate === null ? null : lifeStats(view, birthDate, today, lifeYears);
+  const stats = birthDate === null ? null : lifeStats(birthDate, today, lifeYears);
 
   const layout = resolveLayout({
     viewport,
     dateText: formatDate(today, locale),
     timeText: formatTime(request.hour, request.minute),
     // Sin fecha de nacimiento no hay pie que mostrar: el bloque de onboarding ocupa ese lugar.
-    footerText: stats === null ? "" : footerText(view, locale, stats),
+    footerText: stats === null ? "" : footerText(locale, stats),
     efemerideText: request.efemerideText,
   });
 
   const paths = gridPaths({
-    view,
     lifeYears,
     currentIndex: stats === null ? null : stats.currentIndex,
     originX: layout.grid.originX,

@@ -14,7 +14,7 @@ import { render } from "../dist/core/render.js";
 import { efemerideFor } from "../dist/core/efemerides.js";
 import { EFEMERIDES as ES } from "../dist/data/efemerides.es.js";
 import { EFEMERIDES as EN } from "../dist/data/efemerides.en.js";
-import type { Locale, Theme, View } from "../dist/core/tokens.js";
+import type { Locale, Theme } from "../dist/core/tokens.js";
 
 const EXTENSION_DIR = resolve(import.meta.dirname, "..");
 const OUT_DIR = join(EXTENSION_DIR, "preview");
@@ -27,45 +27,46 @@ interface Card {
   readonly subtitle: string;
   readonly widthPx: number;
   readonly heightPx: number;
-  readonly view: View;
   readonly theme: Theme;
   readonly locale: Locale;
   readonly lifeYears: number;
   readonly efemeride: boolean;
 }
 
-/** Las 4 variantes del handoff, en el lienzo de referencia. */
+/** Las 2 variantes que quedan (dark/light), en el lienzo de referencia. */
 const VARIANTS: readonly Card[] = [
-  { title: "Semanas · Dark", subtitle: "las 4 variantes, lienzo de referencia 1440x720", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "Semanas · Light", subtitle: "", widthPx: 1440, heightPx: 720, view: "weeks", theme: "light", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "Meses · Dark", subtitle: "", widthPx: 1440, heightPx: 720, view: "months", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "Meses · Light", subtitle: "", widthPx: 1440, heightPx: 720, view: "months", theme: "light", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "Dark · ES", subtitle: "lienzo de referencia 1440x720", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "Light · ES", subtitle: "", widthPx: 1440, heightPx: 720, theme: "light", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "Dark · EN", subtitle: "", widthPx: 1440, heightPx: 720, theme: "dark", locale: "en", lifeYears: 80, efemeride: true },
+  { title: "Light · EN", subtitle: "", widthPx: 1440, heightPx: 720, theme: "light", locale: "en", lifeYears: 80, efemeride: true },
 ];
 
 /** Viewports reales, que es donde se decide si el responsive sirve o no. */
 const VIEWPORTS: readonly Card[] = [
-  { title: "1920 x 950", subtitle: "monitor FHD, ventana maximizada", widthPx: 1920, heightPx: 950, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "1536 x 730", subtitle: "portatil 1080p con Windows al 125 %", widthPx: 1536, heightPx: 730, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "1366 x 640", subtitle: "portatil comun", widthPx: 1366, heightPx: 640, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "1280 x 720", subtitle: "el caso que el plan mandaba a composicion A", widthPx: 1280, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "2560 x 1300", subtitle: "monitor QHD", widthPx: 2560, heightPx: 1300, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "1180 x 820", subtitle: "tablet apaisada", widthPx: 1180, heightPx: 820, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "810 x 1080", subtitle: "tablet vertical — composicion A", widthPx: 810, heightPx: 1080, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { title: "768 x 1024", subtitle: "tablet vertical chica — composicion A", widthPx: 768, heightPx: 1024, view: "months", theme: "light", locale: "en", lifeYears: 80, efemeride: true },
-  { title: "1440 x 400", subtitle: "ventana baja — se oculta la efemeride", widthPx: 1440, heightPx: 400, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "1920 x 950", subtitle: "monitor FHD, ventana maximizada", widthPx: 1920, heightPx: 950, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "1536 x 730", subtitle: "portatil 1080p con Windows al 125 %", widthPx: 1536, heightPx: 730, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "1366 x 640", subtitle: "portatil comun", widthPx: 1366, heightPx: 640, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "1280 x 720", subtitle: "el caso que el plan mandaba a composicion A", widthPx: 1280, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "2560 x 1300", subtitle: "monitor QHD", widthPx: 2560, heightPx: 1300, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "1180 x 820", subtitle: "tablet apaisada", widthPx: 1180, heightPx: 820, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "810 x 1080", subtitle: "tablet vertical — composicion A", widthPx: 810, heightPx: 1080, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "768 x 1024", subtitle: "tablet vertical chica — composicion A", widthPx: 768, heightPx: 1024, theme: "light", locale: "en", lifeYears: 80, efemeride: true },
+  { title: "1440 x 400", subtitle: "ventana baja — se oculta la efemeride", widthPx: 1440, heightPx: 400, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
 ];
 
-/** Extremos del rango de esperanza de vida: donde la banda de decada sufre. */
+/** Todo el rango de esperanza de vida, que es donde la banda de decada se pone a prueba. */
 const EDGES: readonly Card[] = [
-  { title: "lifeYears = 40", subtitle: "40 columnas en el eje de anios: la banda de decada se lee peor", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 40, efemeride: true },
-  { title: "lifeYears = 100", subtitle: "100 columnas: el paso mas comprimido del rango", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 100, efemeride: true },
-  { title: "Sin efemeride", subtitle: "el pie se ancla al borde inferior y nada mas se mueve", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: false },
-  { title: "Onboarding", subtitle: "sin fecha de nacimiento: grilla entera en estado futuro", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { title: "lifeYears = 20", subtitle: "minimo del rango nuevo, para mirar a corto plazo", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 20, efemeride: true },
+  { title: "lifeYears = 30", subtitle: "", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 30, efemeride: true },
+  { title: "lifeYears = 40", subtitle: "el caso donde la banda fija desaparecia", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 40, efemeride: true },
+  { title: "lifeYears = 60", subtitle: "", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 60, efemeride: true },
+  { title: "lifeYears = 100", subtitle: "maximo: el paso mas comprimido", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 100, efemeride: true },
+  { title: "Sin efemeride", subtitle: "el pie se ancla al borde inferior y nada mas se mueve", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: false },
+  { title: "Onboarding", subtitle: "sin fecha de nacimiento: grilla entera en estado futuro", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
 ];
 
 function cardHtml(card: Card, onboarding = false): string {
   const result = render({
-    view: card.view,
     theme: card.theme,
     locale: card.locale,
     lifeYears: card.lifeYears,
@@ -129,7 +130,7 @@ function main(): void {
 Comparar contra <code>docs/design-handoff/landscape-options.html</code>, opcion B.
 La fuente va embebida: la pagina no pide nada por red.</p>
 
-<h2>Las 4 variantes — lienzo de referencia 1440 x 720</h2>
+<h2>Las 2 variantes (dark / light) en los 2 idiomas — 1440 x 720</h2>
 <div class="grid">
 ${VARIANTS.map((card) => cardHtml(card)).join("\n")}
 </div>
@@ -141,7 +142,9 @@ cuando la grilla bajaria del 62 % del alto disponible, que en la practica son la
 ${VIEWPORTS.map((card) => cardHtml(card)).join("\n")}
 </div>
 
-<h2>Extremos y estados</h2>
+<h2>Rango de esperanza de vida y estados</h2>
+<p class="sub">La banda de decada es proporcional al paso del eje de anios, asi que se lee igual de bien
+en todo el rango. Con banda fija, de 40 para abajo dejaba de poder contarse.</p>
 <div class="grid">
 ${EDGES.map((card, index) => cardHtml(card, index === EDGES.length - 1)).join("\n")}
 </div>

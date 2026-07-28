@@ -1,23 +1,33 @@
 /**
  * geometry.ts — la caja de grilla mide SIEMPRE 466 x 326 unidades de diseno.
  *
- * Es el hallazgo que ordena todo el rediseno apaisado (plan 5.1). En el handoff:
- *   semanas: 80 filas x 5,475 + 7 bandas x 4 = 466  ·  52 columnas x 6,269 = 326
- *   meses:   40 filas x 10,6  + 7 bandas x 6 = 466  ·  24 columnas x 13,583 = 326
+ * Es el hallazgo que ordena todo el rediseno apaisado (plan 5.1): la grilla no se rediseña
+ * cuando cambia lifeYears, se TRANSPONE y se multiplica por un unico factor k. Todos los
+ * ratios internos del handoff se conservan por construccion, no por disciplina — y por eso
+ * el test parametrizado sobre todo el rango es el gate de verdad.
  *
- * Cuando lifeYears cambia, el paso del eje de anios se readapta para que la caja siga
- * midiendo lo mismo. O sea: la grilla no se rediseña, se TRANSPONE y se multiplica por un
- * unico factor k. Todos los ratios internos del handoff se conservan por construccion, no
- * por disciplina — y por eso el test parametrizado de 122 casos es el gate de verdad.
+ * Nomenclatura, que es donde es facil perderse: "eje de unidad" son las 52 semanas del
+ * anio (fijo); "eje de anios" es el que crece con lifeYears. En retrato el eje de unidad
+ * era horizontal; en apaisado es vertical. La matematica no cambia, solo que eje se dibuja
+ * en que direccion.
  *
- * Nomenclatura, que es donde es facil perderse: "eje de unidad" son las 52 semanas o los
- * 24 meses (fijo); "eje de anios" es el que crece con lifeYears. En retrato el eje de
- * unidad era horizontal; en apaisado es vertical. La matematica no cambia, solo que eje
- * se dibuja en que direccion.
+ * ── La banda de decada es PROPORCIONAL, no fija ──────────────────────────────────────
+ *
+ * En el handoff la banda media 4 unidades fijas, porque el unico caso real era lifeYears
+ * = 80. Con un valor bajo eso se rompe: en 40, el paso del eje de anios se duplica a 11,35
+ * unidades (20,33 px en pantalla) y la banda se queda en 4 (7,17 px). El resultado es que
+ * la separacion de decada es MAS CHICA que el espacio normal entre columnas y las decadas
+ * dejan de poder contarse — la grilla se lee como columnas uniformes.
+ *
+ * La solucion es hacer que la banda sea una fraccion constante del paso, con la fraccion
+ * derivada del propio caso aprobado (4 / 5,475 = 0,7306). Eso deja lifeYears = 80 exacto
+ * al pixel y arregla todo el resto del rango. Despejando:
+ *
+ *   paso = (466 - bandas x banda) / anios       y      banda = ratio x paso
+ *   =>  paso = 466 / (anios + bandas x ratio)
  */
 
-import { T, gridVariant, unitsPerYear } from "./tokens.js";
-import type { View } from "./tokens.js";
+import { GRID, T, UNITS_PER_YEAR } from "./tokens.js";
 
 /** Lado largo de la caja (eje de anios), en unidades de diseno. */
 export const BOX_YEAR_UNITS = T.landscape.gridBox.yearAxisUnits;
@@ -26,10 +36,26 @@ export const BOX_UNIT_UNITS = T.landscape.gridBox.unitAxisUnits;
 /** 466 / 326 = 1,42945. Se deriva, no se lee: el token "aspect" es documentacion. */
 export const BOX_ASPECT = BOX_YEAR_UNITS / BOX_UNIT_UNITS;
 
+function bandCountFor(yearCount: number): number {
+  return yearCount > 1 ? Math.floor((yearCount - 1) / GRID.bandEveryRows) : 0;
+}
+
+/**
+ * Fraccion del paso que ocupa la banda. Se deriva del caso de referencia en vez de
+ * guardarse redondeada, por la misma razon que los margenes: un decimal cortado hace que
+ * el lienzo aprobado deje de reproducirse exacto.
+ */
+const BAND_GAP_RATIO = (() => {
+  const reference = T.landscape.gridBox.referenceLifeYears;
+  const bands = bandCountFor(reference);
+  const referencePitch = (BOX_YEAR_UNITS - bands * GRID.bandGapPx) / reference;
+  return GRID.bandGapPx / referencePitch;
+})();
+
 export interface GridGeometry {
-  /** Celdas del eje de unidad: 52 o 24. Fijo. */
+  /** Celdas del eje de unidad: 52. Fijo. */
   readonly unitCount: number;
-  /** Celdas del eje de anios. Crece con lifeYears. */
+  /** Celdas del eje de anios. Igual a lifeYears. */
   readonly yearCount: number;
   /** Total de celdas dibujadas. */
   readonly totalCells: number;
@@ -39,31 +65,29 @@ export interface GridGeometry {
   readonly unitPitch: number;
   /** Cada cuantas celdas del eje de anios entra una banda de aire. */
   readonly bandEvery: number;
-  /** Ancho de la banda de aire, en unidades de diseno. */
+  /** Ancho de la banda, en unidades de diseno. Proporcional al paso. */
   readonly bandGap: number;
   /** Cuantas bandas entran. */
   readonly bandCount: number;
 }
 
-export function geometry(view: View, lifeYears: number): GridGeometry {
-  const variant = gridVariant(view);
-  const unitCount = variant.columns;
-  const totalCells = lifeYears * unitsPerYear(view);
+export function geometry(lifeYears: number): GridGeometry {
+  const unitCount = GRID.columns;
+  const totalCells = lifeYears * UNITS_PER_YEAR;
   const yearCount = Math.ceil(totalCells / unitCount);
-  const bandEvery = variant.bandEveryRows;
-  const bandGap = variant.bandGapPx;
-  const bandCount = yearCount > 1 ? Math.floor((yearCount - 1) / bandEvery) : 0;
+  const bandCount = bandCountFor(yearCount);
+
+  // Despeje de la ecuacion del encabezado: mantiene la caja en 466 exactas.
+  const yearPitch = BOX_YEAR_UNITS / (yearCount + bandCount * BAND_GAP_RATIO);
 
   return {
     unitCount,
     yearCount,
     totalCells,
-    // El paso se despeja para que filas x paso + bandas = 466 exacto. Esta es la linea
-    // que mantiene el invariante para cualquier lifeYears.
-    yearPitch: (BOX_YEAR_UNITS - bandCount * bandGap) / yearCount,
+    yearPitch,
     unitPitch: BOX_UNIT_UNITS / unitCount,
-    bandEvery,
-    bandGap,
+    bandEvery: GRID.bandEveryRows,
+    bandGap: yearPitch * BAND_GAP_RATIO,
     bandCount,
   };
 }

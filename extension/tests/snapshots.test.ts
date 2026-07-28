@@ -17,12 +17,11 @@ import { render } from "../src/core/render.js";
 import { efemerideFor } from "../src/core/efemerides.js";
 import { EFEMERIDES as ES } from "../src/data/efemerides.es.js";
 import { EFEMERIDES as EN } from "../src/data/efemerides.en.js";
-import type { Locale, Theme, View } from "../src/core/tokens.js";
+import type { Locale, Theme } from "../src/core/tokens.js";
 
 interface Fixture {
   readonly id: string;
   readonly note?: string;
-  readonly view: View;
   readonly theme: Theme;
   readonly locale: Locale;
   readonly birthDate: string;
@@ -47,8 +46,8 @@ const HOUR = 7;
 const MINUTE = 41;
 
 describe("snapshots SVG por fixture", () => {
-  it("cubre los 15 fixtures del repo", () => {
-    expect(fixtures).toHaveLength(15);
+  it("cubre los 12 fixtures del repo", () => {
+    expect(fixtures).toHaveLength(12);
   });
 
   for (const fixture of fixtures) {
@@ -56,7 +55,6 @@ describe("snapshots SVG por fixture", () => {
       const today = parseDate(fixture.today);
       const table = fixture.locale === "es" ? ES : EN;
       const result = render({
-        view: fixture.view,
         theme: fixture.theme,
         locale: fixture.locale,
         lifeYears: fixture.lifeYears,
@@ -81,7 +79,6 @@ describe("propiedades que valen para todos los fixtures", () => {
     it(`${fixture.id}: el DOM queda en pocos nodos, no uno por celda`, () => {
       const today = parseDate(fixture.today);
       const result = render({
-        view: fixture.view,
         theme: fixture.theme,
         locale: fixture.locale,
         lifeYears: fixture.lifeYears,

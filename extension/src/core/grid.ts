@@ -16,11 +16,9 @@
 
 import { cellCenter, geometry } from "./geometry.js";
 import type { GridGeometry } from "./geometry.js";
-import { gridVariant } from "./tokens.js";
-import type { View } from "./tokens.js";
+import { GRID } from "./tokens.js";
 
 export interface GridPathsOptions {
-  readonly view: View;
   readonly lifeYears: number;
   /**
    * Celda actual. `null` dibuja la grilla entera en estado futuro y sin anillo: es el
@@ -59,13 +57,12 @@ function circlePath(x: number, y: number, r: number): string {
 }
 
 export function gridPaths(options: GridPathsOptions): GridPaths {
-  const { view, lifeYears, currentIndex, originX, originY, k, transposed } = options;
-  const variant = gridVariant(view);
-  const g = geometry(view, lifeYears);
+  const { lifeYears, currentIndex, originX, originY, k, transposed } = options;
+  const g = geometry(lifeYears);
 
-  const dotRadius = variant.dotRadiusPx * k;
-  const ringRadius = variant.currentRingRadiusPx * k;
-  const ringStroke = variant.currentRingStrokePx * k;
+  const dotRadius = GRID.dotRadiusPx * k;
+  const ringRadius = GRID.currentRingRadiusPx * k;
+  const ringStroke = GRID.currentRingStrokePx * k;
 
   const past: string[] = [];
   const future: string[] = [];

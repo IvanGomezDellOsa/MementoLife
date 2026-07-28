@@ -47,14 +47,6 @@
       "currentRingRadiusPx": 2.95,
       "currentRingStrokePx": 1.1
     },
-    "months": {
-      "columns": 24,
-      "dotRadiusPx": 3.2,
-      "bandEveryRows": 5,
-      "bandGapPx": 6,
-      "currentRingRadiusPx": 4.6,
-      "currentRingStrokePx": 1.2
-    },
     "opacity": {
       "past": {
         "dark": 0.90,
@@ -75,7 +67,15 @@
       "yearAxisUnits": 466,
       "unitAxisUnits": 326,
       "aspect": 1.4294,
-      "transposed": true
+      "transposed": true,
+      "_bandGapNote": "La banda de decada es PROPORCIONAL al paso del eje de anios, no fija. Con paso fijo, un lifeYears bajo ensancha las columnas y deja la banda relativamente invisible: en 40 el paso pasaba a 20,33 px con la banda todavia en 7,17 px, y las decadas dejaban de contarse. La proporcion se deriva de referenceLifeYears para que ese caso salga identico al aprobado.",
+      "referenceLifeYears": 80
+    },
+    "lifeYears": {
+      "_note": "Rango elegible por el usuario. El minimo baja de 40 a 20: con la banda proporcional los valores cortos ya se leen bien, y sirven para mirar a corto plazo.",
+      "min": 20,
+      "max": 100,
+      "default": 80
     },
     "layout": {
       "marginTopPx": 68,

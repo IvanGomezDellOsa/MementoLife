@@ -26,16 +26,12 @@ const ES = {
 
   lifeYearsLabel: "Esperanza de vida",
   lifeYearsUnit: "años",
-  lifeYearsHint: "Entre 40 y 100.",
+  lifeYearsHint: "Entre 20 y 100.",
 
   themeLabel: "Tema",
   themeDark: "Oscuro",
   themeLight: "Claro",
   themeSystem: "Del sistema",
-
-  viewLabel: "Vista",
-  viewWeeks: "Semanas",
-  viewMonths: "Meses",
 
   efemerideLabel: "Efeméride del día",
   efemerideOn: "Mostrar",
@@ -66,16 +62,12 @@ const EN: Strings = {
 
   lifeYearsLabel: "Life expectancy",
   lifeYearsUnit: "years",
-  lifeYearsHint: "Between 40 and 100.",
+  lifeYearsHint: "Between 20 and 100.",
 
   themeLabel: "Theme",
   themeDark: "Dark",
   themeLight: "Light",
   themeSystem: "System",
-
-  viewLabel: "View",
-  viewWeeks: "Weeks",
-  viewMonths: "Months",
 
   efemerideLabel: "Fact of the day",
   efemerideOn: "Show",

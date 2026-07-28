@@ -10,8 +10,8 @@
  * ano/mes/dia explicitos y aritmetica de dias propia, el core no tiene husos horarios.
  */
 
-import { unitsPerYear } from "./tokens.js";
-import type { Locale, View } from "./tokens.js";
+import { UNITS_PER_YEAR } from "./tokens.js";
+import type { Locale } from "./tokens.js";
 
 /** Fecha civil, sin hora ni huso. Es lo unico que el core entiende como "fecha". */
 export interface CalendarDate {
@@ -26,7 +26,7 @@ const DAYS_PER_YEAR = 365.2425;
 export interface LifeStats {
   /** Anios vividos en decimal, p. ej. 33.5. */
   readonly yearsLived: number;
-  /** Total de celdas de la grilla: lifeYears x 52 o x 12. */
+  /** Total de celdas de la grilla: lifeYears x 52. */
   readonly totalUnits: number;
   /** Indice 0-based de la celda actual (la del anillo vacio), ya clampeado. */
   readonly currentIndex: number;
@@ -64,14 +64,14 @@ export function yearsLived(birthDate: CalendarDate, today: CalendarDate): number
  * 40.0008 para alguien que cumple exactamente 40), y sin clamp el anillo se dibujaria
  * fuera de la grilla. Es el caso del fixture edge_lifeYears_40.
  */
-export function currentIndex(view: View, yearsLivedValue: number, lifeYears: number): number {
-  const raw = Math.floor(yearsLivedValue * unitsPerYear(view));
-  const lastValid = totalUnits(view, lifeYears) - 1;
+export function currentIndex(yearsLivedValue: number, lifeYears: number): number {
+  const raw = Math.floor(yearsLivedValue * UNITS_PER_YEAR);
+  const lastValid = totalUnits(lifeYears) - 1;
   return Math.max(0, Math.min(raw, lastValid));
 }
 
-export function totalUnits(view: View, lifeYears: number): number {
-  return lifeYears * unitsPerYear(view);
+export function totalUnits(lifeYears: number): number {
+  return lifeYears * UNITS_PER_YEAR;
 }
 
 export function percentLived(yearsLivedValue: number, lifeYears: number): number {
@@ -79,14 +79,13 @@ export function percentLived(yearsLivedValue: number, lifeYears: number): number
 }
 
 export function lifeStats(
-  view: View,
   birthDate: CalendarDate,
   today: CalendarDate,
   lifeYears: number,
 ): LifeStats {
   const lived = yearsLived(birthDate, today);
-  const total = totalUnits(view, lifeYears);
-  const index = currentIndex(view, lived, lifeYears);
+  const total = totalUnits(lifeYears);
+  const index = currentIndex(lived, lifeYears);
   return {
     yearsLived: lived,
     totalUnits: total,
@@ -100,15 +99,8 @@ export function lifeStats(
  * Pie: "{n} % · semana X de Y" / "{n} % · week X of Y". El espacio antes del % y la
  * ausencia de "vivido"/"lived" vienen del handoff; no son un descuido de formato.
  */
-export function footerText(view: View, locale: Locale, stats: LifeStats): string {
-  const unit =
-    locale === "es"
-      ? view === "weeks"
-        ? "semana"
-        : "mes"
-      : view === "weeks"
-        ? "week"
-        : "month";
+export function footerText(locale: Locale, stats: LifeStats): string {
+  const unit = locale === "es" ? "semana" : "week";
   const joiner = locale === "es" ? "de" : "of";
   return `${stats.percent} % · ${unit} ${stats.currentNumber} ${joiner} ${stats.totalUnits}`;
 }

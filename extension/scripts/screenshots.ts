@@ -18,7 +18,7 @@ import { render } from "../dist/core/render.js";
 import { efemerideFor } from "../dist/core/efemerides.js";
 import { EFEMERIDES as ES } from "../dist/data/efemerides.es.js";
 import { EFEMERIDES as EN } from "../dist/data/efemerides.en.js";
-import type { Locale, Theme, View } from "../dist/core/tokens.js";
+import type { Locale, Theme } from "../dist/core/tokens.js";
 
 const EXTENSION_DIR = resolve(import.meta.dirname, "..");
 const OUT_DIR = join(EXTENSION_DIR, "preview", "shots");
@@ -30,7 +30,6 @@ interface Shot {
   readonly name: string;
   readonly widthPx: number;
   readonly heightPx: number;
-  readonly view: View;
   readonly theme: Theme;
   readonly locale: Locale;
   readonly lifeYears: number;
@@ -39,42 +38,42 @@ interface Shot {
 }
 
 const SHOTS: readonly Shot[] = [
-  // Las 4 variantes en el lienzo de referencia.
-  { name: "variante-semanas-dark", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "variante-semanas-light", widthPx: 1440, heightPx: 720, view: "weeks", theme: "light", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "variante-meses-dark", widthPx: 1440, heightPx: 720, view: "months", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "variante-meses-light", widthPx: 1440, heightPx: 720, view: "months", theme: "light", locale: "es", lifeYears: 80, efemeride: true },
+  // Las 2 variantes que quedan: dark y light. La vista de meses se elimino.
+  { name: "variante-dark", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "variante-light", widthPx: 1440, heightPx: 720, theme: "light", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "variante-dark-en", widthPx: 1440, heightPx: 720, theme: "dark", locale: "en", lifeYears: 80, efemeride: true },
+  { name: "variante-light-en", widthPx: 1440, heightPx: 720, theme: "light", locale: "en", lifeYears: 80, efemeride: true },
 
   // Los tres tamanos que pide la revision de diseno.
-  { name: "real-1280x720", widthPx: 1280, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "real-1920x950", widthPx: 1920, heightPx: 950, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "real-2560x1300", widthPx: 2560, heightPx: 1300, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "real-1280x720", widthPx: 1280, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "real-1920x950", widthPx: 1920, heightPx: 950, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "real-2560x1300", widthPx: 2560, heightPx: 1300, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
 
   // Portatil con zoom del sistema y tablets.
-  { name: "real-1536x730-win125", widthPx: 1536, heightPx: 730, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "real-1366x640", widthPx: 1366, heightPx: 640, view: "weeks", theme: "light", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "tablet-810x1080-compA", widthPx: 810, heightPx: 1080, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "tablet-768x1024-compA", widthPx: 768, heightPx: 1024, view: "months", theme: "light", locale: "en", lifeYears: 80, efemeride: true },
+  { name: "real-1536x730-win125", widthPx: 1536, heightPx: 730, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "real-1366x640", widthPx: 1366, heightPx: 640, theme: "light", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "tablet-810x1080-compA", widthPx: 810, heightPx: 1080, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "tablet-768x1024-compA", widthPx: 768, heightPx: 1024, theme: "light", locale: "en", lifeYears: 80, efemeride: true },
 
-  // Legibilidad del futuro: el punto abierto del gate de E1.
-  { name: "legibilidad-futuro-dark", widthPx: 1440, heightPx: 720, view: "months", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "legibilidad-futuro-light", widthPx: 1440, heightPx: 720, view: "months", theme: "light", locale: "es", lifeYears: 80, efemeride: true },
 
   // Extremos y estados.
-  { name: "edge-lifeYears-40", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 40, efemeride: true },
-  { name: "edge-lifeYears-100", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 100, efemeride: true },
-  { name: "estado-sin-efemeride", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: false },
-  { name: "estado-onboarding", widthPx: 1440, heightPx: 720, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true, onboarding: true },
-  { name: "estado-ventana-baja", widthPx: 1440, heightPx: 400, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "rango-lifeYears-20", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 20, efemeride: true },
+  { name: "rango-lifeYears-30", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 30, efemeride: true },
+  { name: "rango-lifeYears-40", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 40, efemeride: true },
+  { name: "rango-lifeYears-60", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 60, efemeride: true },
+  { name: "rango-lifeYears-100", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 100, efemeride: true },
+  { name: "rango-lifeYears-20-light", widthPx: 1440, heightPx: 720, theme: "light", locale: "es", lifeYears: 20, efemeride: true },
+  { name: "estado-sin-efemeride", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: false },
+  { name: "estado-onboarding", widthPx: 1440, heightPx: 720, theme: "dark", locale: "es", lifeYears: 80, efemeride: true, onboarding: true },
+  { name: "estado-ventana-baja", widthPx: 1440, heightPx: 400, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
 
   // Ficha de la tienda: 1280x800 exacto.
-  { name: "store-1280x800-es", widthPx: 1280, heightPx: 800, view: "weeks", theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
-  { name: "store-1280x800-en", widthPx: 1280, heightPx: 800, view: "months", theme: "light", locale: "en", lifeYears: 80, efemeride: true },
+  { name: "store-1280x800-es", widthPx: 1280, heightPx: 800, theme: "dark", locale: "es", lifeYears: 80, efemeride: true },
+  { name: "store-1280x800-en", widthPx: 1280, heightPx: 800, theme: "light", locale: "en", lifeYears: 80, efemeride: true },
 ];
 
 function pageHtml(shot: Shot, fontBase64: string): string {
   const result = render({
-    view: shot.view,
     theme: shot.theme,
     locale: shot.locale,
     lifeYears: shot.lifeYears,

@@ -9,15 +9,21 @@
 import { DESIGN_TOKENS } from "../data/tokens.js";
 
 export type Theme = "dark" | "light";
-export type View = "weeks" | "months";
 export type Locale = "es" | "en";
 
 export const T = DESIGN_TOKENS;
 
-/** Variante de grilla: columnas del eje de unidad, radios, bandas. Invariantes de medio. */
-export function gridVariant(view: View): typeof DESIGN_TOKENS.grid.weeks | typeof DESIGN_TOKENS.grid.months {
-  return view === "weeks" ? T.grid.weeks : T.grid.months;
-}
+/**
+ * Parametros de la grilla: columnas del eje de unidad, radios, banda de decada.
+ *
+ * Hay una sola vista, semanas. La de meses existia porque en la pantalla de un telefono
+ * 4160 puntos no entraban con peso suficiente; en un monitor entran de sobra, asi que se
+ * elimino junto con la plataforma que la justificaba.
+ */
+export const GRID = T.grid.weeks;
+
+/** Semanas por anio. Es calendario, no diseno, por eso no sale de tokens. */
+export const UNITS_PER_YEAR = 52;
 
 export function background(theme: Theme): string {
   return theme === "dark" ? T.colors.background.dark : T.colors.background.light;
@@ -39,7 +45,9 @@ export function efemerideOpacity(theme: Theme): number {
   return theme === "dark" ? T.typography.efemeride.opacity.dark : T.typography.efemeride.opacity.light;
 }
 
-/** Unidades por anio segun la vista. 52 semanas o 12 meses; no sale de tokens porque es calendario. */
-export function unitsPerYear(view: View): number {
-  return view === "weeks" ? 52 : 12;
+/** Rango elegible de esperanza de vida. */
+export const LIFE_YEARS = T.landscape.lifeYears;
+
+export function clampLifeYears(value: number): number {
+  return Math.min(LIFE_YEARS.max, Math.max(LIFE_YEARS.min, Math.round(value)));
 }

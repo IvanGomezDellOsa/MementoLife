@@ -39,7 +39,7 @@ describe("celdas vividas", () => {
   it("caso base del handoff: 1990-01-01 a 2023-07-02", () => {
     const lived = yearsLived({ year: 1990, month: 1, day: 1 }, { year: 2023, month: 7, day: 2 });
     expect(lived).toBeCloseTo(33.5, 1);
-    expect(currentIndex("weeks", lived, 80)).toBe(Math.floor(lived * 52));
+    expect(currentIndex(lived, 80)).toBe(Math.floor(lived * 52));
   });
 
   it("clampea cuando los bisiestos empujan yearsLived por encima de lifeYears", () => {
@@ -47,13 +47,13 @@ describe("celdas vividas", () => {
     // hacen que la division por 365,2425 de un pelo mas de 40.
     const lived = yearsLived({ year: 2000, month: 6, day: 10 }, { year: 2040, month: 6, day: 10 });
     expect(lived).toBeGreaterThan(40);
-    const index = currentIndex("weeks", lived, 40);
-    expect(index).toBe(totalUnits("weeks", 40) - 1);
+    const index = currentIndex(lived, 40);
+    expect(index).toBe(totalUnits(40) - 1);
     expect(index).toBe(2079);
   });
 
   it("nunca devuelve un indice negativo", () => {
-    expect(currentIndex("weeks", -5, 80)).toBe(0);
+    expect(currentIndex(-5, 80)).toBe(0);
   });
 
   it("el porcentaje queda acotado a 0..100", () => {
@@ -64,19 +64,14 @@ describe("celdas vividas", () => {
 });
 
 describe("texto del pie", () => {
-  const stats = lifeStats("weeks", { year: 1990, month: 1, day: 1 }, { year: 2023, month: 7, day: 2 }, 80);
+  const stats = lifeStats({ year: 1990, month: 1, day: 1 }, { year: 2023, month: 7, day: 2 }, 80);
 
   it("espanol", () => {
-    expect(footerText("weeks", "es", stats)).toBe("42 % · semana 1742 de 4160");
+    expect(footerText("es", stats)).toBe("42 % · semana 1742 de 4160");
   });
 
   it("ingles", () => {
-    expect(footerText("weeks", "en", stats)).toBe("42 % · week 1742 of 4160");
+    expect(footerText("en", stats)).toBe("42 % · week 1742 of 4160");
   });
 
-  it("meses en los dos idiomas", () => {
-    const m = lifeStats("months", { year: 1990, month: 1, day: 1 }, { year: 2023, month: 7, day: 2 }, 80);
-    expect(footerText("months", "es", m)).toBe("42 % · mes 402 de 960");
-    expect(footerText("months", "en", m)).toBe("42 % · month 402 of 960");
-  });
 });
