@@ -240,6 +240,119 @@ function p4(p: Palette): string {
   return out;
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * RONDA 2 — geometria dirigida por la CELDA, no por la caja.
+ *
+ * Hoy la caja mide 466x326 unidades fijas y el tamano de celda sale de ahi. Eso hace dos
+ * cosas malas: en apaisado las celdas quedan mas angostas que altas (12,94 x 14,82 px), y
+ * con lifeYears bajo se estiran hasta parecer rayas.
+ *
+ * Aca se invierte: se elige el tamano de celda y la caja es la consecuencia. La celda sale
+ * cuadrada, que es lo que da mas aire horizontal —justo donde hoy falta— y de paso usa el
+ * espacio libre que quedaba entre la columna y la grilla.
+ * ══════════════════════════════════════════════════════════════════════════════ */
+
+interface CellOptions {
+  /** Ancho de celda / alto de celda. 1 = cuadrada. */
+  readonly cellAspect: number;
+  /** Diametro del punto como fraccion del paso. 0,494 es el ratio actual. */
+  readonly dotRatio: number;
+  /** Cada cuantos anios entra una banda de aire. */
+  readonly bandEvery: number;
+  /** Banda como fraccion del paso horizontal. */
+  readonly bandRatio: number;
+}
+
+function cellGrid(
+  availX: number,
+  availY: number,
+  availW: number,
+  availH: number,
+  p: Palette,
+  o: CellOptions,
+): { svg: string; width: number; height: number; pitch: number; gap: number } {
+  const rows = 52;
+  const cols = LIFE;
+  const bands = Math.floor((cols - 1) / o.bandEvery);
+
+  let vp = availH / rows;
+  let hp = vp * o.cellAspect;
+  let width = cols * hp + bands * hp * o.bandRatio;
+  if (width > availW) {
+    const scale = availW / width;
+    vp *= scale;
+    hp *= scale;
+    width = availW;
+  }
+  const band = hp * o.bandRatio;
+  const height = rows * vp;
+  const r = (hp * o.dotRatio) / 2;
+  const x0 = availX;
+  const y0 = availY + (availH - height) / 2;
+
+  const past: string[] = [];
+  const future: string[] = [];
+  const ring: string[] = [];
+  for (let i = 0; i < cols * rows; i += 1) {
+    const year = Math.floor(i / rows);
+    const week = i % rows;
+    const x = x0 + year * hp + Math.floor(year / o.bandEvery) * band + hp / 2;
+    const y = y0 + week * vp + vp / 2;
+    if (i === CURRENT) ring.push(circle(x, y, r * 1.58));
+    else (i < CURRENT ? past : future).push(circle(x, y, r));
+  }
+  return {
+    svg:
+      `<path d="${past.join("")}" fill="${p.dot}" opacity="${p.past}"/>` +
+      `<path d="${future.join("")}" fill="${p.dot}" opacity="${p.future}"/>` +
+      `<path d="${ring.join("")}" fill="none" stroke="${p.ink}" stroke-width="${(r * 0.72).toFixed(2)}"/>`,
+    width,
+    height,
+    pitch: hp,
+    gap: hp - 2 * r,
+  };
+}
+
+/** Composicion editorial aprobada + geometria de celda. */
+function editorial(p: Palette, o: CellOptions): string {
+  const vM = 89.7;
+  const hM = 117.3;
+  const colW = 380;
+  const gutter = 92;
+  const availH = H - 2 * vM;
+  const availW = W - 2 * hM - colW - gutter;
+  const g = cellGrid(hM + colW + gutter, vM, availW, availH, p, o);
+
+  let out = g.svg;
+  const lines = wrapText(EFEM, colW, 13);
+  const lh = 13 * 1.62;
+  const blockH = 20 + 104 + 30 + 26 + 1 + 26 + lines.length * lh;
+  let y = vM + (availH - blockH) / 2 + 16;
+  out += text(hM, y, DATE_ES, { size: 15, opacity: 0.5, ls: 0.2 }, p);
+  y += 104;
+  out += text(hM, y, STAT_PCT, { size: 104, weight: 300 }, p);
+  y += 30;
+  out += text(hM, y, STAT_SUB, { size: 13, opacity: 0.5, ls: 1.3 }, p);
+  y += 40;
+  out += `<rect x="${hM}" y="${y.toFixed(1)}" width="${colW}" height="1" fill="${p.ink}" opacity="0.13"/>`;
+  y += 34;
+  lines.forEach((l, i) => (out += text(hM, y + i * lh, l, { size: 13, opacity: 0.46 }, p)));
+  console.log(
+    `    paso ${g.pitch.toFixed(2)} px · hueco ${g.gap.toFixed(2)} px · caja ${g.width.toFixed(0)}x${g.height.toFixed(0)}`,
+  );
+  return out;
+}
+
+const CUADRADA: CellOptions = { cellAspect: 1, dotRatio: 0.494, bandEvery: 10, bandRatio: 0.73 };
+const CUADRADA_AIRE: CellOptions = { cellAspect: 1, dotRatio: 0.44, bandEvery: 10, bandRatio: 0.8 };
+const LUSTRO: CellOptions = { cellAspect: 1, dotRatio: 0.46, bandEvery: 5, bandRatio: 0.62 };
+
+const FONDO_CALIDO: Palette = { bg: "#161310", ink: "#eae3d4", dot: "#cdbfa4", past: 0.95, future: 0.24 };
+const FONDO_PROFUNDO: Palette = { bg: "#121110", ink: "#ece5d8", dot: "#cdbfa4", past: 0.95, future: 0.26 };
+const FONDO_NEUTRO: Palette = { bg: "#0f0e0d", ink: "#ece5d8", dot: "#cfc1a6", past: 0.95, future: 0.27 };
+const FONDO_FRIO: Palette = { bg: "#0d0d0f", ink: "#e8e6e0", dot: "#bfb6a4", past: 0.95, future: 0.27 };
+
 const VARIANTS: readonly { name: string; svg: string }[] = [
   { name: "P0-actual", svg: frame(p0(BONE), BONE) },
   { name: "P1-editorial-sin-reloj", svg: frame(p1(BONE), BONE) },
@@ -252,6 +365,15 @@ const VARIANTS: readonly { name: string; svg: string }[] = [
   { name: "F1-PROPUESTA-dark", svg: frame(p1(SAND), SAND) },
   { name: "F2-PROPUESTA-con-reloj", svg: frame(withClock(SAND), SAND) },
   { name: "F3-PROPUESTA-light", svg: frame(p1(SAND_LIGHT), SAND_LIGHT) },
+
+  // Ronda 2
+  { name: "G1-celda-cuadrada", svg: frame(editorial(FONDO_CALIDO, CUADRADA), FONDO_CALIDO) },
+  { name: "G2-celda-cuadrada-mas-aire", svg: frame(editorial(FONDO_CALIDO, CUADRADA_AIRE), FONDO_CALIDO) },
+  { name: "G3-banda-cada-5", svg: frame(editorial(FONDO_CALIDO, LUSTRO), FONDO_CALIDO) },
+  { name: "H1-fondo-calido-actual", svg: frame(editorial(FONDO_CALIDO, CUADRADA_AIRE), FONDO_CALIDO) },
+  { name: "H2-fondo-profundo", svg: frame(editorial(FONDO_PROFUNDO, CUADRADA_AIRE), FONDO_PROFUNDO) },
+  { name: "H3-fondo-casi-neutro", svg: frame(editorial(FONDO_NEUTRO, CUADRADA_AIRE), FONDO_NEUTRO) },
+  { name: "H4-fondo-frio", svg: frame(editorial(FONDO_FRIO, CUADRADA_AIRE), FONDO_FRIO) },
 ];
 
 async function main(): Promise<void> {
