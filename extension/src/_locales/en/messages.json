@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "MementoLife",
+    "description": "Extension name shown in the Chrome Web Store and the extensions page."
+  },
+  "extDesc": {
+    "message": "Replaces the new tab page with your life drawn as a grid of weeks. No accounts, no network, nothing leaves your device.",
+    "description": "Store listing description. Hard limit: 132 characters."
+  }
+}

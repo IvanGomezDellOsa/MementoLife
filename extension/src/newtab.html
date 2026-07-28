@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- El titulo se localiza en newtab.ts. Chrome no expande __MSG_ en HTML, y sin <title>
+     mostraria la URL como nombre de la pestana (RESTRICCIONES-CHROME-WEB-STORE.md 3.6). -->
+<title>New tab</title>
+<style>
+  /* Inline a proposito: la CSP por defecto de MV3 restringe script-src, NO los estilos.
+     Esto pinta el fondo en el primer cuadro, sin esperar a ningun archivo. */
+  :root { --bg: #161310; --ink: #eae3d4; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #f4f0e8; --ink: #2b2721; }
+  }
+  /* theme-boot.js estampa data-theme cuando el usuario eligio un tema distinto al del
+     sistema; tiene que ganarle al media query en las dos direcciones. */
+  :root[data-theme="dark"]  { --bg: #161310; --ink: #eae3d4; }
+  :root[data-theme="light"] { --bg: #f4f0e8; --ink: #2b2721; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); overflow: hidden; }
+</style>
+<link rel="preload" href="assets/fonts/Fraunces-subset.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="newtab.css">
+<script src="theme-boot.js"></script>
+</head>
+<body>
+  <main id="canvas" aria-live="polite"></main>
+  <div id="onboarding" hidden></div>
+  <script type="module" src="newtab.js"></script>
+</body>
+</html>

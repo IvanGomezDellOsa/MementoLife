@@ -1,0 +1,121 @@
+/*
+ * newtab.css — la pestana nueva es un SVG a pantalla completa mas el bloque de onboarding.
+ * Casi todo el diseno vive en el SVG que genera el core; aca solo esta lo que el SVG no
+ * puede resolver.
+ */
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("assets/fonts/Fraunces-subset.woff2") format("woff2");
+  font-weight: 300 400;
+  /* La fuente viene del disco, asi que el bloqueo es de milisegundos. Vale la pena para
+     evitar el flash de serif del sistema, que con Fraunces se nota mucho. */
+  font-display: block;
+}
+
+html, body {
+  height: 100%;
+  color: var(--ink);
+}
+
+#canvas,
+#canvas svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#canvas svg {
+  /* Pinneado. El eje opsz ya se instancio fuera del .woff2, pero dejarlo explicito cuesta
+     cero y documenta la intencion: sin esto, si algun dia la fuente volviera a traer el eje,
+     el reloj a 78 px y el pie a 11,5 px dejarian de coincidir con la referencia (riesgo 10.1). */
+  font-optical-sizing: none;
+  font-family: "Fraunces", Georgia, serif;
+}
+
+/*
+ * Onboarding. Se posiciona sobre la columna tipografica, donde despues van a ir el pie y
+ * la efemeride, asi que el usuario ve el lugar que va a ocupar su dato.
+ *
+ * NO se autofocusea el campo: Chrome le da el foco de teclado a la barra de direcciones en
+ * cada pestana nueva, y pelearselo rompe el caso de uso dominante — abrir una pestana para
+ * escribir una URL. Por eso el bloque es un objetivo de CLIC evidente y no un input
+ * discreto que haya que descubrir.
+ */
+#onboarding {
+  position: absolute;
+  font-family: "Fraunces", Georgia, serif;
+  font-optical-sizing: none;
+  color: var(--ink);
+}
+
+#onboarding[hidden] { display: none; }
+
+.onboarding-heading {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 400;
+  opacity: 0.92;
+}
+
+.onboarding-body {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.62;
+  line-height: 1.5;
+}
+
+.onboarding-field {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.onboarding-field input {
+  flex: 1 1 150px;
+  min-width: 0;
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 11px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ink) 26%, transparent);
+  border-radius: 6px;
+}
+
+.onboarding-field input::-webkit-calendar-picker-indicator {
+  filter: invert(var(--picker-invert, 1));
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+:root[data-theme="light"] { --picker-invert: 0; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --picker-invert: 0; } }
+
+.onboarding-field button {
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 18px;
+  cursor: pointer;
+  color: var(--bg);
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+.onboarding-field input:focus-visible,
+.onboarding-field button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.onboarding-error {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  opacity: 0.75;
+  min-height: 1em;
+}
+
+.onboarding-error:empty { visibility: hidden; }

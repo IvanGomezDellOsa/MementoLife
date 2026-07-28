@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "MementoLife",
+    "description": "Nombre de la extension en la Chrome Web Store y en la pagina de extensiones."
+  },
+  "extDesc": {
+    "message": "Reemplaza la pestaña nueva por tu vida dibujada como una grilla de semanas. Sin cuentas, sin red, nada sale de tu equipo.",
+    "description": "Descripcion de la ficha de la tienda. Limite duro: 132 caracteres."
+  }
+}

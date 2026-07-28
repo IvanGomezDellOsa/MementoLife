@@ -72,9 +72,18 @@ export interface LayoutInput {
   readonly efemerideText: string | null;
 }
 
+/** Donde vive la columna de texto. Lo usa el onboarding para ubicarse encima. */
+export interface TextColumn {
+  /** Borde izquierdo si anchor es "start"; centro si es "middle". */
+  readonly x: number;
+  readonly widthPx: number;
+  readonly anchor: TextAnchor;
+}
+
 export interface LayoutResult {
   readonly composition: Composition;
   readonly grid: LayoutBox;
+  readonly column: TextColumn;
   readonly lines: readonly TextLine[];
   readonly showFooter: boolean;
   readonly showEfemeride: boolean;
@@ -260,6 +269,7 @@ function compositionB(input: LayoutInput, frame: FrameB): LayoutResult {
   return {
     composition: "B",
     grid: { originX, originY, widthPx: gridWidth, heightPx: gridHeight, k },
+    column: { x: colX, widthPx: typeColWidth, anchor: "start" },
     lines,
     showFooter,
     showEfemeride: efemLines.length > 0,
@@ -388,6 +398,7 @@ function compositionA(input: LayoutInput, frame: Frame): LayoutResult {
   return {
     composition: "A",
     grid: { originX, originY, widthPx: gridWidth, heightPx: gridHeight, k },
+    column: { x: centerX, widthPx: efemMaxWidth, anchor: "middle" },
     lines,
     showFooter,
     showEfemeride: efemLines.length > 0,

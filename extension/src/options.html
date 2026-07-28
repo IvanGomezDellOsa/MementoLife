@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Se localiza en options.ts, igual que en newtab. -->
+<title>Options</title>
+<style>
+  :root { --bg: #f4f0e8; --ink: #2b2721; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161310; --ink: #eae3d4; }
+  }
+  :root[data-theme="dark"]  { --bg: #161310; --ink: #eae3d4; }
+  :root[data-theme="light"] { --bg: #f4f0e8; --ink: #2b2721; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+</style>
+<link rel="stylesheet" href="options.css">
+<script src="theme-boot.js"></script>
+</head>
+<body>
+  <main class="sheet">
+    <h1 id="title">Options</h1>
+    <form id="form" novalidate>
+      <!-- options.ts arma los campos: asi las etiquetas salen del mismo diccionario
+           tipado que usa la pestana nueva y no hay dos fuentes de texto. -->
+    </form>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>
