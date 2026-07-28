@@ -9,43 +9,39 @@ Thumbs.db
 !.env.example
 .idea/
 .vscode/
-*.iml
 *.swp
 *.code-workspace
-
-# ========================
-# PYTHON
-# ========================
-__pycache__/
-*.py[cod]
-*$py.class
-.pytest_cache/
-.coverage
-htmlcov/
 
 # Logs
 *.log
 
 # ========================
-# ANDROID / GRADLE (Kotlin nativo)
+# EXTENSIÓN DE CHROME (Node / TypeScript)
 # ========================
-android/.gradle/
-android/local.properties
-android/**/build/
-android/.idea/
-android/**/*.iml
-android/captures/
-android/.cxx/
-android/*.keystore
-android/*.jks
-android/key.properties
+node_modules/
+extension/dist/
+extension/build/
+extension/*.zip
 
-# Copias generadas por la tarea Gradle de assets (fuente de verdad: render-core/ y content/)
-android/app/src/main/assets/render-core/
-android/app/src/main/assets/efemerides/
+# Módulos TS generados desde content/ y render-core/ por scripts/gen-data.ts.
+# Fuente de verdad: los JSON. No se duplican a mano ni se commitean.
+extension/src/data/
+
+# Salidas de Playwright (los goldens PNG de e2e/golden/ SÍ se commitean; esto es el ruido)
+extension/test-results/
+extension/playwright-report/
+extension/blob-report/
 
 # ========================
-# DOCUMENTACIÓN INTERNA (no publicada aún)
+# PYTHON (sólo herramientas de build que se corren a mano:
+# pyftsubset para el subset de Fraunces. El .woff2 resultante SÍ se commitea.)
+# ========================
+.venv/
+__pycache__/
+*.py[cod]
+
+# ========================
+# DOCUMENTACIÓN INTERNA (no publicada)
 # ========================
 README.md
 README.en.md

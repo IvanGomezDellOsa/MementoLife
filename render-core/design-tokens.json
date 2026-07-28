@@ -65,5 +65,70 @@
         "light": 0.15
       }
     }
+  },
+  "landscape": {
+    "canvas": {
+      "refWidthPx": 1440,
+      "refHeightPx": 720
+    },
+    "gridBox": {
+      "yearAxisUnits": 466,
+      "unitAxisUnits": 326,
+      "aspect": 1.4294,
+      "transposed": true
+    },
+    "layout": {
+      "marginTopPx": 68,
+      "marginBottomPx": 68,
+      "marginLeftPx": 88,
+      "marginRightPx": 88,
+      "typeColumnWidthPx": 340,
+      "gutterPx": 89.2
+    },
+    "typography": {
+      "date": {
+        "sizePx": 16,
+        "weight": 400,
+        "opacity": 0.68,
+        "baselineFromGridTopPx": 15
+      },
+      "time": {
+        "sizePx": 78,
+        "weight": 300,
+        "opacity": 1.00,
+        "baselineFromGridTopPx": 105
+      },
+      "footer": {
+        "sizePx": 11.5,
+        "weight": 400,
+        "opacity": 0.55,
+        "letterSpacingPx": 1.4,
+        "gapAboveEfemeridePx": 40
+      },
+      "efemeride": {
+        "sizePx": 12.5,
+        "weight": 400,
+        "lineHeightMultiplier": 1.55
+      }
+    },
+    "responsive": {
+      "referenceK": 1.7914,
+      "verticalMarginRatio": 0.094444,
+      "verticalMarginMinPx": 40,
+      "verticalMarginMaxPx": 96,
+      "horizontalMarginRatio": 0.061111,
+      "horizontalMarginMinPx": 48,
+      "horizontalMarginMaxPx": 120,
+      "typeColumnMinPx": 280,
+      "typeColumnMaxPx": 380,
+      "fontClampPx": {
+        "date": { "min": 14, "max": 20 },
+        "time": { "min": 56, "max": 104 },
+        "footer": { "min": 11, "max": 15 },
+        "efemeride": { "min": 12, "max": 16 }
+      },
+      "hideEfemerideBelowVhPx": 420,
+      "hideFooterBelowVhPx": 340
+    }
   }
 }

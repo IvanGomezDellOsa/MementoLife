@@ -1,1 +1,13 @@
 * text=auto eol=lf
+
+# Binarios: nunca normalizar saltos de linea. `text=auto` los detecta bien casi siempre,
+# pero un .woff2 corrupto no falla al commitear — falla al renderizar, y tarde.
+*.woff2 binary
+*.woff  binary
+*.ttf   binary
+*.otf   binary
+*.png   binary
+*.zip   binary
+
+# El charset del subset es UTF-8 sin salto final; se compara byte a byte con la fuente.
+extension/scripts/font-charset.txt -text

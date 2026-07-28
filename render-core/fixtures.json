@@ -1,4 +1,5 @@
 {
+  "_note": "Casos canonicos de la extension de Chrome (composicion apaisada). Los 12 fixtures retrato de la v1 Android se eliminaron junto con su renderer: nada dibuja retrato. viewport define el lienzo real del navegador; 1440x720 es el lienzo de referencia del plan (5.3).",
   "fixtures": [
     {
       "id": "base_weeks_dark_es",
@@ -9,7 +10,8 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "base_weeks_light_en",
@@ -19,7 +21,8 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "base_weeks_dark_en",
@@ -29,7 +32,8 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "base_weeks_light_es",
@@ -39,7 +43,8 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "base_months_dark_en",
@@ -49,7 +54,8 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "base_months_light_es",
@@ -59,7 +65,8 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "base_months_dark_es",
@@ -69,7 +76,8 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "base_months_light_en",
@@ -79,40 +87,44 @@
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "edge_lifeYears_40",
-      "note": "Extremo inferior del rango (40) y ademas caso de clamping: por los dias bisiestos, yearsLived da 40.0008 (> lifeYears). El renderer debe clampear como reference.html (Math.min): grilla 100% pasada, sin anillo fuera de rango.",
+      "note": "Extremo inferior del rango (40) y ademas caso de clamping: por los dias bisiestos, yearsLived da 40.0008 (> lifeYears). El renderer debe clampear (Math.min): grilla 100% pasada, sin anillo fuera de rango. En apaisado el eje de anios queda con solo 40 columnas, asi que la banda de decada se lee peor que en retrato (riesgo 10.4 del plan).",
       "view": "weeks",
       "theme": "dark",
       "locale": "es",
       "birthDate": "2000-06-10",
       "today": "2040-06-10",
       "lifeYears": 40,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "edge_lifeYears_100",
-      "note": "Extremo superior del rango (100): 100 filas de semanas, el paso vertical mas comprimido permitido.",
+      "note": "Extremo superior del rango (100): 100 columnas en el eje de anios, el paso horizontal mas comprimido permitido.",
       "view": "weeks",
       "theme": "dark",
       "locale": "es",
       "birthDate": "1965-11-20",
       "today": "2023-07-02",
       "lifeYears": 100,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "edge_efemeride_off",
-      "note": "Con efemeride apagada el bloque no se dibuja y el resto del layout no se mueve.",
+      "note": "Con efemeride apagada el pie se ancla directo al borde inferior de la grilla y nada mas se mueve (plan 5.3).",
       "view": "weeks",
       "theme": "dark",
       "locale": "es",
       "birthDate": "1990-01-01",
       "today": "2023-07-02",
       "lifeYears": 80,
-      "efemerideEnabled": false
+      "efemerideEnabled": false,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
     },
     {
       "id": "edge_feb29_leap_year",
@@ -123,7 +135,32 @@
       "birthDate": "2020-02-29",
       "today": "2024-02-29",
       "lifeYears": 80,
-      "efemerideEnabled": true
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 720 }
+    },
+    {
+      "id": "viewport_narrow_breakpoint",
+      "note": "Ventana angosta: 1280x720 dispara el unico breakpoint del plan (5.7.5). W_g 834.80 + gutter 89.2 + columna minima 280 = 1204.00 > ancho util 1123.55, asi que degrada a composicion A centrada con la grilla ajustada al ANCHO. Es el viewport de escritorio mas comun que NO entra en composicion B.",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1280, "heightPx": 720 }
+    },
+    {
+      "id": "viewport_short_no_efemeride",
+      "note": "Ventana baja: vh 400 < 420, asi que se oculta la efemeride y el pie queda (plan 5.7.6). El ancho 1440 mantiene composicion B, para aislar la regla de alto de la del breakpoint. La grilla nunca se recorta.",
+      "view": "weeks",
+      "theme": "dark",
+      "locale": "es",
+      "birthDate": "1990-01-01",
+      "today": "2023-07-02",
+      "lifeYears": 80,
+      "efemerideEnabled": true,
+      "viewport": { "widthPx": 1440, "heightPx": 400 }
     }
   ]
 }

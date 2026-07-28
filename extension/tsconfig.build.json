@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "noEmit": false,
+    "declaration": false,
+    "sourceMap": false,
+    // La politica de la tienda desaconseja ofuscar y pide "enviar el codigo tal como fue
+    // escrito" (RESTRICCIONES-CHROME-WEB-STORE.md 3.8): los comentarios se conservan.
+    "removeComments": false
+  },
+  "include": ["src/**/*.ts"]
+}

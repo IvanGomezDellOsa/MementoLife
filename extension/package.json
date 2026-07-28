@@ -1,0 +1,24 @@
+{
+  "name": "mementolife-extension",
+  "version": "0.0.1",
+  "private": true,
+  "description": "MementoLife — extension de Chrome que reemplaza la pestana nueva por una grilla de vida.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "gen:data": "node scripts/gen-data.ts",
+    "typecheck": "npm run gen:data && tsc --noEmit",
+    "test": "npm run gen:data && vitest run",
+    "test:watch": "npm run gen:data && vitest",
+    "verify:font": "python scripts/verify-font-coverage.py"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
