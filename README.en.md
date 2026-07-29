@@ -1,15 +1,15 @@
 [Español](README.md) | [English](README.en.md)
 
 <p align="center">
-  <img src="extension/brand/hourglass.png" alt="" width="120">
+  <img src="extension/brand/logo-master.png" alt="MementoLife" width="320">
 </p>
 
 # MementoLife — Chrome Extension
 
-Replaces the new tab page with a grid of the weeks you have lived and the ones ahead,
-computed from your date of birth. The ones behind you, filled in; the ones ahead, barely
-there; an empty ring marks the current week. With light and dark themes, a full interface in
-Spanish and English, and a different historical fact for each of the 366 days of the year.
+Replaces the new tab page with a grid of weeks, computed from your date of birth: the weeks
+you have lived are drawn filled in, the ones ahead barely there, and a ring marks the week
+you are in now. With light and dark themes, a full interface in Spanish and English, and a
+different historical fact for every day of the year.
 
 ---
 

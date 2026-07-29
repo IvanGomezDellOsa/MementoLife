@@ -1,15 +1,15 @@
 [Español](README.md) | [English](README.en.md)
 
 <p align="center">
-  <img src="extension/brand/hourglass.png" alt="" width="120">
+  <img src="extension/brand/logo-master.png" alt="MementoLife" width="320">
 </p>
 
 # MementoLife — Extensión de Chrome
 
-Reemplaza la pestaña nueva por una grilla de semanas vividas y por vivir, calculada a partir
-de la fecha de nacimiento. Las que ya pasaron, llenas; las que faltan, apenas insinuadas; un
-anillo vacío marca la semana actual. Con tema claro y oscuro, interfaz completa en español e
-inglés, y una efeméride histórica distinta para cada uno de los 366 días del año.
+Reemplaza la pestaña nueva por una grilla de semanas, calculada a partir de la fecha de
+nacimiento: las semanas vividas se dibujan llenas, las que faltan apenas insinuadas, y un
+anillo marca la semana actual. Con tema claro y oscuro, interfaz completa en español e
+inglés, y una efeméride histórica distinta para todos los días del año.
 
 ---
 
