@@ -8,8 +8,8 @@
 
 Reemplaza la pestaña nueva por una grilla de semanas vividas y por vivir, calculada a partir
 de la fecha de nacimiento. Las que ya pasaron, llenas; las que faltan, apenas insinuadas; un
-anillo vacío marca la semana actual. Sin frases motivacionales, sin recordatorios, sin nada
-que hacer.
+anillo vacío marca la semana actual. Con tema claro y oscuro, interfaz completa en español e
+inglés, y una efeméride histórica distinta para cada uno de los 366 días del año.
 
 ---
 

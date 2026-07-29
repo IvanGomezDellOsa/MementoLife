@@ -8,8 +8,8 @@
 
 Replaces the new tab page with a grid of the weeks you have lived and the ones ahead,
 computed from your date of birth. The ones behind you, filled in; the ones ahead, barely
-there; an empty ring marks the current week. No motivational quotes, no reminders, nothing
-to do.
+there; an empty ring marks the current week. With light and dark themes, a full interface in
+Spanish and English, and a different historical fact for each of the 366 days of the year.
 
 ---
 
