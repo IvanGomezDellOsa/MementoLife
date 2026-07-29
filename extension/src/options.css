@@ -55,6 +55,19 @@ fieldset {
   opacity: 0.6;
 }
 
+/* Mensaje de error del campo. Antes no existia: una fecha imposible o una esperanza de vida
+   fuera de rango simplemente no se guardaban, sin decir nada. Se oculta con display:none en
+   vez de reservar el alto porque va DEBAJO del control, asi que aparecer no mueve nada que
+   el usuario este por tocar. */
+.error {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--danger);
+}
+
+.error:empty { display: none; }
+
 input[type="date"],
 input[type="number"],
 select.field-select {

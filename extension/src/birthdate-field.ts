@@ -23,15 +23,19 @@
 
 import { t } from "./core/i18n.js";
 import type { Locale } from "./core/tokens.js";
-import { isLeapYear } from "./core/lifemath.js";
 import { intlTag } from "./core/format.js";
-
-const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] as const;
+import { checkBirthDate } from "./core/birthdate.js";
+import type { BirthDateCheck } from "./core/birthdate.js";
+import type { CalendarDate } from "./core/lifemath.js";
 
 export interface BirthDateField {
   readonly element: HTMLElement;
-  /** "YYYY-MM-DD", o null si falta algo o la fecha no existe. */
-  value(): string | null;
+  /**
+   * Valida contra el calendario real y contra el rango que la grilla puede dibujar, y
+   * devuelve el motivo si falla. La validacion vive en core/birthdate.ts para que el
+   * onboarding y la pagina de opciones no puedan divergir.
+   */
+  check(today: CalendarDate): BirthDateCheck;
   setValue(iso: string | null): void;
   focus(): void;
 }
@@ -45,11 +49,6 @@ function monthNames(locale: Locale): string[] {
   return Array.from({ length: 12 }, (_, i) =>
     format.format(new Date(Date.UTC(2024, i, 1))),
   );
-}
-
-function daysInMonth(month: number, year: number): number {
-  if (month === 2) return isLeapYear(year) ? 29 : 28;
-  return MONTH_LENGTHS[month - 1] ?? 31;
 }
 
 export function createBirthDateField(locale: Locale, onEnter: () => void): BirthDateField {
@@ -125,17 +124,11 @@ export function createBirthDateField(locale: Locale, onEnter: () => void): Birth
 
   return {
     element: wrapper,
-    value(): string | null {
-      const d = Number(day.value);
-      const m = Number(month.value);
-      const y = Number(year.value);
-      if (day.value === "" || month.value === "" || year.value.length !== 4) return null;
-      if (!Number.isInteger(d) || !Number.isInteger(m) || !Number.isInteger(y)) return null;
-      if (m < 1 || m > 12) return null;
-      // 31 de febrero y compania: se valida contra el mes y el anio reales.
-      if (d < 1 || d > daysInMonth(m, y)) return null;
-      if (y < 1900) return null;
-      return `${String(y).padStart(4, "0")}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    check(todayDate: CalendarDate): BirthDateCheck {
+      return checkBirthDate(
+        { day: day.value, month: month.value, year: year.value },
+        todayDate,
+      );
     },
     setValue(iso: string | null): void {
       const match = iso === null ? null : /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);

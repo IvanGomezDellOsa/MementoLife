@@ -296,7 +296,7 @@ test.describe("pagina de opciones", () => {
     await expect(page.locator("#birth-month option").nth(7)).toHaveText("July");
   });
 
-  test("acota la esperanza de vida al rango elegible", async ({ page }) => {
+  test("avisa cuando la esperanza de vida se va del rango, en vez de clampear callado", async ({ page }) => {
     await openOptions(page);
     const min = await page.locator("#life-years").getAttribute("min");
     const max = await page.locator("#life-years").getAttribute("max");
@@ -305,11 +305,51 @@ test.describe("pagina de opciones", () => {
 
     await page.locator("#life-years").fill("500");
     await page.locator("#life-years").blur();
+    // Antes esto guardaba 100 sin decir nada y el campo aparecia con otro numero.
+    await expect(page.locator("#life-years-error")).toHaveText("La esperanza de vida va de 20 a 100 años.");
+    await expect(page.locator("#status")).toBeEmpty();
+
+    await page.locator("#life-years").fill("70");
+    await page.locator("#life-years").blur();
+    await expect(page.locator("#life-years-error")).toBeEmpty();
     await expect(page.locator("#status")).toHaveText("Guardado.");
-    await page.reload();
-    await page.waitForSelector("#form input");
-    // Se guardo clampeado, no 500.
-    await expect(page.locator("#life-years")).toHaveValue("100");
+  });
+
+  test("explica por que rechaza una fecha, segun el motivo", async ({ page }) => {
+    await openOptions(page, "es-AR");
+
+    // 31 de febrero: los tres campos completos, pero la fecha no existe.
+    await page.locator("#birth-day").fill("31");
+    await page.locator("#birth-month").selectOption("2");
+    await page.locator("#birth-year").fill("1990");
+    await page.locator("#birth-year").blur();
+    await expect(page.locator("#birth-error")).toHaveText("Esa fecha no existe en el calendario.");
+
+    // Fecha futura.
+    await page.locator("#birth-day").fill("1");
+    await page.locator("#birth-month").selectOption("1");
+    await page.locator("#birth-year").fill("2999");
+    await page.locator("#birth-year").blur();
+    await expect(page.locator("#birth-error")).toHaveText("La fecha tiene que ser anterior a hoy.");
+
+    // Mas vieja que la vida mas larga que la grilla dibuja.
+    await page.locator("#birth-year").fill("1800");
+    await page.locator("#birth-year").blur();
+    await expect(page.locator("#birth-error")).toHaveText("La fecha no puede ser de hace más de 100 años.");
+
+    // Una fecha buena limpia el error y guarda.
+    await page.locator("#birth-year").fill("1990");
+    await page.locator("#birth-year").blur();
+    await expect(page.locator("#birth-error")).toBeEmpty();
+    await expect(page.locator("#status")).toHaveText("Guardado.");
+  });
+
+  test("no reta mientras se estan completando los campos", async ({ page }) => {
+    await openOptions(page, "es-AR");
+    // Solo el dia cargado: el commit salta al salir del campo, pero no es un error todavia.
+    await page.locator("#birth-day").fill("5");
+    await page.locator("#birth-day").blur();
+    await expect(page.locator("#birth-error")).toBeEmpty();
   });
 });
 

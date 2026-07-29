@@ -5,12 +5,12 @@
 <!-- Se localiza en options.ts, igual que en newtab. -->
 <title>Options</title>
 <style>
-  :root { --bg: #f4f0e8; --ink: #2b2721; }
+  :root { --bg: #f4f0e8; --ink: #2b2721; --danger: #a33418; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #0f0e0d; --ink: #ece5d8; }
+    :root { --bg: #0f0e0d; --ink: #ece5d8; --danger: #d97757; }
   }
-  :root[data-theme="dark"]  { --bg: #0f0e0d; --ink: #ece5d8; }
-  :root[data-theme="light"] { --bg: #f4f0e8; --ink: #2b2721; }
+  :root[data-theme="dark"]  { --bg: #0f0e0d; --ink: #ece5d8; --danger: #d97757; }
+  :root[data-theme="light"] { --bg: #f4f0e8; --ink: #2b2721; --danger: #a33418; }
   html, body { margin: 0; background: var(--bg); color: var(--ink); }
   /* Ver newtab.html: los controles nativos necesitan saber el esquema. */
   :root { color-scheme: light; }

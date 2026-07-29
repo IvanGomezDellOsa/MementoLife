@@ -13,13 +13,14 @@
  * lector de pantalla, todo sin JS de teclado propio.
  */
 
-import { t } from "./core/i18n.js";
+import { BIRTH_DATE_PROBLEM_KEY, t, tf } from "./core/i18n.js";
 import type { StringKey } from "./core/i18n.js";
 import { LIFE_YEARS, LOCALES } from "./core/tokens.js";
 import type { Locale } from "./core/tokens.js";
 import { load, resolveTheme, save } from "./prefs.js";
 import { requireElement } from "./dom.js";
 import { createBirthDateField } from "./birthdate-field.js";
+import { today } from "./today.js";
 import type { Prefs, ThemePref } from "./prefs.js";
 
 const form = requireElement("form");
@@ -50,11 +51,27 @@ function applyTheme(): void {
   document.documentElement.lang = prefs.locale;
 }
 
+/**
+ * Ranura de error de un campo.
+ *
+ * `role="alert"` para que un lector de pantalla lo anuncie al aparecer: si el mensaje solo
+ * se ve, el usuario que no mira la pantalla sigue sin saber por que no se guardo. Reserva
+ * su alto aun vacia (ver options.css) asi el formulario no salta al aparecer el texto.
+ */
+function errorSlot(id: string): HTMLParagraphElement {
+  const slot = document.createElement("p");
+  slot.className = "error";
+  slot.id = id;
+  slot.setAttribute("role", "alert");
+  return slot;
+}
+
 function field(
   labelKey: StringKey,
   control: HTMLElement,
   hintKey?: StringKey,
   unitKey?: StringKey,
+  error?: HTMLElement,
 ): HTMLElement {
   const wrapper = document.createElement("div");
   wrapper.className = "field";
@@ -74,6 +91,7 @@ function field(
     hint.textContent = t(prefs.locale, hintKey);
     wrapper.append(hint);
   }
+  if (error !== undefined) wrapper.append(error);
   return wrapper;
 }
 
@@ -169,17 +187,30 @@ function build(): void {
   document.title = t(prefs.locale, "optionsTitle");
   form.innerHTML = "";
 
+  const birthError = errorSlot("birth-error");
   const birth = createBirthDateField(prefs.locale, () => commitBirthDate());
   birth.setValue(prefs.birthDate);
   const commitBirthDate = (): void => {
-    const value = birth.value();
-    if (value !== null && value !== prefs.birthDate) void update({ birthDate: value });
+    const result = birth.check(today());
+    if (result.ok) {
+      birthError.textContent = "";
+      if (result.iso !== prefs.birthDate) void update({ birthDate: result.iso });
+      return;
+    }
+    // "incomplete" NO se marca: el commit tambien salta al pasar de dia a mes con Tab, y
+    // avisar ahi seria retar al usuario a mitad de la carga. Los otros tres motivos si, que
+    // son fechas ya escritas del todo y equivocadas.
+    birthError.textContent =
+      result.problem === "incomplete"
+        ? ""
+        : tf(prefs.locale, BIRTH_DATE_PROBLEM_KEY[result.problem], { max: LIFE_YEARS.max });
   };
   // Cada control avisa por su cuenta: no hay boton de guardar en ningun lado.
   birth.element.addEventListener("change", commitBirthDate);
   birth.element.addEventListener("blur", commitBirthDate, true);
-  form.append(field("birthDateLabel", birth.element));
+  form.append(field("birthDateLabel", birth.element, undefined, undefined, birthError));
 
+  const lifeError = errorSlot("life-years-error");
   const life = document.createElement("input");
   life.type = "number";
   life.id = "life-years";
@@ -189,9 +220,19 @@ function build(): void {
   life.value = String(prefs.lifeYears);
   life.addEventListener("change", () => {
     const value = Number(life.value);
-    if (Number.isFinite(value)) void update({ lifeYears: value });
+    // Antes esto se clampeaba en silencio: escribias 500, se guardaba 100, y el campo
+    // aparecia con otro numero sin ninguna explicacion.
+    if (!Number.isInteger(value) || value < LIFE_YEARS.min || value > LIFE_YEARS.max) {
+      lifeError.textContent = tf(prefs.locale, "lifeYearsInvalid", {
+        min: LIFE_YEARS.min,
+        max: LIFE_YEARS.max,
+      });
+      return;
+    }
+    lifeError.textContent = "";
+    void update({ lifeYears: value });
   });
-  form.append(field("lifeYearsLabel", life, "lifeYearsHint", "lifeYearsUnit"));
+  form.append(field("lifeYearsLabel", life, "lifeYearsHint", "lifeYearsUnit", lifeError));
 
   form.append(
     segmented<ThemePref>(

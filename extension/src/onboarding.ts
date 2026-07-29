@@ -13,23 +13,15 @@
  * comodo. Una vez que el usuario hace clic en el campo, Enter confirma.
  */
 
-import { t } from "./core/i18n.js";
+import { BIRTH_DATE_PROBLEM_KEY, t, tf } from "./core/i18n.js";
+import { LIFE_YEARS } from "./core/tokens.js";
 import type { Locale } from "./core/tokens.js";
 import type { LayoutResult } from "./core/layout.js";
-import { daysFromCivil } from "./core/lifemath.js";
-import { parseBirthDate } from "./prefs.js";
 import { createBirthDateField } from "./birthdate-field.js";
+import { today } from "./today.js";
 
 export interface OnboardingHandlers {
   readonly onSubmit: (birthDate: string) => void;
-}
-
-/** Fecha de hoy en horario LOCAL, para acotar el campo. */
-function todayIso(): string {
-  const now = new Date();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${now.getFullYear()}-${month}-${day}`;
 }
 
 export function mount(
@@ -63,17 +55,19 @@ export function mount(
   row.append(field.element, button);
   container.append(heading, body, row, error);
 
+  // Aca SI se avisa de "incomplete": el usuario apreto el boton, o sea que dio la carga por
+  // terminada. En opciones no, porque ahi el commit tambien salta al recorrer los campos.
   const submit = (): void => {
-    const value = field.value();
-    const parsed = parseBirthDate(value);
-    const isPast = parsed !== null && daysFromCivil(parsed) < daysFromCivil(parseBirthDate(todayIso()) ?? parsed);
-    if (parsed === null || !isPast || value === null) {
-      error.textContent = t(locale, "birthDateInvalid");
+    const result = field.check(today());
+    if (!result.ok) {
+      error.textContent = tf(locale, BIRTH_DATE_PROBLEM_KEY[result.problem], {
+        max: LIFE_YEARS.max,
+      });
       field.focus();
       return;
     }
     error.textContent = "";
-    handlers.onSubmit(value);
+    handlers.onSubmit(result.iso);
   };
 
   button.addEventListener("click", submit);

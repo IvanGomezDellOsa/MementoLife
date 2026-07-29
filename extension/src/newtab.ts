@@ -26,6 +26,7 @@ import { load, onChanged, parseBirthDate, readCache, resolveTheme, save } from "
 import type { Prefs } from "./prefs.js";
 import { mount as mountOnboarding, position as positionOnboarding } from "./onboarding.js";
 import { requireElement } from "./dom.js";
+import { today } from "./today.js";
 
 const canvas = requireElement("canvas");
 const onboardingEl = requireElement("onboarding");
@@ -36,12 +37,6 @@ const tables = new Map<Locale, readonly string[]>();
 
 let prefs: Prefs = readCache();
 let lastRenderedDay = "";
-
-/** Fecha LOCAL. El core no lee el reloj: se le pasa como parametro. */
-function today(): { year: number; month: number; day: number } {
-  const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
-}
 
 function draw(): RenderResult {
   const now = today();

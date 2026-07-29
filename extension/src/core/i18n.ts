@@ -10,6 +10,7 @@
  */
 
 import type { Locale } from "./tokens.js";
+import type { BirthDateProblem } from "./birthdate.js";
 
 const ES = {
   optionsTitle: "MementoLife — Opciones",
@@ -23,7 +24,11 @@ const ES = {
   monthPlaceholder: "Mes",
   yearLabel: "Año",
   yearShort: "AAAA",
-  birthDateInvalid: "Revisá la fecha: tiene que ser anterior a hoy.",
+  birthDateIncomplete: "Completá el día, el mes y el año.",
+  birthDateImpossible: "Esa fecha no existe en el calendario.",
+  birthDateFuture: "La fecha tiene que ser anterior a hoy.",
+  birthDateTooOld: "La fecha no puede ser de hace más de {max} años.",
+  lifeYearsInvalid: "La esperanza de vida va de {min} a {max} años.",
   save: "Guardar",
 
   onboardingHeading: "Tu vida, semana a semana",
@@ -69,7 +74,11 @@ const EN: Strings = {
   monthPlaceholder: "Month",
   yearLabel: "Year",
   yearShort: "YYYY",
-  birthDateInvalid: "Check the date: it must be in the past.",
+  birthDateIncomplete: "Fill in the day, month and year.",
+  birthDateImpossible: "That date does not exist in the calendar.",
+  birthDateFuture: "The date must be in the past.",
+  birthDateTooOld: "The date cannot be more than {max} years ago.",
+  lifeYearsInvalid: "Life expectancy must be between {min} and {max} years.",
   save: "Save",
 
   onboardingHeading: "Your life, week by week",
@@ -112,7 +121,11 @@ const FR: Strings = {
   monthPlaceholder: "Mois",
   yearLabel: "Année",
   yearShort: "AAAA",
-  birthDateInvalid: "Vérifiez la date : elle doit être antérieure à aujourd'hui.",
+  birthDateIncomplete: "Renseignez le jour, le mois et l'année.",
+  birthDateImpossible: "Cette date n'existe pas dans le calendrier.",
+  birthDateFuture: "La date doit être antérieure à aujourd'hui.",
+  birthDateTooOld: "La date ne peut pas remonter à plus de {max} ans.",
+  lifeYearsInvalid: "L'espérance de vie va de {min} à {max} ans.",
   save: "Enregistrer",
 
   onboardingHeading: "Votre vie, semaine après semaine",
@@ -155,7 +168,11 @@ const PT: Strings = {
   monthPlaceholder: "Mês",
   yearLabel: "Ano",
   yearShort: "AAAA",
-  birthDateInvalid: "Verifique a data: precisa ser anterior a hoje.",
+  birthDateIncomplete: "Preencha o dia, o mês e o ano.",
+  birthDateImpossible: "Essa data não existe no calendário.",
+  birthDateFuture: "A data precisa ser anterior a hoje.",
+  birthDateTooOld: "A data não pode ser de mais de {max} anos atrás.",
+  lifeYearsInvalid: "A expectativa de vida vai de {min} a {max} anos.",
   save: "Salvar",
 
   onboardingHeading: "Sua vida, semana a semana",
@@ -198,7 +215,11 @@ const IT: Strings = {
   monthPlaceholder: "Mese",
   yearLabel: "Anno",
   yearShort: "AAAA",
-  birthDateInvalid: "Controlla la data: deve essere precedente a oggi.",
+  birthDateIncomplete: "Compila il giorno, il mese e l'anno.",
+  birthDateImpossible: "Questa data non esiste nel calendario.",
+  birthDateFuture: "La data deve essere precedente a oggi.",
+  birthDateTooOld: "La data non può risalire a più di {max} anni fa.",
+  lifeYearsInvalid: "L'aspettativa di vita va da {min} a {max} anni.",
   save: "Salva",
 
   onboardingHeading: "La tua vita, settimana per settimana",
@@ -241,7 +262,11 @@ const DE: Strings = {
   monthPlaceholder: "Monat",
   yearLabel: "Jahr",
   yearShort: "JJJJ",
-  birthDateInvalid: "Prüfe das Datum: es muss in der Vergangenheit liegen.",
+  birthDateIncomplete: "Fülle Tag, Monat und Jahr aus.",
+  birthDateImpossible: "Dieses Datum gibt es im Kalender nicht.",
+  birthDateFuture: "Das Datum muss in der Vergangenheit liegen.",
+  birthDateTooOld: "Das Datum darf nicht mehr als {max} Jahre zurückliegen.",
+  lifeYearsInvalid: "Die Lebenserwartung liegt zwischen {min} und {max} Jahren.",
   save: "Speichern",
 
   onboardingHeading: "Dein Leben, Woche für Woche",
@@ -290,3 +315,29 @@ function strings(locale: Locale): Strings {
 export function t(locale: Locale, key: StringKey): string {
   return strings(locale)[key];
 }
+
+/**
+ * Igual que `t`, pero reemplaza `{clave}` por su valor.
+ *
+ * Existe para que los limites del producto (20, 100) vivan en los design tokens y no
+ * copiados dentro de seis traducciones, donde cambiar el rango dejaria cinco mensajes
+ * mintiendo en silencio.
+ */
+export function tf(
+  locale: Locale,
+  key: StringKey,
+  vars: Readonly<Record<string, string | number>>,
+): string {
+  return t(locale, key).replace(/\{(\w+)\}/g, (whole, name: string) => {
+    const value = vars[name];
+    return value === undefined ? whole : String(value);
+  });
+}
+
+/** Cada motivo de rechazo tiene su propio mensaje: ver core/birthdate.ts. */
+export const BIRTH_DATE_PROBLEM_KEY: { readonly [K in BirthDateProblem]: StringKey } = {
+  incomplete: "birthDateIncomplete",
+  impossible: "birthDateImpossible",
+  future: "birthDateFuture",
+  tooOld: "birthDateTooOld",
+};
