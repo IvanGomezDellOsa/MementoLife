@@ -17,9 +17,9 @@
     "build:ts": "tsc -p tsconfig.build.json",
     "preview": "npm run gen:data && tsc -p tsconfig.build.json && node scripts/preview.ts",
     "shots": "npm run gen:data && tsc -p tsconfig.build.json && node scripts/screenshots.ts",
-    "icons": "tsc -p tsconfig.build.json && node scripts/icons.ts",
     "build": "npm run gen:data && tsc -p tsconfig.build.json && node scripts/build.ts",
-    "e2e": "npm run build && playwright test"
+    "e2e": "npm run build && playwright test",
+    "brand": "python scripts/brand-assets.py"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",

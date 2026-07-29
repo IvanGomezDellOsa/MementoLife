@@ -152,10 +152,17 @@ input:focus-visible {
 .birthdate select { cursor: pointer; }
 .birthdate-day { width: 3.4em; text-align: center; }
 .birthdate-year { width: 4.8em; text-align: center; }
-.birthdate-month { flex: 1 1 auto; }
+.birthdate-month { flex: 1 1 auto; min-width: 8em; }
 
 .birthdate input:focus-visible,
 .birthdate select:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
+}
+
+/* Los <option> del desplegable nativo no heredan del <select> en Windows: con color-scheme
+   en "normal" el popup salia con fondo claro del sistema y texto claro encima. */
+.birthdate option {
+  background: var(--bg);
+  color: var(--ink);
 }

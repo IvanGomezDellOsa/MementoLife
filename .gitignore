@@ -43,8 +43,9 @@ __pycache__/
 # ========================
 # DOCUMENTACIÓN INTERNA (no publicada)
 # ========================
-README.md
-README.en.md
+# docs/ queda local por decision de Ivan. Los READMEs y PRIVACY SI se publican: la
+# politica de privacidad es requisito de la tienda (tiene que ser una URL accesible) y
+# sin README el repo publico no explica nada.
 docs/
 
 # ========================

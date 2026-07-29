@@ -8,15 +8,20 @@
 <style>
   /* Inline a proposito: la CSP por defecto de MV3 restringe script-src, NO los estilos.
      Esto pinta el fondo en el primer cuadro, sin esperar a ningun archivo. */
-  :root { --bg: #161310; --ink: #eae3d4; }
+  :root { --bg: #0f0e0d; --ink: #ece5d8; }
   @media (prefers-color-scheme: light) {
     :root { --bg: #f4f0e8; --ink: #2b2721; }
   }
   /* theme-boot.js estampa data-theme cuando el usuario eligio un tema distinto al del
      sistema; tiene que ganarle al media query en las dos direcciones. */
-  :root[data-theme="dark"]  { --bg: #161310; --ink: #eae3d4; }
+  :root[data-theme="dark"]  { --bg: #0f0e0d; --ink: #ece5d8; }
   :root[data-theme="light"] { --bg: #f4f0e8; --ink: #2b2721; }
   html, body { margin: 0; padding: 0; height: 100%; background: var(--bg); overflow: hidden; }
+  /* Sin esto los controles nativos —desplegables, barras de scroll, autocompletado— se
+     dibujan con la paleta clara del sistema aunque la pagina este en oscuro. */
+  :root { color-scheme: dark; }
+  :root[data-theme="light"] { color-scheme: light; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { color-scheme: light; } }
 </style>
 <link rel="preload" href="assets/fonts/Fraunces-subset.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="newtab.css">

@@ -94,7 +94,7 @@ const EN: Strings = {
 
 export type StringKey = keyof typeof ES;
 
-export function strings(locale: Locale): Strings {
+function strings(locale: Locale): Strings {
   return locale === "es" ? ES : EN;
 }
 

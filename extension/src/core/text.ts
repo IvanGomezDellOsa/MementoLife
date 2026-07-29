@@ -28,12 +28,12 @@ function charWidthEm(char: string): number {
 }
 
 /**
- * Ancho de un texto en px.
+ * Ancho de un texto en px. Interno: el unico consumidor es wrapText.
  *
  * `letterSpacing` se suma una vez por caracter, que es como lo aplica SVG/CSS: tambien
  * despues del ultimo. Importa para el pie, que lleva 1,4 px de tracking.
  */
-export function measureText(text: string, fontSizePx: number, letterSpacingPx = 0): number {
+function measureText(text: string, fontSizePx: number, letterSpacingPx = 0): number {
   let em = 0;
   let count = 0;
   for (const char of text) {

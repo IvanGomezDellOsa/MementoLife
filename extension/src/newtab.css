@@ -79,27 +79,6 @@ html, body {
   margin-top: 4px;
 }
 
-.onboarding-field input {
-  flex: 1 1 150px;
-  min-width: 0;
-  font: inherit;
-  font-size: 14px;
-  padding: 9px 11px;
-  color: var(--ink);
-  background: color-mix(in srgb, var(--ink) 7%, transparent);
-  border: 1px solid color-mix(in srgb, var(--ink) 26%, transparent);
-  border-radius: 6px;
-}
-
-.onboarding-field input::-webkit-calendar-picker-indicator {
-  filter: invert(var(--picker-invert, 1));
-  opacity: 0.55;
-  cursor: pointer;
-}
-
-:root[data-theme="light"] { --picker-invert: 0; }
-@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --picker-invert: 0; } }
-
 .onboarding-field button {
   font: inherit;
   font-size: 14px;
@@ -111,7 +90,6 @@ html, body {
   border-radius: 6px;
 }
 
-.onboarding-field input:focus-visible,
 .onboarding-field button:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
@@ -192,7 +170,7 @@ html, body {
 .birthdate select { cursor: pointer; }
 .birthdate-day { width: 3.6em; text-align: center; }
 .birthdate-year { width: 5em; text-align: center; }
-.birthdate-month { flex: 1 1 auto; }
+.birthdate-month { flex: 1 1 auto; min-width: 8.5em; }
 
 .birthdate input::placeholder { color: color-mix(in srgb, var(--ink) 45%, transparent); }
 
@@ -200,4 +178,11 @@ html, body {
 .birthdate select:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
+}
+
+/* Los <option> del desplegable nativo no heredan del <select> en Windows: con color-scheme
+   en "normal" el popup salia con fondo claro del sistema y texto claro encima. */
+.birthdate option {
+  background: var(--bg);
+  color: var(--ink);
 }
