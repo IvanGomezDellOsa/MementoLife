@@ -8,8 +8,8 @@
 
 Reemplaza la pestaña nueva por una grilla de semanas, calculada a partir de la fecha de
 nacimiento: las semanas vividas se dibujan llenas, las que faltan apenas insinuadas, y un
-anillo marca la semana actual. Con tema claro y oscuro, interfaz completa en español e
-inglés, y una efeméride histórica distinta para todos los días del año.
+anillo marca la semana actual. Con tema claro y oscuro, interfaz completa en 6 idiomas, y
+una efeméride histórica distinta para todos los días del año.
 
 ---
 
@@ -26,8 +26,9 @@ inglés, y una efeméride histórica distinta para todos los días del año.
 
 - Grilla de semanas vividas y por vivir, con esperanza de vida ajustable entre 20 y 100 años
 - Tema claro, oscuro o el del sistema
-- Español e inglés en toda la interfaz, no sólo en el contenido
-- Efeméride histórica diaria (366 fechas, bilingüe), activable o no
+- 6 idiomas en toda la interfaz, no sólo en el contenido: español, inglés, francés,
+  portugués, italiano y alemán
+- Efeméride histórica diaria (366 fechas, en los 6 idiomas), activable o no
 - Cero conexiones de red, un solo permiso (`storage`) y la fecha de nacimiento guardada en
   `chrome.storage.local`, nunca en `sync`: no viaja por tu cuenta de Google
 

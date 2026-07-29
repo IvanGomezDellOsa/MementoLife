@@ -8,8 +8,8 @@
 
 Replaces the new tab page with a grid of weeks, computed from your date of birth: the weeks
 you have lived are drawn filled in, the ones ahead barely there, and a ring marks the week
-you are in now. With light and dark themes, a full interface in Spanish and English, and a
-different historical fact for every day of the year.
+you are in now. With light and dark themes, a full interface in 6 languages, and a different
+historical fact for every day of the year.
 
 ---
 
@@ -26,8 +26,9 @@ different historical fact for every day of the year.
 
 - Grid of weeks lived and left, with life expectancy adjustable between 20 and 100 years
 - Light, dark, or system theme
-- Fully bilingual, Spanish and English, across the whole interface — not just the content
-- Daily historical fact (366 dates, bilingual), can be turned off
+- 6 languages across the whole interface, not just the content: Spanish, English, French,
+  Portuguese, Italian and German
+- Daily historical fact (366 dates, in all 6 languages), can be turned off
 - Zero network connections, a single permission (`storage`), and the date of birth stored in
   `chrome.storage.local`, never `sync`: it never travels through your Google account
 
