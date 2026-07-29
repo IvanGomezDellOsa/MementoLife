@@ -4,7 +4,7 @@
     "description": "Nombre de la extension en la Chrome Web Store y en la pagina de extensiones."
   },
   "extDesc": {
-    "message": "Calendario de vida en tu pestaña nueva: semanas vividas y por vivir. Memento mori estoico, sin anuncios.",
+    "message": "Calendario de vida en tu pestaña nueva: semanas vividas y por vivir, con perspectiva estoica. Sin cuentas ni anuncios.",
     "description": "Descripcion de la ficha de la tienda. Limite duro: 132 caracteres."
   }
 }

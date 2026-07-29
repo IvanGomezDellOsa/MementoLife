@@ -19,7 +19,8 @@
     "shots": "npm run gen:data && tsc -p tsconfig.build.json && node scripts/screenshots.ts",
     "build": "npm run gen:data && tsc -p tsconfig.build.json && node scripts/build.ts",
     "e2e": "npm run build && playwright test",
-    "brand": "python scripts/brand-assets.py"
+    "brand": "python scripts/brand-assets.py",
+    "store-shots": "npm run build && node scripts/store-shots.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",

@@ -57,3 +57,7 @@ docs/
 
 # Pagina de revision visual: se regenera con `npm run preview`
 extension/preview/
+
+# Crudos intermedios de las capturas de la ficha: se regeneran con `npm run store-shots`.
+# Lo que se versiona es el resultado compuesto en extension/brand/store/.
+extension/brand/store-raw/
