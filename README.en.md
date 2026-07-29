@@ -4,11 +4,12 @@
   <img src="extension/brand/hourglass.png" alt="" width="120">
 </p>
 
-# MementoLife — A Chrome extension that visualizes your life in weeks
+# MementoLife — Chrome Extension
 
-A grid of the weeks you have lived and the ones ahead, computed from your date of birth. The
-ones behind you, filled in; the ones ahead, barely there; an empty ring marks the current
-week. No motivational quotes, no reminders, nothing to do.
+Replaces the new tab page with a grid of the weeks you have lived and the ones ahead,
+computed from your date of birth. The ones behind you, filled in; the ones ahead, barely
+there; an empty ring marks the current week. No motivational quotes, no reminders, nothing
+to do.
 
 ---
 
@@ -78,16 +79,6 @@ project's design decisions, the platform changed.
 
 ---
 
-## 📝 Development Notes
-
-Development assisted by LLMs for the renderer implementation, the tests, and the build
-infrastructure. The decisions that define the product — the pivot from Android to a Chrome
-extension, the visual composition, the palette, the cell-driven grid geometry that removes
-the optical vibration effect, and the zero-network privacy model — were made and directed
-by me.
-
----
-
 ## 👤 Author
 
 **Iván Gómez Dell'Osa**
@@ -95,7 +86,3 @@ by me.
 - Email: [ivangomezdellosa@gmail.com](mailto:ivangomezdellosa@gmail.com)
 - LinkedIn: [linkedin.com/in/ivangomezdellosa](https://www.linkedin.com/in/ivangomezdellosa/)
 - GitHub: [IvanGomezDellOsa](https://github.com/IvanGomezDellOsa)
-
-## License
-
-MIT.
