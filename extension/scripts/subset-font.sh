@@ -33,7 +33,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-SRC="../docs/design-handoff/fonts/Fraunces.ttf"
+# Copia versionada, no docs/design-handoff/fonts/ (esa carpeta es local y no se sube).
+SRC="brand/fonts/Fraunces-source.ttf"
 INSTANCED="$(mktemp -t fraunces-instanced-XXXXXX).ttf"
 OUT_DIR="assets/fonts"
 OUT="$OUT_DIR/Fraunces-subset.woff2"

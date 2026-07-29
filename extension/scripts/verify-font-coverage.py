@@ -31,7 +31,10 @@ REPO_ROOT = EXTENSION_DIR.parent
 
 CHARSET_FILE = EXTENSION_DIR / "scripts" / "font-charset.txt"
 SUBSET_FILE = EXTENSION_DIR / "assets" / "fonts" / "Fraunces-subset.woff2"
-SOURCE_FILE = REPO_ROOT / "docs" / "design-handoff" / "fonts" / "Fraunces.ttf"
+SOURCE_FILE = EXTENSION_DIR / "brand" / "fonts" / "Fraunces-source.ttf"
+# Copia versionada de la fuente original (SIL OFL, libre de redistribuir). Vivia solo en
+# docs/design-handoff/fonts/, que es local por decision de Ivan y nunca se sube: en CI ese
+# archivo no existe y el chequeo fallaba con "no encuentro ... Fraunces.ttf" en cada push.
 
 # Caracteres que la Fraunces del handoff NO tiene y que igual aparecen en el contenido.
 # Cada uno es una decision aceptada conscientemente, no un descuido.
