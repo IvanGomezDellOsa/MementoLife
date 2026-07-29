@@ -4,7 +4,7 @@
   <img src="extension/brand/hourglass.png" alt="" width="120">
 </p>
 
-# MementoLife — A life calendar for Chrome's new tab
+# MementoLife — A Chrome extension that visualizes your life in weeks
 
 Chrome extension that replaces the new tab page with your entire life drawn as a grid of
 weeks: the ones you have lived, filled in; the ones ahead, barely there. An empty ring marks

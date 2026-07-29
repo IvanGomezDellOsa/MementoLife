@@ -4,7 +4,7 @@
   <img src="extension/brand/hourglass.png" alt="" width="120">
 </p>
 
-# MementoLife — Calendario de vida para la pestaña nueva de Chrome
+# MementoLife — Extensión de Chrome que visualiza tu vida en semanas
 
 Extensión de Chrome que reemplaza la pestaña nueva por tu vida entera dibujada como una
 grilla de semanas: las que ya viviste, llenas; las que faltan, apenas insinuadas. Un anillo
