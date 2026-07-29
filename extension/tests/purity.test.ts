@@ -49,14 +49,11 @@ describe("el render es reproducible", () => {
   it("la misma entrada da exactamente la misma cadena", async () => {
     const { render } = await import("../src/core/render.js");
     const request = {
-      view: "weeks",
       theme: "dark",
       locale: "es",
       lifeYears: 80,
       birthDate: { year: 1990, month: 1, day: 1 },
       today: { year: 2023, month: 7, day: 2 },
-      hour: 7,
-      minute: 41,
       efemerideText: "una efemeride cualquiera",
       viewport: { widthPx: 1440, heightPx: 720 },
     } as const;

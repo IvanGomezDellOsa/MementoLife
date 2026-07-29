@@ -10,9 +10,10 @@
  *      escritos a mano: es lo que el navegador va a pedirle a la fuente en tiempo real.
  *   3. Un set explicito de UI y de formato.
  *
- * El punto 3 no es opcional: ":" (reloj 07:41), "%" y "·" (pie "42 % · semana 1743 de 4160")
- * NO aparecen en ninguna de las 732 entradas. Un subset hecho solo con el dataset dejaria
- * el reloj sin dos puntos.
+ * El punto 3 no es opcional: signos como "¿¡" (apertura en espanol), "—"/"–" y las comillas
+ * tipograficas son caracteres de UI/formato que no estan garantizados en las 2196 entradas
+ * del dataset para los 6 idiomas. Listarlos a mano es mas seguro que confiar en que el
+ * contenido los va a traer todos.
  *
  * Se corre con `node scripts/font-charset.ts`; subset-font.sh lo invoca antes de subsetear.
  */

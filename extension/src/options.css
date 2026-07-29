@@ -68,7 +68,6 @@ fieldset {
 
 .error:empty { display: none; }
 
-input[type="date"],
 input[type="number"],
 select.field-select {
   box-sizing: border-box;

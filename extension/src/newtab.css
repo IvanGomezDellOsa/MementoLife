@@ -28,7 +28,7 @@ html, body {
 #canvas svg {
   /* Pinneado. El eje opsz ya se instancio fuera del .woff2, pero dejarlo explicito cuesta
      cero y documenta la intencion: sin esto, si algun dia la fuente volviera a traer el eje,
-     el reloj a 78 px y el pie a 11,5 px dejarian de coincidir con la referencia (riesgo 10.1). */
+     el porcentaje a 104 px dejaria de coincidir con la referencia (riesgo 10.1). */
   font-optical-sizing: none;
   font-family: "Fraunces", Georgia, serif;
 }

@@ -7,8 +7,8 @@
  * ARRANQUE EN DOS PASOS (plan 6.2):
  *
  *   1. Sincrono, sin esperar nada: se lee la cache de preferencias de localStorage y se
- *      dibuja la grilla, el reloj, la fecha y el pie. Los tokens entran por import estatico,
- *      asi que en este punto no hay ninguna espera.
+ *      dibuja la grilla, la fecha, el porcentaje y el pie. Los tokens entran por import
+ *      estatico, asi que en este punto no hay ninguna espera.
  *   2. Despues: la efemeride, por import() dinamico del modulo del idioma activo (~45 KB
  *      desde disco). Es el elemento de menor prioridad visual, asi que no bloquea nada — y
  *      como el layout reserva su lugar desde el primer cuadro, al aparecer no mueve nada.

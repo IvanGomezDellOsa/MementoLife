@@ -48,7 +48,7 @@ function detectLocale(): Locale {
   }
 }
 
-export function defaultPrefs(): Prefs {
+function defaultPrefs(): Prefs {
   return {
     birthDate: null,
     lifeYears: LIFE_YEARS.default,

@@ -12,7 +12,7 @@ exacto Y sigue siendo una funcion pura: los snapshots SVG son deterministicos y 
 navegador no tiene que medir nada en el arranque.
 
 Los anchos se leen a wght=400, que es el peso de la efemeride, del pie y de la fecha.
-El reloj (300) no se corta nunca en lineas, asi que no necesita tabla.
+El porcentaje (300) no se corta nunca en lineas, asi que no necesita tabla.
 
 Requiere:  python -m pip install fonttools brotli
 """
