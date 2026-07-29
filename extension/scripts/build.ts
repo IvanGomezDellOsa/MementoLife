@@ -27,6 +27,7 @@ import {
   readdirSync,
   rmSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -55,6 +56,33 @@ function copyCompiled(from: string, to: string): void {
       copyFileSync(source, target);
     }
   }
+}
+
+/**
+ * theme-boot.ts se carga a proposito como <script> CLASICO (sin type="module"): tiene que
+ * correr antes del primer paint, y un modulo ES es diferido por definicion. Pero el archivo
+ * no tiene ningun import/export propio, y con isolatedModules:true tsc le agrega un
+ * `export {};` al final para marcarlo como modulo de todos modos. Ese `export` es sintaxis
+ * de modulo dentro de un script clasico, y el navegador lo rechaza con "Unexpected token
+ * 'export'" — rompe la pagina entera, en silencio salvo por la consola.
+ *
+ * Se lo saca despues de compilar, en vez de sacarle isolatedModules a todo el proyecto:
+ * es la unica pieza que necesita ser un script clasico, y la regla que exige verificarlo es
+ * el propio caso de uso, no una opcion global del compilador.
+ */
+function stripModuleMarker(file: string): void {
+  const before = readFileSync(file, "utf8");
+  const after = before.replace(/\n?export\s*\{\s*\}\s*;?\s*$/, "\n");
+  if (after === before) {
+    fail(`theme-boot.js no tenia el marcador de modulo esperado — revisar si tsc cambio de comportamiento`);
+  }
+  // El chequeo va sobre el codigo sin comentarios: el propio comentario del archivo explica
+  // por que no debe haber import/export, y esas palabras en prosa no cuentan como sintaxis.
+  const withoutComments = after.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
+  if (/^\s*(import|export)\b/m.test(withoutComments)) {
+    fail(`theme-boot.js sigue teniendo sintaxis de modulo despues de limpiarlo: se rompe como <script> clasico`);
+  }
+  writeFileSync(file, after, "utf8");
 }
 
 /** Todo lo que no compila tsc: HTML, CSS, manifest, locales. */
@@ -162,6 +190,7 @@ function main(): void {
   mkdirSync(BUILD, { recursive: true });
 
   copyCompiled(DIST, BUILD);
+  stripModuleMarker(join(BUILD, "theme-boot.js"));
   copyStatic();
   verifyManifest();
   verifyNoRemoteCode();

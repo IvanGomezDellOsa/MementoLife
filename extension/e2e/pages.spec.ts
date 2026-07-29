@@ -313,6 +313,22 @@ test.describe("pagina de opciones", () => {
   });
 });
 
+test("no hay errores en consola, cargando theme-boot.js como script clasico de verdad", async ({ page }) => {
+  // Regresion real: tsc le agrega `export {};` a cualquier archivo compilado sin import ni
+  // export propio, porque el proyecto usa isolatedModules. theme-boot.js es justamente eso
+  // -un <script> clasico, sin type="module", a proposito- asi que ese `export` rompia con
+  // "Unexpected token 'export'" apenas cargaba la pagina. build.ts ahora lo saca despues de
+  // compilar (stripModuleMarker); este test es el que lo hubiera detectado antes de subirlo.
+  const errors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  page.on("pageerror", (error) => errors.push(error.message));
+  await openNewTab(page);
+  await page.waitForTimeout(800);
+  expect(errors).toEqual([]);
+});
+
 test("CERO RED: las paginas no piden nada fuera de su propio origen", async ({ page }) => {
   const offenders: string[] = [];
   page.on("request", (request) => {

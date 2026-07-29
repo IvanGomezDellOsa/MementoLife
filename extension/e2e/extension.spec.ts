@@ -102,7 +102,10 @@ test("con storage vacio aparece el onboarding, y desaparece al guardar", async (
   // La grilla ya esta dibujada, entera en estado futuro: se ve que se va a obtener.
   await expect(page.locator("#canvas svg path")).toHaveCount(1);
 
-  await page.locator("#birth-date").fill("1990-01-01");
+  // El campo de fecha son tres controles (dia/mes/anio), no un <input type="date">.
+  await page.locator("#birth-day").fill("01");
+  await page.locator("#birth-month").selectOption("1");
+  await page.locator("#birth-year").fill("1990");
   await page.locator("#onboarding button").click();
 
   await expect(onboarding).toBeHidden();
