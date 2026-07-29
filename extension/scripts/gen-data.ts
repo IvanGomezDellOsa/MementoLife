@@ -1,9 +1,8 @@
 /**
  * gen-data.ts — convierte los JSON de fuente de verdad en modulos TS.
  *
- *   content/efemerides/es.json     -> src/data/efemerides.es.ts
- *   content/efemerides/en.json     -> src/data/efemerides.en.ts
- *   render-core/design-tokens.json -> src/data/tokens.ts
+ *   content/efemerides/{es,en,fr,pt,it,de}.json -> src/data/efemerides.{locale}.ts
+ *   render-core/design-tokens.json               -> src/data/tokens.ts
  *
  * Es el unico paso de "build" real del proyecto (plan 2.1). `src/data/` esta en
  * .gitignore: los JSON no se duplican a mano.
@@ -28,14 +27,23 @@ const OUT_DIR = join(EXTENSION_DIR, "src", "data");
 const LEAP_MONTH_LENGTHS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] as const;
 const DAYS_IN_LEAP_YEAR = 366;
 
-type Locale = "es" | "en";
+type Locale = "es" | "en" | "fr" | "pt" | "it" | "de";
+
+/** Los 6 idiomas soportados, con el nombre completo para los mensajes de log. */
+const LOCALE_NAMES: { readonly [K in Locale]: string } = {
+  es: "espanol",
+  en: "ingles",
+  fr: "frances",
+  pt: "portugues",
+  it: "italiano",
+  de: "aleman",
+};
+const LOCALES = Object.keys(LOCALE_NAMES) as Locale[];
 
 interface EfemerideEntry {
   readonly month: number;
   readonly day: number;
   readonly year: number;
-  readonly text_es?: string;
-  readonly text_en?: string;
   readonly category: string;
 }
 
@@ -57,6 +65,26 @@ function readJson<T>(relativePath: string): T {
   }
 }
 
+/** Cada entrada trae `text_{locale}` (p. ej. `text_es`), no una clave generica `text`. */
+function readEfemerideEntries(locale: Locale): readonly Record<string, unknown>[] {
+  return readJson<Record<string, unknown>[]>(`content/efemerides/${locale}.json`);
+}
+
+function textOf(entry: Record<string, unknown>, locale: Locale): string | undefined {
+  const value = entry[`text_${locale}`];
+  return typeof value === "string" ? value : undefined;
+}
+
+/** Vista con solo month/day/year, para comparar fechas entre idiomas sin arrastrar el texto. */
+function toEfemerideEntry(entry: Record<string, unknown>): EfemerideEntry {
+  return {
+    month: Number(entry["month"]),
+    day: Number(entry["day"]),
+    year: Number(entry["year"]),
+    category: String(entry["category"]),
+  };
+}
+
 /**
  * Indice 0..365 de una fecha dentro de un anio bisiesto. Es el orden en el que se emite
  * el array plano: buscar la efemeride del dia es un acceso directo, sin recorrer 366
@@ -74,7 +102,7 @@ function leapYearDayIndex(month: number, day: number): number {
  * Valida los invariantes del dataset y devuelve los 366 textos en orden de anio bisiesto.
  * Falla si hay huecos, duplicados, fechas fuera de calendario o textos vacios.
  */
-function buildEfemerideTable(entries: readonly EfemerideEntry[], locale: Locale): string[] {
+function buildEfemerideTable(entries: readonly Record<string, unknown>[], locale: Locale): string[] {
   if (entries.length !== DAYS_IN_LEAP_YEAR) {
     fail(`${locale}.json tiene ${entries.length} entradas, se esperaban ${DAYS_IN_LEAP_YEAR}`);
   }
@@ -82,19 +110,21 @@ function buildEfemerideTable(entries: readonly EfemerideEntry[], locale: Locale)
   const table = new Array<string | undefined>(DAYS_IN_LEAP_YEAR).fill(undefined);
 
   for (const entry of entries) {
-    const monthLength = LEAP_MONTH_LENGTHS[entry.month - 1];
-    if (monthLength === undefined || entry.day < 1 || entry.day > monthLength) {
-      fail(`${locale}.json: fecha fuera de calendario ${entry.month}/${entry.day}`);
+    const month = Number(entry["month"]);
+    const day = Number(entry["day"]);
+    const monthLength = LEAP_MONTH_LENGTHS[month - 1];
+    if (monthLength === undefined || day < 1 || day > monthLength) {
+      fail(`${locale}.json: fecha fuera de calendario ${month}/${day}`);
     }
 
-    const text = locale === "es" ? entry.text_es : entry.text_en;
+    const text = textOf(entry, locale);
     if (text === undefined || text.trim() === "") {
-      fail(`${locale}.json: texto vacio en ${entry.month}/${entry.day}`);
+      fail(`${locale}.json: texto vacio en ${month}/${day}`);
     }
 
-    const index = leapYearDayIndex(entry.month, entry.day);
+    const index = leapYearDayIndex(month, day);
     if (table[index] !== undefined) {
-      fail(`${locale}.json: fecha duplicada ${entry.month}/${entry.day}`);
+      fail(`${locale}.json: fecha duplicada ${month}/${day}`);
     }
     table[index] = text;
   }
@@ -107,18 +137,23 @@ function buildEfemerideTable(entries: readonly EfemerideEntry[], locale: Locale)
   return table as string[];
 }
 
-/** Verifica que ambos idiomas describan las mismas fechas y anios, entrada por entrada. */
-function assertLocalesAligned(es: readonly EfemerideEntry[], en: readonly EfemerideEntry[]): void {
-  if (es.length !== en.length) {
-    fail(`es.json (${es.length}) y en.json (${en.length}) tienen distinta cantidad de entradas`);
+/** Verifica que todos los idiomas describan las mismas fechas y anios, entrada por entrada, contra el espanol. */
+function assertLocalesAligned(
+  reference: readonly EfemerideEntry[],
+  referenceLocale: Locale,
+  entries: readonly EfemerideEntry[],
+  locale: Locale,
+): void {
+  if (reference.length !== entries.length) {
+    fail(`${referenceLocale}.json (${reference.length}) y ${locale}.json (${entries.length}) tienen distinta cantidad de entradas`);
   }
-  for (let i = 0; i < es.length; i += 1) {
-    const a = es[i];
-    const b = en[i];
+  for (let i = 0; i < reference.length; i += 1) {
+    const a = reference[i];
+    const b = entries[i];
     if (a === undefined || b === undefined) continue;
     if (a.month !== b.month || a.day !== b.day || a.year !== b.year) {
       fail(
-        `desalineados en el indice ${i}: es ${a.month}/${a.day}/${a.year} vs en ${b.month}/${b.day}/${b.year}`,
+        `desalineados en el indice ${i}: ${referenceLocale} ${a.month}/${a.day}/${a.year} vs ${locale} ${b.month}/${b.day}/${b.year}`,
       );
     }
   }
@@ -128,7 +163,7 @@ function emitEfemerides(locale: Locale, table: readonly string[]): void {
   const lines = table.map((text) => `  ${JSON.stringify(text)},`).join("\n");
   const source = `${BANNER}
 /**
- * Las 366 efemerides en ${locale === "es" ? "espanol" : "ingles"}, en orden de anio bisiesto
+ * Las 366 efemerides en ${LOCALE_NAMES[locale]}, en orden de anio bisiesto
  * (1 de enero = 0, 29 de febrero = 59, 31 de diciembre = 365). El texto ya trae la fecha
  * formateada como prefijo: el renderer lo dibuja tal cual.
  *
@@ -177,22 +212,30 @@ export const DESIGN_TOKENS = ${JSON.stringify(tokens, null, 2)} as const;
 function main(): void {
   mkdirSync(OUT_DIR, { recursive: true });
 
-  const es = readJson<EfemerideEntry[]>("content/efemerides/es.json");
-  const en = readJson<EfemerideEntry[]>("content/efemerides/en.json");
-  assertLocalesAligned(es, en);
+  const entriesByLocale = new Map<Locale, readonly Record<string, unknown>[]>();
+  for (const locale of LOCALES) {
+    entriesByLocale.set(locale, readEfemerideEntries(locale));
+  }
 
-  const tableEs = buildEfemerideTable(es, "es");
-  const tableEn = buildEfemerideTable(en, "en");
-  emitEfemerides("es", tableEs);
-  emitEfemerides("en", tableEn);
+  const reference = (entriesByLocale.get("es") ?? []).map(toEfemerideEntry);
+  for (const locale of LOCALES) {
+    if (locale === "es") continue;
+    const entries = (entriesByLocale.get(locale) ?? []).map(toEfemerideEntry);
+    assertLocalesAligned(reference, "es", entries, locale);
+  }
+
+  const counts: string[] = [];
+  for (const locale of LOCALES) {
+    const table = buildEfemerideTable(entriesByLocale.get(locale) ?? [], locale);
+    emitEfemerides(locale, table);
+    counts.push(`${table.length} ${locale}`);
+  }
 
   const tokens = readJson<unknown>("render-core/design-tokens.json");
   emitTokens(tokens);
   emitFontMetrics();
 
-  console.log(
-    `gen-data: OK — ${tableEs.length} efemerides es, ${tableEn.length} en, tokens y metricas en src/data/`,
-  );
+  console.log(`gen-data: OK — efemerides ${counts.join(", ")}, tokens y metricas en src/data/`);
 }
 
 main();

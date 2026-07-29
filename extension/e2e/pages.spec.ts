@@ -254,11 +254,11 @@ test.describe("pagina de opciones", () => {
     await openOptions(page, "es-AR");
     await expect(page.locator("#title")).toHaveText("MementoLife — Opciones");
 
-    await page.locator("label[for=locale-en]").click();
+    await page.locator("#locale").selectOption("en");
     await expect(page.locator("#title")).toHaveText("MementoLife — Options");
     await expect(page.locator("#theme-system + label")).toHaveText("System");
 
-    await page.locator("label[for=locale-es]").click();
+    await page.locator("#locale").selectOption("es");
     await expect(page.locator("#title")).toHaveText("MementoLife — Opciones");
     await expect(page.locator("#theme-system + label")).toHaveText("Del sistema");
   });

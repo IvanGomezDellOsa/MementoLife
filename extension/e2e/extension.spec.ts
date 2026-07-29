@@ -130,10 +130,10 @@ test("la pagina de opciones es bilingue y navegable por teclado", async () => {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.waitForSelector("#form input");
 
-  await page.locator("label[for=locale-es]").click();
+  await page.locator("#locale").selectOption("es");
   await expect(page.locator("#title")).toHaveText(/Opciones/);
 
-  await page.locator("label[for=locale-en]").click();
+  await page.locator("#locale").selectOption("en");
   await expect(page.locator("#title")).toHaveText(/Options/);
 
   // Los grupos son radios reales: se pueden marcar con teclado sin JS propio.

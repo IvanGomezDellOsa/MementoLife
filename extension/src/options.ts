@@ -15,7 +15,7 @@
 
 import { t } from "./core/i18n.js";
 import type { StringKey } from "./core/i18n.js";
-import { LIFE_YEARS } from "./core/tokens.js";
+import { LIFE_YEARS, LOCALES } from "./core/tokens.js";
 import type { Locale } from "./core/tokens.js";
 import { load, resolveTheme, save } from "./prefs.js";
 import { requireElement } from "./dom.js";
@@ -80,6 +80,47 @@ function field(
 interface Choice<T extends string> {
   readonly value: T;
   readonly labelKey: StringKey;
+}
+
+/** Etiqueta del nombre de cada idioma, en el diccionario del idioma activo. */
+const LOCALE_NAME_KEY: { readonly [K in Locale]: StringKey } = {
+  es: "localeEs",
+  en: "localeEn",
+  fr: "localeFr",
+  pt: "localePt",
+  it: "localeIt",
+  de: "localeDe",
+};
+
+/**
+ * <select> nativo. El picker de idioma dejo de ser un segmented control (2 opciones) al
+ * pasar a 6: en fila se hubiera envuelto en dos lineas desparejas, y un <select> es el
+ * control nativo pensado para una lista larga de una sola eleccion.
+ */
+function localeSelect(current: Locale, onPick: (value: Locale) => void): HTMLElement {
+  const wrapper = document.createElement("div");
+  wrapper.className = "field";
+
+  const label = document.createElement("label");
+  label.textContent = t(prefs.locale, "localeLabel");
+  label.htmlFor = "locale";
+
+  const select = document.createElement("select");
+  select.id = "locale";
+  select.className = "field-select";
+  for (const value of LOCALES) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = t(prefs.locale, LOCALE_NAME_KEY[value]);
+    option.selected = value === current;
+    select.append(option);
+  }
+  select.addEventListener("change", () => {
+    onPick(select.value as Locale);
+  });
+
+  wrapper.append(label, select);
+  return wrapper;
 }
 
 function segmented<T extends string>(
@@ -179,18 +220,7 @@ function build(): void {
     ),
   );
 
-  form.append(
-    segmented<Locale>(
-      "locale",
-      "localeLabel",
-      [
-        { value: "es", labelKey: "localeEs" },
-        { value: "en", labelKey: "localeEn" },
-      ],
-      prefs.locale,
-      (value) => void update({ locale: value }),
-    ),
-  );
+  form.append(localeSelect(prefs.locale, (value) => void update({ locale: value })));
 }
 
 async function start(): Promise<void> {

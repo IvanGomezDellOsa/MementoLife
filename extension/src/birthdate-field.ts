@@ -24,6 +24,7 @@
 import { t } from "./core/i18n.js";
 import type { Locale } from "./core/tokens.js";
 import { isLeapYear } from "./core/lifemath.js";
+import { intlTag } from "./core/format.js";
 
 const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] as const;
 
@@ -37,7 +38,7 @@ export interface BirthDateField {
 
 /** Nombres de mes en el idioma activo. Generados, no escritos a mano. */
 function monthNames(locale: Locale): string[] {
-  const format = new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-US", {
+  const format = new Intl.DateTimeFormat(intlTag(locale), {
     month: "long",
     timeZone: "UTC",
   });
@@ -90,9 +91,9 @@ export function createBirthDateField(locale: Locale, onEnter: () => void): Birth
   year.placeholder = t(locale, "yearShort");
   year.setAttribute("aria-label", t(locale, "yearLabel"));
 
-  // El orden sigue la convencion del idioma. En espanol se dice "28 de julio de 1990";
-  // en ingles, "July 28, 1990".
-  wrapper.append(...(locale === "es" ? [day, month, year] : [month, day, year]));
+  // El orden sigue la convencion del idioma: dia-mes-anio en todos salvo ingles, que va
+  // mes-dia-anio ("July 28, 1990" contra "28 de julio de 1990").
+  wrapper.append(...(locale === "en" ? [month, day, year] : [day, month, year]));
 
   const digitsOnly = (input: HTMLInputElement): void => {
     input.addEventListener("input", () => {
@@ -149,7 +150,7 @@ export function createBirthDateField(locale: Locale, onEnter: () => void): Birth
       day.value = String(Number(match[3]));
     },
     focus(): void {
-      (locale === "es" ? day : month).focus();
+      (locale === "en" ? month : day).focus();
     },
   };
 }

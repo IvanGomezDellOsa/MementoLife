@@ -87,13 +87,20 @@ function draw(): RenderResult {
   return result;
 }
 
+/** Un import() dinamico por idioma: rutas literales, para que el bundler-menos build igual pueda resolverlas. */
+const EFEMERIDES_IMPORTS: { readonly [K in Locale]: () => Promise<{ EFEMERIDES: readonly string[] }> } = {
+  es: () => import("./data/efemerides.es.js"),
+  en: () => import("./data/efemerides.en.js"),
+  fr: () => import("./data/efemerides.fr.js"),
+  pt: () => import("./data/efemerides.pt.js"),
+  it: () => import("./data/efemerides.it.js"),
+  de: () => import("./data/efemerides.de.js"),
+};
+
 /** Carga la tabla del idioma activo y redibuja. Es el paso 2 del arranque. */
 async function loadEfemerides(locale: Locale): Promise<void> {
   if (!prefs.efemeride || tables.has(locale)) return;
-  const module =
-    locale === "es"
-      ? await import("./data/efemerides.es.js")
-      : await import("./data/efemerides.en.js");
+  const module = await EFEMERIDES_IMPORTS[locale]();
   tables.set(locale, module.EFEMERIDES);
   if (prefs.locale === locale) draw();
 }

@@ -103,9 +103,18 @@ export function percentText(stats: LifeStats): string {
   return `${stats.percent} %`;
 }
 
+/** "semana"/"de" por idioma, para el subtitulo del porcentaje. */
+const UNIT_WORDS: { readonly [K in Locale]: { readonly unit: string; readonly joiner: string } } = {
+  es: { unit: "semana", joiner: "de" },
+  en: { unit: "week", joiner: "of" },
+  fr: { unit: "semaine", joiner: "sur" },
+  pt: { unit: "semana", joiner: "de" },
+  it: { unit: "settimana", joiner: "di" },
+  de: { unit: "Woche", joiner: "von" },
+};
+
 /** "semana 1742 de 4160" / "week 1742 of 4160". Es el subtitulo del porcentaje. */
 export function unitText(locale: Locale, stats: LifeStats): string {
-  const unit = locale === "es" ? "semana" : "week";
-  const joiner = locale === "es" ? "de" : "of";
+  const { unit, joiner } = UNIT_WORDS[locale];
   return `${unit} ${stats.currentNumber} ${joiner} ${stats.totalUnits}`;
 }

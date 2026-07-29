@@ -16,8 +16,12 @@
  * Google via la cuenta del usuario, en contra del "100 % en el equipo" del proyecto (6.6).
  */
 
-import { LIFE_YEARS, clampLifeYears } from "./core/tokens.js";
+import { LIFE_YEARS, LOCALES, clampLifeYears } from "./core/tokens.js";
 import type { Locale, Theme } from "./core/tokens.js";
+
+function isLocale(value: unknown): value is Locale {
+  return typeof value === "string" && (LOCALES as readonly string[]).includes(value);
+}
 
 /** "system" sigue a prefers-color-scheme; es el valor por defecto. */
 export type ThemePref = Theme | "system";
@@ -37,7 +41,8 @@ const CACHE_KEY = "mementolife.prefs.v1";
 /** Idioma inicial: el del navegador, como pide el plan 6.4. Despues es elegible. */
 function detectLocale(): Locale {
   try {
-    return chrome.i18n.getUILanguage().toLowerCase().startsWith("es") ? "es" : "en";
+    const lang = chrome.i18n.getUILanguage().toLowerCase().slice(0, 2);
+    return isLocale(lang) ? lang : "en";
   } catch {
     return "en";
   }
@@ -74,7 +79,7 @@ function normalize(raw: unknown): Prefs {
       value.theme === "dark" || value.theme === "light" || value.theme === "system"
         ? value.theme
         : base.theme,
-    locale: value.locale === "es" || value.locale === "en" ? value.locale : base.locale,
+    locale: isLocale(value.locale) ? value.locale : base.locale,
     efemeride: typeof value.efemeride === "boolean" ? value.efemeride : base.efemeride,
   };
 }

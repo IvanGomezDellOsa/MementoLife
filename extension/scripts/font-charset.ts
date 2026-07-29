@@ -5,8 +5,8 @@
  * Existe porque subsetear "latin + latin-ext a ojo" es una apuesta. El conjunto se deriva
  * de tres fuentes, ninguna asumida:
  *
- *   1. Los 732 textos del dataset (366 es + 366 en), leidos de content/efemerides/.
- *   2. Los nombres de dia y mes que produce Intl en es y en, GENERADOS con Intl, no
+ *   1. Los 2196 textos del dataset (366 x 6 idiomas), leidos de content/efemerides/.
+ *   2. Los nombres de dia y mes que produce Intl en cada idioma, GENERADOS con Intl, no
  *      escritos a mano: es lo que el navegador va a pedirle a la fuente en tiempo real.
  *   3. Un set explicito de UI y de formato.
  *
@@ -24,10 +24,16 @@ const SCRIPT_DIR = import.meta.dirname;
 const REPO_ROOT = resolve(SCRIPT_DIR, "..", "..");
 const OUT_FILE = join(SCRIPT_DIR, "font-charset.txt");
 
-interface EfemerideEntry {
-  readonly text_es?: string;
-  readonly text_en?: string;
-}
+type Locale = "es" | "en" | "fr" | "pt" | "it" | "de";
+const LOCALES: readonly Locale[] = ["es", "en", "fr", "pt", "it", "de"];
+const INTL_TAG: { readonly [K in Locale]: string } = {
+  es: "es-ES",
+  en: "en-US",
+  fr: "fr-FR",
+  pt: "pt-PT",
+  it: "it-IT",
+  de: "de-DE",
+};
 
 /**
  * ASCII imprimible completo. Son ~95 glifos y cubre de una vez digitos, ":", "%",
@@ -39,26 +45,38 @@ const ASCII_PRINTABLE = Array.from({ length: 0x7e - 0x20 + 1 }, (_, i) =>
 ).join("");
 
 /**
- * Extras que no son ASCII y que el producto usa o puede usar:
+ * Extras que no son ASCII y que el producto usa o puede usar. No se deja en manos del
+ * dataset traducido: la UI (i18n.ts) tiene sus propios acentos que un texto del dataset
+ * podria no traer nunca, y este script no puede importar i18n.ts (corre ANTES del build,
+ * cuando src/data/tokens.ts todavia no existe).
+ *
  *  - acentos y enes del espanol, en ambas cajas
- *  - signos de apertura ¿ ¡ (la UI en espanol de E2 los va a usar)
+ *  - acentos del frances, portugues, italiano y aleman (incluida ß, sin mayuscula: no
+ *    aparece en texto de UI en mayusculas en ningun idioma del proyecto)
+ *  - signos de apertura ¿ ¡ (espanol)
  *  - · separador del pie · — guion largo del dataset · – guion medio
  *  - comillas tipograficas y puntos suspensivos, por si un texto de UI los trae
  *  - ° y º, habituales en fechas y unidades
  */
-const UI_EXTRAS = "áéíóúüñÁÉÍÓÚÜÑ¿¡·—–…“”‘’«»°º";
+const UI_EXTRAS =
+  "áéíóúüñÁÉÍÓÚÜÑ" +
+  "àâäçèêëîïôöùûœãõìòÀÂÄÇÈÊËÎÏÔÖÙÛŒÃÕÌÒß" +
+  "¿¡·—–…“”‘’«»°º";
 
-function readEntries(file: string): readonly EfemerideEntry[] {
-  return JSON.parse(readFileSync(join(REPO_ROOT, file), "utf8")) as EfemerideEntry[];
+function readEntries(locale: Locale): readonly Record<string, string>[] {
+  return JSON.parse(
+    readFileSync(join(REPO_ROOT, `content/efemerides/${locale}.json`), "utf8"),
+  ) as Record<string, string>[];
 }
 
-/** Nombres de dia y mes tal como los va a pedir Intl en runtime (plan 5.4). */
+/** Nombres de dia y mes tal como los va a pedir Intl en runtime (plan 5.4), en los 6 idiomas. */
 function intlDateVocabulary(): string {
   let out = "";
-  for (const locale of ["es", "en"]) {
-    const weekday = new Intl.DateTimeFormat(locale, { weekday: "long" });
-    const month = new Intl.DateTimeFormat(locale, { month: "long" });
-    const full = new Intl.DateTimeFormat(locale, {
+  for (const locale of LOCALES) {
+    const tag = INTL_TAG[locale];
+    const weekday = new Intl.DateTimeFormat(tag, { weekday: "long" });
+    const month = new Intl.DateTimeFormat(tag, { month: "long" });
+    const full = new Intl.DateTimeFormat(tag, {
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -88,16 +106,13 @@ function main(): void {
   add(intlChars);
 
   let datasetCount = 0;
-  for (const entry of readEntries("content/efemerides/es.json")) {
-    if (entry.text_es !== undefined) {
-      add(entry.text_es);
-      datasetCount += 1;
-    }
-  }
-  for (const entry of readEntries("content/efemerides/en.json")) {
-    if (entry.text_en !== undefined) {
-      add(entry.text_en);
-      datasetCount += 1;
+  for (const locale of LOCALES) {
+    for (const entry of readEntries(locale)) {
+      const text = entry[`text_${locale}`];
+      if (text !== undefined) {
+        add(text);
+        datasetCount += 1;
+      }
     }
   }
 

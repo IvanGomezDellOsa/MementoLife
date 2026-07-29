@@ -19,7 +19,20 @@ import type { RenderResult } from "../src/core/render.js";
 import { efemerideFor } from "../src/core/efemerides.js";
 import { EFEMERIDES as ES } from "../src/data/efemerides.es.js";
 import { EFEMERIDES as EN } from "../src/data/efemerides.en.js";
+import { EFEMERIDES as FR } from "../src/data/efemerides.fr.js";
+import { EFEMERIDES as PT } from "../src/data/efemerides.pt.js";
+import { EFEMERIDES as IT } from "../src/data/efemerides.it.js";
+import { EFEMERIDES as DE } from "../src/data/efemerides.de.js";
 import type { Locale, Theme } from "../src/core/tokens.js";
+
+const EFEMERIDE_TABLES: { readonly [K in Locale]: readonly string[] } = {
+  es: ES,
+  en: EN,
+  fr: FR,
+  pt: PT,
+  it: IT,
+  de: DE,
+};
 
 interface Fixture {
   readonly id: string;
@@ -52,7 +65,7 @@ function renderFixture(fixture: Fixture): RenderResult {
     birthDate: parseDate(fixture.birthDate),
     today,
     efemerideText: fixture.efemerideEnabled
-      ? efemerideFor(fixture.locale === "es" ? ES : EN, today)
+      ? efemerideFor(EFEMERIDE_TABLES[fixture.locale], today)
       : null,
     viewport: fixture.viewport,
   });

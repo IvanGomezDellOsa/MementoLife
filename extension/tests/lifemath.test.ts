@@ -74,5 +74,9 @@ describe("textos del bloque de dato", () => {
   it("el subtitulo va en el idioma activo", () => {
     expect(unitText("es", stats)).toBe("semana 1742 de 4160");
     expect(unitText("en", stats)).toBe("week 1742 of 4160");
+    expect(unitText("fr", stats)).toBe("semaine 1742 sur 4160");
+    expect(unitText("pt", stats)).toBe("semana 1742 de 4160");
+    expect(unitText("it", stats)).toBe("settimana 1742 di 4160");
+    expect(unitText("de", stats)).toBe("Woche 1742 von 4160");
   });
 });

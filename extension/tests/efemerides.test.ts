@@ -7,6 +7,20 @@ import { describe, expect, it } from "vitest";
 import { DAYS_IN_LEAP_YEAR, efemerideFor, leapYearDayIndex } from "../src/core/efemerides.js";
 import { EFEMERIDES as ES } from "../src/data/efemerides.es.js";
 import { EFEMERIDES as EN } from "../src/data/efemerides.en.js";
+import { EFEMERIDES as FR } from "../src/data/efemerides.fr.js";
+import { EFEMERIDES as PT } from "../src/data/efemerides.pt.js";
+import { EFEMERIDES as IT } from "../src/data/efemerides.it.js";
+import { EFEMERIDES as DE } from "../src/data/efemerides.de.js";
+
+/** El patron con el que arranca el texto del dia 1 de cada mes, por idioma. */
+const FIRST_OF_MONTH_PATTERN: Record<string, RegExp> = {
+  es: /^1 de /,
+  en: / 1, /,
+  fr: /^1er /,
+  pt: /^1 de /,
+  it: /^1° /,
+  de: /^1\. /,
+};
 
 const LEAP_MONTH_LENGTHS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -34,6 +48,10 @@ describe("indice de dia del anio bisiesto", () => {
 describe.each([
   ["es", ES],
   ["en", EN],
+  ["fr", FR],
+  ["pt", PT],
+  ["it", IT],
+  ["de", DE],
 ])("dataset %s", (_locale, table) => {
   it("tiene 366 entradas", () => {
     expect(table).toHaveLength(DAYS_IN_LEAP_YEAR);
@@ -58,13 +76,20 @@ describe.each([
 });
 
 describe("alineacion entre idiomas", () => {
-  it("ambos datasets describen el mismo dia en el mismo indice", () => {
-    expect(ES).toHaveLength(EN.length);
+  it.each([
+    ["en", EN],
+    ["fr", FR],
+    ["pt", PT],
+    ["it", IT],
+    ["de", DE],
+  ])("%s describe el mismo dia que es en el mismo indice", (locale, table) => {
+    expect(table).toHaveLength(ES.length);
     // El texto arranca con la fecha formateada; el numero de dia tiene que coincidir.
+    const pattern = FIRST_OF_MONTH_PATTERN[locale] as RegExp;
     for (let month = 1; month <= 12; month += 1) {
       const index = leapYearDayIndex(month, 1);
       expect(ES[index]).toMatch(/^1 de /);
-      expect(EN[index]).toMatch(/ 1, /);
+      expect(table[index]).toMatch(pattern);
     }
   });
 });

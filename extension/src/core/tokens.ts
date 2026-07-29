@@ -9,7 +9,10 @@
 import { DESIGN_TOKENS } from "../data/tokens.js";
 
 export type Theme = "dark" | "light";
-export type Locale = "es" | "en";
+export type Locale = "es" | "en" | "fr" | "pt" | "it" | "de";
+
+/** Todos los idiomas soportados, en el orden en que se listan en el selector. */
+export const LOCALES: readonly Locale[] = ["es", "en", "fr", "pt", "it", "de"];
 
 export const T = DESIGN_TOKENS;
 

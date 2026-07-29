@@ -66,13 +66,18 @@ def codepoints_of(font_path: Path) -> set:
     return set(TTFont(str(font_path)).getBestCmap().keys())
 
 
+LOCALES = ("es", "en", "fr", "pt", "it", "de")
+
+
 def dataset_codepoints() -> set:
-    """Los codepoints de las 732 entradas, leidos de la fuente de verdad."""
+    """Los codepoints de las 2196 entradas (366 x 6 idiomas), leidos de la fuente de verdad."""
     out = set()
-    for name, key in (("es.json", "text_es"), ("en.json", "text_en")):
-        entries = json.loads((REPO_ROOT / "content" / "efemerides" / name).read_text(encoding="utf-8"))
+    for locale in LOCALES:
+        entries = json.loads(
+            (REPO_ROOT / "content" / "efemerides" / f"{locale}.json").read_text(encoding="utf-8")
+        )
         for entry in entries:
-            for ch in entry.get(key, ""):
+            for ch in entry.get(f"text_{locale}", ""):
                 out.add(ord(ch))
     return out
 
@@ -114,7 +119,7 @@ def main() -> int:
     for cp in known:
         print(f"AVISO  {fmt(cp)} no existe en Fraunces (hueco conocido y aceptado).")
 
-    # --- C. La comprobacion que pide el gate de E0: las 732 entradas ---------------
+    # --- C. La comprobacion que pide el gate de E0: las 2196 entradas ---------------
     dataset_uncovered = sorted(dataset - subset)
     dataset_real_failures = [cp for cp in dataset_uncovered if cp not in KNOWN_MISSING_FROM_FONT]
     if dataset_real_failures:
@@ -124,7 +129,7 @@ def main() -> int:
             print(f"   {fmt(cp)}")
     else:
         print(
-            f"OK  dataset: los {len(dataset)} codepoints distintos de las 732 entradas "
+            f"OK  dataset: los {len(dataset)} codepoints distintos de las 2196 entradas "
             f"quedan cubiertos ({len(dataset_uncovered)} hueco(s) conocido(s))."
         )
 
