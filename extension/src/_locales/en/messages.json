@@ -4,7 +4,7 @@
     "description": "Extension name shown in the Chrome Web Store and the extensions page."
   },
   "extDesc": {
-    "message": "Replaces the new tab page with your life drawn as a grid of weeks. No accounts, no network, nothing leaves your device.",
+    "message": "A life calendar on your new tab: weeks lived and left. Stoic memento mori, minimalist, no ads.",
     "description": "Store listing description. Hard limit: 132 characters."
   }
 }
