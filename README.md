@@ -6,6 +6,8 @@
 
 # MementoLife — Extensión de Chrome
 
+[![Disponible en Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Disponible-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)
+
 Reemplaza la pestaña nueva por una grilla de semanas, calculada a partir de la fecha de
 nacimiento: las semanas vividas se dibujan llenas, las que faltan apenas insinuadas, y un
 anillo marca la semana actual. Con tema claro y oscuro, interfaz completa en 6 idiomas, y
@@ -55,7 +57,9 @@ ingenua: 1,30 ms contra 10,00 ms.
 
 ## Instalar
 
-Próximamente en la Chrome Web Store.
+[![Disponible en Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Disponible-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)
+
+Instalá **MementoLife** directamente desde la **[Chrome Web Store](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)**.
 
 > En ventanas de incógnito, Chrome no permite que ninguna extensión reemplace la pestaña
 > nueva. Es una restricción de la plataforma.

@@ -6,6 +6,8 @@
 
 # MementoLife — Chrome Extension
 
+[![Available in Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)
+
 Replaces the new tab page with a grid of weeks, computed from your date of birth: the weeks
 you have lived are drawn filled in, the ones ahead barely there, and a ring marks the week
 you are in now. With light and dark themes, a full interface in 6 languages, and a different
@@ -55,7 +57,9 @@ naive alternative: 1.30 ms against 10.00 ms.
 
 ## Install
 
-Coming soon to the Chrome Web Store.
+[![Available in Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)
+
+Install **MementoLife** directly from the **[Chrome Web Store](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)**.
 
 > In incognito windows, Chrome does not allow any extension to override the new tab page.
 > That is a platform restriction.
