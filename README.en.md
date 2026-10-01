@@ -8,6 +8,8 @@
 
 [![Available in Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)
 
+🎬 [Watch the video on YouTube](https://youtu.be/tZbJvq8xoBk)
+
 Replaces the new tab page with a grid of weeks, computed from your date of birth: the weeks
 you have lived are drawn filled in, the ones ahead barely there, and a ring marks the week
 you are in now. With light and dark themes, a full interface in 6 languages, and a different
