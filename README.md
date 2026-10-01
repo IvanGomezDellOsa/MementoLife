@@ -8,7 +8,7 @@
 
 [![Disponible en Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Disponible-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/mementolife/eackmngdibobdeciapcedkmjoecaiblp)
 
-🎬 [Ver video en YouTube](https://youtu.be/tZbJvq8xoBk)
+🎬 [Video de presentación (YouTube)](https://youtu.be/tZbJvq8xoBk)
 
 Reemplaza la pestaña nueva por una grilla de semanas, calculada a partir de la fecha de
 nacimiento: las semanas vividas se dibujan llenas, las que faltan apenas insinuadas, y un
