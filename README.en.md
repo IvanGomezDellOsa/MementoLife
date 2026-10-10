@@ -51,7 +51,7 @@ Full detail in [PRIVACY.en.md](PRIVACY.en.md).
 | **Packaging** | Manifest V3, a single permission, no service worker |
 | **CI** | GitHub Actions on every push |
 
-The grid is 4160 dots, but the DOM holds **7 nodes**: three `<path>` elements —past, future
+The grid is 4160 dots, but it is drawn with **3 paths**: three `<path>` elements —past, future
 and ring— are accumulated instead of emitting one element per cell. Measured against the
 naive alternative: 1.30 ms against 10.00 ms.
 

@@ -51,7 +51,7 @@ Detalle completo en [PRIVACY.md](PRIVACY.md).
 | **Empaquetado** | Manifest V3, un solo permiso, sin service worker |
 | **CI** | GitHub Actions en cada push |
 
-La grilla son 4160 puntos, pero el DOM tiene **7 nodos**: se acumulan tres `<path>` —pasado,
+La grilla son 4160 puntos, pero se dibuja con **3 trazados**: se acumulan tres `<path>` —pasado,
 futuro y anillo— en vez de emitir un elemento por celda. Medido contra la alternativa
 ingenua: 1,30 ms contra 10,00 ms.
 
